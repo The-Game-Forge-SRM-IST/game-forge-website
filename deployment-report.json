@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-08-02T08:39:51.807Z",
+  "status": "NEEDS_ATTENTION",
+  "issues": [
+    "Integration test failures"
+  ],
+  "fixes": [],
+  "checklist": {
+    "build": "PASS",
+    "bundleSize": "PASS",
+    "images": "PASS",
+    "performance": "PASS",
+    "accessibility": "PASS",
+    "security": "PASS",
+    "tests": "FAIL"
+  }
+}

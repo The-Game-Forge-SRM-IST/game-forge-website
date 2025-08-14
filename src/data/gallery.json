@@ -1,0 +1,32 @@
+[
+  {
+    "id": "club-meet",
+    "src": "/images/gallery/Clubmeetup.jpg",
+    "alt": "First Official Club Meet",
+    "title": "Club Meet 2025",
+    "description": "Introduction about the club.",
+    "category": "social",
+    "date": "2025-02-05",
+    "tags": ["competition", "teamwork"]
+  },
+  {
+    "id": "iiitdm",
+    "src": "/images/gallery/IIITDM Award.jpeg",
+    "alt": "Team celebrating hackathon victory",
+    "title": "Hackathon Victory",
+    "description": "Our team winning first place at the IIITDM IEEE Paper Presentation.",
+    "category": "competitions",
+    "date": "2025-03-31",
+    "tags": ["hackathon", "victory", "achievement"]
+  },
+  {
+    "id": "club-membership",
+    "src": "/images/gallery/Club Membership Registration.jpeg",
+    "alt": "Club Membership Award",
+    "title": "Official Club Membership",
+    "description": "Oficial Club Membership Award Ceremony",
+    "category": "events",
+    "date": "2024-10-29",
+    "tags": ["gaming", "community"]
+  }
+]

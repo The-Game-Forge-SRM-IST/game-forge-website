@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-08-02T09:37:24.831Z",
+  "tests": [
+    {
+      "name": "Server Availability",
+      "passed": true,
+      "details": "Server is running",
+      "warning": false,
+      "timestamp": "2025-08-02T09:37:24.872Z"
+    },
+    {
+      "name": "Test Execution",
+      "passed": false,
+      "details": "Navigation timeout of 30000 ms exceeded",
+      "warning": false,
+      "timestamp": "2025-08-02T09:37:55.814Z"
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "warnings": 0
+  }
+}

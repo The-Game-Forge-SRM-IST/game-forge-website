@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Game Development Workshop: Unity Basics",
+    "description": "Learn the fundamentals of Unity game engine in this hands-on workshop. Perfect for beginners looking to start their game development journey.",
+    "date": "2025-02-15",
+    "time": "14:00",
+    "location": "Computer Lab 3, SRM IST KTR",
+    "type": "workshop",
+    "registrationUrl": "https://forms.google.com/unity-workshop",
+    "images": ["/images/events/unity-workshop.jpg"]
+  },
+  {
+    "id": "2",
+    "title": "48-Hour Game Jam Challenge",
+    "description": "Join us for an intense 48-hour game development challenge. Form teams, brainstorm ideas, and create amazing games under time pressure!",
+    "date": "2025-03-01",
+    "time": "18:00",
+    "location": "Innovation Hub, SRM IST KTR",
+    "type": "competition",
+    "registrationUrl": "https://forms.google.com/game-jam-2025",
+    "images": ["/images/events/game-jam.jpg"]
+  },
+  {
+    "id": "4",
+    "title": "Weekly Club Meeting",
+    "description": "Regular club meeting to discuss ongoing projects, plan upcoming events, and share knowledge among members.",
+    "date": "2025-02-08",
+    "time": "15:00",
+    "location": "Room 204, Tech Block, SRM IST KTR",
+    "type": "meeting",
+    "images": []
+  },
+  {
+    "id": "6",
+    "title": "Indie Game Showcase",
+    "description": "Present your indie game projects to fellow developers and get valuable feedback. Open to all skill levels and game genres.",
+    "date": "2024-11-20",
+    "time": "17:00",
+    "location": "Exhibition Hall, SRM IST KTR",
+    "type": "social",
+    "images": ["/images/events/indie-showcase.jpg"]
+  }
+]

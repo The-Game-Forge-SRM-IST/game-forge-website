@@ -1,0 +1,117 @@
+[
+  {
+    "id": "alumni-1",
+    "name": "Arjun Sharma",
+    "graduationYear": "2023",
+    "currentPosition": "Game Developer",
+    "currentCompany": "Ubisoft India",
+    "image": "/images/placeholder-600x700.jpg",
+    "bio": "Former president of The Game Forge who led the club to multiple competition victories. Now working on AAA game titles at Ubisoft.",
+    "contributions": [
+      "Led development of award-winning puzzle game 'Nexus'",
+      "Organized first inter-college game jam at SRM",
+      "Mentored 15+ junior developers",
+      "Established partnerships with industry professionals"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/arjunsharma",
+      "github": "https://github.com/arjunsharma",
+      "portfolio": "https://arjunsharma.dev"
+    }
+  },
+  {
+    "id": "alumni-2",
+    "name": "Priya Patel",
+    "graduationYear": "2022",
+    "currentPosition": "Technical Artist",
+    "currentCompany": "Rockstar Games",
+    "image": "/images/placeholder-600x750.jpg",
+    "bio": "Specialized in 3D modeling and animation during her time at The Game Forge. Now creating stunning visuals for open-world games.",
+    "contributions": [
+      "Created visual assets for 8 club projects",
+      "Conducted workshops on Blender and Maya",
+      "Won 'Best Art Direction' at National Game Dev Competition",
+      "Designed the club's current logo and branding"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/priyapatel",
+      "portfolio": "https://priyapatel.art"
+    }
+  },
+  {
+    "id": "alumni-3",
+    "name": "Rahul Kumar",
+    "graduationYear": "2023",
+    "currentPosition": "Indie Game Developer",
+    "currentCompany": "Self-Employed",
+    "image": "/images/placeholder-600x800.jpg",
+    "bio": "Passionate indie developer who started his entrepreneurial journey at The Game Forge. His mobile game has over 100K downloads.",
+    "contributions": [
+      "Developed club's first mobile game 'Campus Quest'",
+      "Organized coding bootcamps for beginners",
+      "Secured funding for club's hardware upgrades",
+      "Published 3 games on Google Play Store"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/rahulkumar",
+      "github": "https://github.com/rahulkumar",
+      "portfolio": "https://rahulgames.com"
+    }
+  },
+  {
+    "id": "alumni-4",
+    "name": "Sneha Reddy",
+    "graduationYear": "2022",
+    "currentPosition": "Game Designer",
+    "currentCompany": "Electronic Arts",
+    "image": "/images/placeholder-650x800.jpg",
+    "bio": "Former game design lead who brought innovative gameplay mechanics to club projects. Now designing experiences for millions of players.",
+    "contributions": [
+      "Designed gameplay systems for 5 major club projects",
+      "Established game design curriculum for club workshops",
+      "Won 'Best Game Design' at South India Game Fest",
+      "Mentored design team for 2 years"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/snehareddy",
+      "portfolio": "https://snehareddy.design"
+    }
+  },
+  {
+    "id": "alumni-5",
+    "name": "Vikram Singh",
+    "graduationYear": "2021",
+    "currentPosition": "Senior Software Engineer",
+    "currentCompany": "Unity Technologies",
+    "image": "/images/placeholder-700x600.jpg",
+    "bio": "Backend specialist who built robust systems for club projects. Now working on Unity's core engine features.",
+    "contributions": [
+      "Built scalable backend for multiplayer club projects",
+      "Introduced DevOps practices to club development",
+      "Organized hackathons with industry partnerships",
+      "Created technical documentation standards"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/vikramsingh",
+      "github": "https://github.com/vikramsingh"
+    }
+  },
+  {
+    "id": "alumni-6",
+    "name": "Ananya Gupta",
+    "graduationYear": "2021",
+    "currentPosition": "Product Manager",
+    "currentCompany": "Supercell",
+    "image": "/images/placeholder-750x600.jpg",
+    "bio": "Former club coordinator who excelled at project management and team leadership. Now managing mobile game products at Supercell.",
+    "contributions": [
+      "Coordinated 12 successful project launches",
+      "Implemented agile development practices",
+      "Secured sponsorships worth ₹2L for club events",
+      "Built relationships with 10+ industry partners"
+    ],
+    "socialLinks": {
+      "linkedin": "https://linkedin.com/in/ananyagupta"
+    }
+  }
+]

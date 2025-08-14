@@ -1,0 +1,106 @@
+[
+  {
+    "id": "impossible-pacman",
+    "title": "Impossible Pacman",
+    "description": "Made for the retro revive game jam condcuted by IITK.",
+    "longDescription": "Dive into a fresh and unpredictable Pacman experience with Impossible Pacman! This isn't your classic arcade game. We've taken the familiar ghost-dodging, pellet-munching gameplay and added a twist: each level is generated uniquely every time you play. Using a random walk algorithm, the maze layout is different in every game, ensuring endless replayability and challenging you to adapt to new environments. But that's not all! Do you feel like setting your challenge? Impossible Pacman allows you to define the win score before you start a level. Whether you prefer a quick dash for a low score or a marathon session aiming for a high one, the choice is yours. Get ready for an 'impossible' level of Pacman fun where no two games are the same!",
+    "images": [
+      "/images/projects/retro-revive-1.png",
+      "/images/projects/retro-revive-2.png"
+    ],
+    "technologies": [
+      "Unity",
+      "C#",
+      "Visual Studio Code",
+      "Git + GitHub for version control",
+      "itch.io for game distribution"
+    ],
+    "teamMembers": [
+      "sharad-mayank-sinha"
+    ],
+    "status": "completed",
+    "itchUrl": "https://ghostkwebb.itch.io/impossible-pacman",
+    "githubUrl": "https://github.com/Ghostkwebb/IITP-Retro-Revive",
+    "awards":["Third Place At IITK Retro Revive Game jam"]
+  },
+  {
+    "id": "head-ball-inspired",
+    "title": "Head Ball PC [Unoffical]",
+    "description": "Made for ChennaiGame internship.",
+    "longDescription": "This project is a fan-made game that brings the exciting gameplay of Head Ball to your PC.",
+    "images": [
+      "/images/projects/hbi-1.png",
+      "/images/projects/hbi-2.png"
+    ],
+    "technologies": [
+      "Unity",
+      "C#",
+      "Visual Studio Code",
+      "Photoshop",
+      "Git + GitHub for version control",
+      "itch.io for game distribution"
+    ],
+    "teamMembers": [
+      "sharad-mayank-sinha"
+    ],
+    "status": "completed",
+    "itchUrl": "https://ghostkwebb.itch.io/head-ball-inspired-pc",
+    "githubUrl": "https://github.com/Ghostkwebb/Head-Ball-Inspired"
+  },
+  {
+    "id": "galaxy-ruler",
+    "title": "Galaxy Ruler",
+    "description": "A fast-paced pixel-art space shooter where you pilot powerful ships, battle alien swarms, survive deadly hazards, and conquer the galaxy one level at a time.",
+    "longDescription": "Galaxy Ruler is a dynamic pixel-art space shooter where you take control of powerful ships, battle deadly alien swarms, dodge hazards, and rise through the galaxy to become the ultimate ruler.",
+    "images": [
+      "/images/projects/galaxy-ruler-1.png",
+      "/images/projects/galaxy-ruler-2.png",
+      "/images/projects/galaxy-ruler-3.png",
+      "/images/projects/galaxy-ruler-4.png"
+    ],
+    "technologies": [
+      "Unity",
+      "C#",
+      "Visual Studio 2022",
+      "Git + GitHub for version control",
+      "itch.io for game distribution"
+    ],
+    "teamMembers": [
+      "suyash-abhishek-kumar",
+      "radhvik-sai",
+      "sanjithkumar-sukumar"
+    ],
+    "status": "completed",
+    "itchUrl":"https://cheesebit27.itch.io/galaxy-ruler",
+    "githubUrl": "https://github.com/Suyash-Abhishek-Kumar/Galaxy-Ruler"
+  },
+  {
+    "id": "speech-recog-game",
+    "title": "Speech Recognition Game",
+    "description": "Game Made For Indian Institute of Technology (IIT), Guwahati GAMEDΞON GameJam",
+    "longDescription":"A game where specefic words control how we move forward in the game",
+    "images":[],
+    "technologies": [
+      "Unity",
+      "C#"
+    ],
+    "teamMembers": [
+      "sharad-mayank-sinha",
+      "gaurav-mahaptra"
+    ],
+    "status": "in-progress",
+    "githubUrl": "https://github.com/Ghostkwebb/Speech-Recognition-Concept-Game"
+  },
+  {
+    "id": "club-members-game",
+    "title": "Games Made By Club Members",
+    "description": "Groups of teams in the club making games and planning many more.",
+    "longDescription": "Our club members are constantly working on exciting new game projects. From indie adventures to innovative gameplay mechanics, our teams collaborate to bring creative visions to life. Stay tuned for upcoming releases and join us in our game development journey!",
+    "images":[],
+    "technologies": [],
+    "teamMembers": [
+    ],
+    "status": "planned"
+  }
+
+]

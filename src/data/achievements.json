@@ -1,0 +1,23 @@
+[
+  {
+    "id": "club-start",
+    "title": "Beginning Of The Club",
+    "description": "The start of the club to create something great and do something different.",
+    "date": "2024-11-1",
+    "type": "milestone",
+    "placement": "Starting of The Club",
+    "competition": "Club Growth",
+    "image": "/images/achievements/gameforgeClubCert.jpg"
+  },
+  {
+    "id": "iiitdm-ieee-paper",
+    "title": "First Place - IIITDM IEEE Paper Presentation",
+    "description": "Secured 1st place in the IEEE Paper Presentation at Samgatha Vashisht 2025, IIITDM Kancheepuram! 🎉 Our research, 'Path Finding Algorithm A in Video Games and Integrating Artificial Intelligence,' explored optimizing AI-driven navigation for seamless and intelligent gameplay experiences.",
+    "date": "2025-03-31",
+    "type": "competition",
+    "placement": "1st Place",
+    "competition": "IEEE Paper Presentation at Samgatha Vashisht 2025, IIITDM Kancheepuram",
+    "image": "/images/achievements/iiitdm.jpeg"
+  }
+]
+

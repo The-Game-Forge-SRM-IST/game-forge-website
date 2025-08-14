@@ -1,0 +1,410 @@
+[
+  {
+    "id": "sharad-mayank-sinha",
+    "name": "Sharad Mayank Sinha",
+    "role": "Club Founder & Game Developer Lead",
+    "department": "Development",
+    "image": "/images/team/sharad.webp",
+    "bio": "Passionate game developer with 1+ years of experience in Unity. Leading The Game Forge towards innovative game development projects and fostering a collaborative learning environment.",
+    "skills": [
+      "Unity",
+      "C#",
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "Project Management",
+      "Game Design",
+      "Game Development",
+      "Leadership",
+      "Agile Development"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/sharad-mayank-sinha/",
+      "github": "https://github.com/ghostkwebb/",
+      "portfolio": "https://ghostkwebb.vercel.app/"
+    }
+  },
+  {
+    "id": "md-mushir-alam",
+    "name": "Md Mushir Alam",
+    "role": "Club Founder & Game Design Lead",
+    "department": "Design",
+    "image": "/images/team/mushir.webp",
+    "bio": "I am a passionate Software Engineer. I love Machine learning, Deep Learning, NLP and try to be better everyday.",
+    "skills": [
+      "Machine Learning",
+      "Deep Learning",
+      "C++",
+      "C",
+      "Python"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/md-mushir-alam-32a765295/",
+      "github": "https://github.com/mushir2004"
+    }
+  },
+  {
+    "id": "gaurav-mahaptra",
+    "name": "Gaurav Mahaptra",
+    "role": "Game Design Lead",
+    "department": "Design",
+    "image": "/images/team/gaurav.webp",
+    "bio": "Game designer passionate about building fun and engaging player experiences through smart mechanics and creative level design.",
+    "skills": [
+      "Unity",
+      "C#",
+      "Game Design",
+      "Game Development",
+      "Leadership"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/gaurav-mahapatra-417673280/",
+      "github": "https://github.com/mahapatra77gaurav"
+    }
+  },
+  {
+    "id": "avdhoot-amol-chaubal",
+    "name": "Avdhoot Amol Chaubal",
+    "role": "Corporate Lead",
+    "department": "Management",
+    "image": "/images/team/avdhoot.webp",
+    "bio": "AI enthusiast with experience in building ML workflows, chatbots, and automation tools. As the Corporate Lead at The Game Forge, I actively manage partnerships, lead sponsorship outreach, and represent the club in external collaborations.",
+    "skills": [
+      "Sponsorship Outreach",
+      "Corporate Communication",
+      "Event Collaboration",
+      "Leadership",
+      "Team Coordination",
+      "Data Science",
+      "Workflow Automation",
+      "Machine Learning",
+      "Python"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/avdhoot-chaubal/",
+      "github": "https://github.com/AvdhootC"
+    }
+  },
+  {
+    "id": "pawani-gupta",
+    "name": "Pawani Gupta",
+    "role": "Creative Lead",
+    "department": "Management",
+    "image": "/images/team/pawani.jpeg",
+    "bio": "Leading creative direction and coordinating ideas from concept to design.",
+    "skills": [
+      "Canva",
+      "Google Workspace",
+      "Level Design Thinking",
+      "Creative Direction",
+      "UI/UX Design Principles"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/pawani-gupta-a2a75a364"
+    }
+  },
+  {
+    "id": "shashvat-rajora",
+    "name": "Shashvat Rajora",
+    "role": "AI Research Lead",
+    "department": "AI For Game Dev",
+    "image": "/images/team/rajora.jpeg",
+    "bio": "AI researcher specializing in game AI, procedural content generation, and machine learning applications in game development. Leading innovative AI solutions for next-generation gaming experiences.",
+    "skills": [
+      "Machine Learning",
+      "Game AI",
+      "Neural Networks",
+      "Python",
+      "TensorFlow",
+      "Unity ML-Agents",
+      "Reinforcement Learning"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/shashvat-rajora-315903288/",
+      "github": "https://github.com/ShashvatRajora"
+    }
+  },
+  {
+    "id": "rishav-raj",
+    "name": "Rishav Raj",
+    "role": "Creatives Memeber",
+    "department": "Management",
+    "image": "/images/team/rishav.webp",
+    "bio": "Coordinating ideas from concept to design.",
+    "skills": [
+      "Video Editing",
+      "Canva",
+      "UI/UX"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/rishav-raj-52796b355/",
+      "github": "https://github.com/rishavraj56"
+    }
+  },
+  {
+    "id": "dineshwar-nagubothu",
+    "name": "Dineshwar Nagubothu",
+    "role": "Corporate for Sponsers",
+    "department": "Management",
+    "image": "/images/team/dinesh.jpeg",
+    "bio": "wannabe a android dev , B.Tech student SRMIST don't hesitate to dm lets connect through telegram @dinonomous",
+    "skills": [
+      "MERN Stack",
+      "Cloud Architect",
+      "C",
+      "C++",
+      "Python",
+      "Django",
+      "AI & ML"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/dineshwar-nagubothu/",
+      "github": "https://github.com/dinonomous",
+      "portfolio": "https://dineshwar.vercel.app/"
+    }
+  },
+  {
+    "id": "prajjwal-rawat",
+    "name": "Prajjwal Rawat",
+    "role": "AI For Game Dev Researcher",
+    "department": "AI For Game Dev",
+    "image": "/images/team/prajjwal.jpeg",
+    "bio": "I'm Prajjwal, currently pursuing a B.Tech in Computer Science and Artificial Intelligence & Machine Learning (CSE AIML) at SRM Chennai. I have a deep passion for AI and Data Science, which aligns with my specialization. My interest in coding comes from its ability to solve real-world problems through well-crafted algorithms and software. I love the logical thinking it demands and the satisfaction of creating solutions from scratch.",
+    "skills": [
+      "Web Development",
+      "Machine Learning",
+      "Game AI",
+      "Neural Networks",
+      "Python",
+      "TensorFlow",
+      "Unity ML-Agents",
+      "Reinforcement Learning"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/prajjwal-rawat-886151278/",
+      "github": "https://github.com/prajjwal-17"
+    }
+  },
+  {
+    "id": "saswat-kumar-adibhatia",
+    "name": "Saswat Kumar Adibhatia",
+    "role": "Corporate Member",
+    "department": "Management",
+    "image": "/images/team/saswat.jpeg",
+    "bio": "He too cool to mention something for his bio.",
+    "skills": [
+      "MERN Stack",
+      "Cloud Architect",
+      "C",
+      "C++",
+      "Python",
+      "Django",
+      "Cybersecurity"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/saswat-kumar-adibhatia-9bb07931b/"
+    }
+  },
+  {
+    "id": "vivek-aryan",
+    "name": "Vivek Aryan",
+    "role": "Creatives and Corporate",
+    "department": "Management",
+    "image": "/images/team/vivek-aryan.jpeg",
+    "bio": "Gym Rat and Great Cook",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/vivek-aryan-07a8932b5/"
+    }
+  },
+  {
+    "id": "surya-kancharana",
+    "name": "Surya Kancharana",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/surya-kancharana.jpeg",
+    "bio": "I'm Surya Game forge club member",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "Jupyter Notebook",
+      "Game Design"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/surya-kancharana-72b283297",
+      "github": "https://github.com/surya-coding-1"
+    }
+  },
+  {
+    "id": "anshu-aman",
+    "name": "Anshu Aman",
+    "role": "Creatives Memeber",
+    "department": "Management",
+    "image": "/images/team/anshu.jpeg",
+    "bio": "I'm Surya Game forge club member",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/anshu-aman/",
+      "github": "https://github.com/09anshu"
+    }
+  },
+  {
+    "id": "menaha-bhandari",
+    "name": "Menaha Bhandari",
+    "role": "Game Design/Art",
+    "department": "Art",
+    "image": "/images/team/menahaha.jpeg",
+    "bio": "My name is menaha, I'm a beginner game dev and I like games that look visually interesting.",
+    "skills": [
+      "C",
+      "JavaScript",
+      "Game Design",
+      "Game Art"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/menaha-bhandari-b616b2348",
+      "github": "https://github.com/menahaha"
+    }
+  },
+  {
+    "id": "sulthan-thasleem",
+    "name": "Sulthan Thasleem",
+    "role": "Game Development",
+    "department": "Development",
+    "image": "/images/team/thasleem.jpeg",
+    "bio": "I'm thasleem Game forge club member",
+    "skills": [
+      "C",
+      "JavaScript",
+      "Game Development"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/sulthan-thasleem-103a8a323",
+      "github": "https://github.com/LesToqz"
+    }
+  },
+  {
+    "id": "suyash-abhishek-kumar",
+    "name": "Suyash Abhishek Kumar",
+    "role": "Game Development",
+    "department": "Development",
+    "image": "/images/team/suyash.jpeg",
+    "bio": "I'm suyash Game forge club member",
+    "skills": [
+      "C",
+      "C#",
+      "C++",
+      "Python",
+      "HTML",
+      "Game Development"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/suyash-abhishek-kumar-96ba0a2ab/",
+      "github": "https://github.com/Suyash-Abhishek-Kumar"
+    }
+  },
+  {
+    "id": "adamya-srivastava",
+    "name": "Adamya Srivastava",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/adamya.png",
+    "bio": "Passionate about game design and development, I love blending technology and creativity to build immersive experiences. Currently pursuing BTech in Electronics and Communication Engineering at SRMIST, I’m exploring programming, AI, and interactive design to bring ideas to life. Always eager to learn, collaborate, and create something exciting!",
+    "skills": [
+      "C",
+      "C#",
+      "Python",
+      "Game Development"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/adamya-srivastava-405670291",
+      "github": "https://github.com/AdamyaDay"
+    }
+  },
+  {
+    "id": "t-siddhartha-reddy",
+    "name": "T.Siddhartha Reddy",
+    "role": "Game Development",
+    "department": "Development",
+    "image": "/images/team/t.siddharthareddy.jpeg",
+    "bio": "I'm Thimmareddygari Siddhartha Reddy — a Computer Science student passionate about building interactive, meaningful digital experiences. As a game developer at SRM's Game Forge club, I design 🕹️ gameplay mechanics, program 👾 character logic, and bring ideas to life using Unity and C#.",
+    "skills": [
+      "C",
+      "Game Development"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/t-siddhartha-reddy-bb4199334",
+      "github": "https://github.com/Siddhu0617"
+    }
+  },
+  {
+    "id": "udayan-singh",
+    "name": "Udayan Singh",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/udayan.jpeg",
+    "bio": "I'm Udayan Game forge club member",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "Game Design"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/udayan-singh-098230336/",
+      "github": "https://github.com/DRT709"
+    }
+  },
+  {
+    "id": "radhvik-sai",
+    "name": "Radhvik Sai",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/RADHVIK.jpeg",
+    "bio": "I am an engineering student at SRMIST KTR chennai, with a keen interest in technology innovation. I am member of Business Development and External at AIESEC in Chennai. Photography, videograhy, 3D modeling and animation, dancing, playing football and writing are my hobbies.",
+    "skills": [
+      "C",
+      "Python",
+      "Java",
+      "TypeScript",
+      "Game Design"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/radhvik-sai-2b61a92b2",
+      "github": "https://github.com/dnmxryder"
+    }
+  },
+  {
+    "id": "sanjithkumar-sukumar",
+    "name": "Sanjithkumar Sukumar",
+    "role": "Game Art",
+    "department": "Art",
+    "image": "/images/team/sanjithkumar.jpg",
+    "bio": "I'm Sanjithkumar Sukumar, a passionate Computer Science student at SRMIST with strong interests in Python development, UI/UX design, and content creation.",
+    "skills": [
+      "C",
+      "C++",
+      "Python",
+      "JavaScript",
+      "Game Art"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/sanjithkumar-sukumar/",
+      "github": "https://github.com/sanjiri2318"
+    }
+  }
+]
