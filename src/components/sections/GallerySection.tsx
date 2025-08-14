@@ -143,7 +143,7 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
             <Filter size={20} className="text-gray-400 mr-2" />
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
                 selectedCategory === 'all'
                   ? 'bg-white text-gray-900'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
@@ -155,7 +155,7 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${
                   selectedCategory === category
                     ? 'bg-white text-gray-900'
                     : `bg-gray-800 text-gray-300 hover:bg-gray-700 ${categoryColors[category as keyof typeof categoryColors]}`
@@ -208,13 +208,11 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
           {filteredImages.map((image, index) => (
             <motion.div
               key={`${selectedCategory}-${image.id}`}
-              className={`group cursor-pointer gpu-accelerated ${viewMode === 'masonry' ? 'break-inside-avoid' : ''}`}
+              className={`group cursor-pointer ${viewMode === 'masonry' ? 'break-inside-avoid' : ''}`}
               onClick={() => openLightbox(index)}
               variants={canAnimate ? variants.item : {}}
-              whileHover={canAnimate ? { scale: 1.02 } : {}}
-              whileTap={canAnimate ? { scale: 0.98 } : {}}
             >
-              <div className="relative overflow-hidden rounded-xl bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-300">
+              <div className="relative overflow-hidden rounded-xl bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-500">
                 {/* Image */}
                 <div className="relative aspect-auto">
                   <Image
@@ -222,17 +220,17 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
                     alt={image.alt}
                     width={400}
                     height={300}
-                    className={`w-full h-auto object-cover transition-all duration-500 ${
+                    className={`w-full h-auto object-cover transition-opacity duration-500 ${
                       imagesLoaded.has(image.id) 
-                        ? 'opacity-100 scale-100' 
-                        : 'opacity-0 scale-110'
-                    } group-hover:scale-110`}
+                        ? 'opacity-100' 
+                        : 'opacity-0'
+                    }`}
                     onLoad={() => handleImageLoad(image.id)}
                     loading="lazy"
                   />
                   
                   {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Category badge */}
                   <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium ${
@@ -243,7 +241,7 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
                 </div>
 
                 {/* Image info */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <h3 className="font-semibold text-lg mb-1">{image.title}</h3>
                   {image.description && (
                     <p className="text-sm text-gray-300 mb-2 line-clamp-2">
