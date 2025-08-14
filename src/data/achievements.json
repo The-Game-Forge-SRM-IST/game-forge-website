@@ -10,6 +10,16 @@
     "image": "/images/achievements/gameforgeClubCert.jpg"
   },
   {
+    "id": "iip-game-jam",
+    "title": "Third Place - IITP Virtual Playground-Game Development Challenge",
+    "description": "Secured 3rd place in the Virtual Playground-Game Development Challenge 🎉. Theme was retro revive and we made a impossible pacman game.",
+    "date": "2025-05-10",
+    "type": "competition",
+    "placement": "3rd Place",
+    "competition": "IITP Virtual Playground-Game Development Challenge",
+    "image": "/images/achievements/iitp-vitual-playground.png"
+  },
+  {
     "id": "iiitdm-ieee-paper",
     "title": "First Place - IIITDM IEEE Paper Presentation",
     "description": "Secured 1st place in the IEEE Paper Presentation at Samgatha Vashisht 2025, IIITDM Kancheepuram! 🎉 Our research, 'Path Finding Algorithm A in Video Games and Integrating Artificial Intelligence,' explored optimizing AI-driven navigation for seamless and intelligent gameplay experiences.",
