@@ -100,8 +100,8 @@ export default function AchievementCard({ achievement, index, isLeft = false }: 
       <div
         className={`bg-gradient-to-br ${getTypeColor(achievement.type)} 
                    backdrop-blur-sm border rounded-xl overflow-hidden
-                   hover:shadow-2xl hover:shadow-black/50 transition-all duration-300
-                   cursor-pointer group hover:scale-[1.02] hover:-translate-y-1`}
+                   hover:shadow-xl transition-shadow duration-500
+                   cursor-pointer group`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* Background Pattern */}
@@ -134,13 +134,13 @@ export default function AchievementCard({ achievement, index, isLeft = false }: 
             <motion.div
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.3 }}
-              className="text-gray-400 group-hover:text-white transition-colors"
+              className="text-gray-400 transition-colors duration-300"
             >
               <ChevronDown className="w-5 h-5" />
             </motion.div>
           </div>
 
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text transition-all duration-300">
+          <h3 className="text-xl font-bold text-white mb-2 transition-colors duration-300">
             {achievement.title}
           </h3>
           
@@ -222,8 +222,8 @@ export default function AchievementCard({ achievement, index, isLeft = false }: 
           </div>
         </motion.div>
 
-        {/* Animated Border */}
-        <div className="absolute inset-0 rounded-xl border-2 border-transparent bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Subtle Border Enhancement */}
+        <div className="absolute inset-0 rounded-xl border border-white/5 group-hover:border-white/10 transition-colors duration-500" />
       </div>
     </div>
   );

@@ -198,13 +198,10 @@ const AchievementsSection = memo(function AchievementsSection() {
             <motion.button
               key={type}
               onClick={() => setActiveFilter(type)}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 font-medium
+              className={`px-6 py-3 rounded-full border transition-colors duration-300 font-medium
                          flex items-center gap-2 ${getFilterColor(type)}
-                         ${activeFilter === type ? 'scale-105' : 'scale-100'}
-                         text-gray-300 border-gray-600/50 gpu-accelerated`}
+                         text-gray-300 border-gray-600/50`}
               variants={canAnimate ? variants.item : {}}
-              whileHover={canAnimate ? { scale: 1.05 } : {}}
-              whileTap={canAnimate ? { scale: 0.95 } : {}}
             >
               {getFilterIcon(type)}
               {type}

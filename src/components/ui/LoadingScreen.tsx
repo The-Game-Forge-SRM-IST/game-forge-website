@@ -209,7 +209,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
           </div>
 
           {/* Loading Content */}
-          <div className="relative z-10 text-center max-w-md mx-auto px-6">
+          <div className="relative z-10 text-center max-w-lg mx-auto px-6">
             {/* Epic Animated Logo */}
             <AnimatePresence>
               {showLogo && (
@@ -223,9 +223,9 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     stiffness: 80,
                     damping: 12
                   }}
-                  className="mb-12"
+                  className="mb-8"
                 >
-                  <div className="w-56 h-56 mx-auto mb-10 relative">
+                  <div className="w-32 h-32 mx-auto mb-6 relative">
                     {/* Outer rotating ring with gradient */}
                     <motion.div
                       animate={{ rotate: 360 }}
@@ -296,7 +296,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                         ]
                       }}
                       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                      className="absolute inset-16 rounded-full flex items-center justify-center shadow-2xl overflow-hidden backdrop-blur-sm"
+                      className="absolute inset-8 rounded-full flex items-center justify-center shadow-2xl overflow-hidden backdrop-blur-sm"
                       style={{
                         background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(34, 197, 94, 0.9) 25%, rgba(239, 68, 68, 0.9) 50%, rgba(245, 158, 11, 0.9) 75%, rgba(139, 92, 246, 0.9) 100%)',
                         border: '2px solid rgba(255, 255, 255, 0.2)'
@@ -315,7 +315,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                           scale: [1, 1.05, 1.02, 1]
                         }}
                         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                        className="w-28 h-28 relative rounded-full overflow-hidden"
+                        className="w-20 h-20 relative rounded-full overflow-hidden"
                       >
                         <Image
                           src="/images/ClubLogo.png"
@@ -344,7 +344,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                           scale: [1, 1.1, 1.05, 1]
                         }}
                         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                        className="text-white font-bold text-5xl tracking-wider drop-shadow-2xl"
+                        className="text-white font-bold text-3xl tracking-wider drop-shadow-2xl"
                         style={{ 
                           display: 'none',
                           fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -360,7 +360,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     initial={{ opacity: 0, y: 40, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: 0.8, duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tight relative"
+                    className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight relative"
                   >
                     <motion.span 
                       className="relative inline-block"
@@ -424,7 +424,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                       scale: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' },
                       y: { duration: 0.8, delay: 1.2 }
                     }}
-                    className="text-gray-100 text-2xl md:text-3xl font-semibold relative"
+                    className="text-gray-100 text-lg md:text-xl font-semibold relative"
                     style={{
                       textShadow: '0 0 20px rgba(255, 255, 255, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5)'
                     }}
@@ -600,7 +600,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2, duration: 0.6, ease: 'easeOut' }}
-              className="flex justify-center space-x-6 mt-12"
+              className="flex justify-center space-x-4 mt-8"
             >
               {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                 <motion.div
@@ -609,7 +609,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                 >
                   {/* Main orb */}
                   <motion.div
-                    className="w-5 h-5 rounded-full relative"
+                    className="w-3 h-3 rounded-full relative"
                     style={{
                       background: [
                         'linear-gradient(135deg, #3b82f6, #1d4ed8)',

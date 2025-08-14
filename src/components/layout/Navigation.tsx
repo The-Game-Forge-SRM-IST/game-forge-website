@@ -152,9 +152,9 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                     handleSectionClick(item.id);
                   }}
                   onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-all duration-200 relative hover:bg-white/10 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black hover:scale-105 ${
+                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-colors duration-300 relative hover:bg-white/10 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
                     activeSection === item.id
-                      ? 'text-green-400 bg-green-400/10 shadow-lg shadow-green-400/20 scale-105'
+                      ? 'text-green-400 bg-green-400/10 shadow-lg shadow-green-400/20'
                       : 'text-gray-300 hover:text-white'
                   }`}
                   aria-current={activeSection === item.id ? 'page' : undefined}
@@ -217,7 +217,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                     handleSectionClick(item.id);
                   }}
                   onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-all duration-150 touch-manipulation relative min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
+                  className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 touch-manipulation relative min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
                     activeSection === item.id
                       ? 'text-green-400 bg-green-400/10 border border-green-400/20'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'

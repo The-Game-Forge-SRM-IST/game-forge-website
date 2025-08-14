@@ -53,8 +53,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         if (progress < 1) {
           requestAnimationFrame(animateScroll);
         } else {
-          // Small delay before re-enabling section detection to prevent conflicts
-          setTimeout(() => setIsNavigating(false), 200);
+          // Brief delay before re-enabling section detection
+          setTimeout(() => setIsNavigating(false), 100);
         }
       };
 
@@ -64,6 +64,43 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }
   }, []);
 
+  // Simple, elegant scroll-based section detection
+  const updateActiveSection = useCallback(() => {
+    if (isNavigating) return;
+
+    const sections = ['home', 'team', 'projects', 'achievements', 'gallery', 'events', 'announcements', 'apply', 'contact'];
+    const scrollY = window.scrollY;
+    const headerOffset = 100;
+
+    // Handle top of page
+    if (scrollY < 200) {
+      if (activeSection !== 'home') {
+        setActiveSection('home');
+      }
+      return;
+    }
+
+    // Find the section that's currently most visible
+    let currentSection = 'home';
+    
+    for (const sectionId of sections) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        
+        // Check if we've scrolled past this section's start point
+        if (scrollY >= elementTop - headerOffset) {
+          currentSection = sectionId;
+        }
+      }
+    }
+
+    if (currentSection !== activeSection) {
+      setActiveSection(currentSection);
+    }
+  }, [activeSection, isNavigating]);
+
   // Ultra-optimized scroll handler with RAF throttling
   const throttledScrollHandler = useMemo(() => 
     createRAFThrottle(() => {
@@ -71,112 +108,28 @@ export default function AppLayout({ children }: AppLayoutProps) {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(scrollY / maxScroll);
       
-      // Additional check for home section when at the very top
-      if (!isNavigating && scrollY < 50 && activeSection !== 'home') {
-        setActiveSection('home');
-      }
-    }), [isNavigating, activeSection]
+      // Update active section based on scroll position
+      updateActiveSection();
+    }), [updateActiveSection]
   );
 
-  // High-performance section detection with intersection observer
+  // Simple scroll-based section detection
   useEffect(() => {
     // Initialize GPU optimizations
     optimizeTransforms();
     
-    // Set up scroll progress tracking
+    // Set up scroll progress tracking and section detection
     window.addEventListener('scroll', throttledScrollHandler, { passive: true });
     
-    // Set up section detection for navigation highlighting
-    const sections = ['home', 'team', 'projects', 'achievements', 'gallery', 'events', 'announcements', 'apply', 'contact'];
-    const sectionElements = sections.map(id => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
-    
-    if (sectionElements.length === 0) {
-      // If sections aren't ready yet, try again after a short delay
-      const retryTimeout = setTimeout(() => {
-        const retryElements = sections.map(id => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
-        if (retryElements.length > 0) {
-          setupSectionObserver(retryElements, sections);
-        }
-      }, 1000);
-      
-      return () => {
-        clearTimeout(retryTimeout);
-        window.removeEventListener('scroll', throttledScrollHandler);
-      };
-    }
-    
-    const observer = setupSectionObserver(sectionElements, sections);
+    // Initial section detection
+    updateActiveSection();
     
     return () => {
       window.removeEventListener('scroll', throttledScrollHandler);
-      observer?.disconnect();
     };
-  }, [throttledScrollHandler]);
+  }, [throttledScrollHandler, updateActiveSection]);
 
-  // Setup intersection observer for section detection
-  const setupSectionObserver = (sectionElements: HTMLElement[], sections: string[]) => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Skip updates during manual navigation to prevent conflicts
-        if (isNavigating) return;
-        
-        // Special handling for when we're at the very top of the page
-        if (window.scrollY < 100) {
-          if (activeSection !== 'home') {
-            setActiveSection('home');
-          }
-          return;
-        }
-        
-        // Create a map of all currently intersecting sections with their visibility
-        const visibleSections = new Map<string, number>();
-        
-        entries.forEach((entry) => {
-          const sectionId = entry.target.id;
-          if (entry.isIntersecting && sections.includes(sectionId)) {
-            // Calculate a more accurate visibility score
-            const rect = entry.target.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const headerOffset = 80;
-            
-            // Calculate how much of the section is in the "active" viewport area
-            const visibleTop = Math.max(rect.top, headerOffset);
-            const visibleBottom = Math.min(rect.bottom, viewportHeight);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-            const sectionHeight = rect.height;
-            
-            // Normalize the visibility score (0-1)
-            const visibilityScore = visibleHeight / Math.min(sectionHeight, viewportHeight - headerOffset);
-            
-            visibleSections.set(sectionId, visibilityScore);
-          }
-        });
-        
-        // Find the section with the highest visibility score
-        let bestSection = 'home';
-        let bestScore = 0;
-        
-        for (const [sectionId, score] of visibleSections.entries()) {
-          if (score > bestScore) {
-            bestScore = score;
-            bestSection = sectionId;
-          }
-        }
-        
-        // Only update if we have a good visibility score and it's different from current
-        if (bestScore > 0.2 && bestSection !== activeSection) {
-          setActiveSection(bestSection);
-        }
-      },
-      {
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1], // More granular thresholds
-        rootMargin: '-80px 0px -20% 0px' // Less aggressive bottom margin to better detect sections
-      }
-    );
-    
-    sectionElements.forEach(element => observer.observe(element));
-    return observer;
-  };
+
 
   return (
     <div className="min-h-screen text-white relative">
