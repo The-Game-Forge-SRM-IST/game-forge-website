@@ -150,7 +150,7 @@ function GeometricShapes({ activeSection }: { activeSection: string }) {
     return (
         <group ref={groupRef}>
             {shapes.map((shape, i) => (
-                <mesh key={i} position={shape.position} scale={shape.scale}>
+                <mesh key={i} position={shape.position as any} scale={shape.scale as any}>
                     {shape.type === 0 && <sphereGeometry args={[0.6, 32, 32]} />}
                     {shape.type === 1 && <boxGeometry args={[1, 1, 1]} />}
                     {shape.type === 2 && <octahedronGeometry args={[0.7, 2]} />}
@@ -200,7 +200,7 @@ function EnergyOrbs({ activeSection }: { activeSection: string }) {
     return (
         <group ref={groupRef}>
             {orbs.map((orb, i) => (
-                <mesh key={i} position={orb.position}>
+                <mesh key={i} position={orb.position as any}>
                     <sphereGeometry args={[0.4, 32, 32]} />
                     <meshBasicMaterial transparent opacity={0.7} />
                 </mesh>

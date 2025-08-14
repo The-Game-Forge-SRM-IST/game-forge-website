@@ -107,7 +107,7 @@ function FloatingShapes({ activeSection, scrollProgress }: { activeSection: stri
     return (
         <group ref={groupRef}>
             {shapes.map((shape, i) => (
-                <mesh key={i} position={shape.position} scale={shape.scale}>
+                <mesh key={i} position={shape.position as any} scale={shape.scale as any}>
                     {shape.type === 0 && <sphereGeometry args={[0.5, 16, 16]} />}
                     {shape.type === 1 && <boxGeometry args={[0.8, 0.8, 0.8]} />}
                     {shape.type === 2 && <octahedronGeometry args={[0.6]} />}
