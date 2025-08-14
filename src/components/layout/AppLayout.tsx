@@ -70,7 +70,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
       const scrollY = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(scrollY / maxScroll);
-    }), []
+      
+      // Additional check for home section when at the very top
+      if (!isNavigating && scrollY < 50 && activeSection !== 'home') {
+        setActiveSection('home');
+      }
+    }), [isNavigating, activeSection]
   );
 
   // High-performance section detection with intersection observer
@@ -115,28 +120,57 @@ export default function AppLayout({ children }: AppLayoutProps) {
         // Skip updates during manual navigation to prevent conflicts
         if (isNavigating) return;
         
-        // Find the section that's most visible
-        let maxVisibility = 0;
-        let mostVisibleSection = 'home';
+        // Special handling for when we're at the very top of the page
+        if (window.scrollY < 100) {
+          if (activeSection !== 'home') {
+            setActiveSection('home');
+          }
+          return;
+        }
+        
+        // Create a map of all currently intersecting sections with their visibility
+        const visibleSections = new Map<string, number>();
         
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > maxVisibility) {
-            maxVisibility = entry.intersectionRatio;
-            const sectionId = entry.target.id;
-            if (sections.includes(sectionId)) {
-              mostVisibleSection = sectionId;
-            }
+          const sectionId = entry.target.id;
+          if (entry.isIntersecting && sections.includes(sectionId)) {
+            // Calculate a more accurate visibility score
+            const rect = entry.target.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const headerOffset = 80;
+            
+            // Calculate how much of the section is in the "active" viewport area
+            const visibleTop = Math.max(rect.top, headerOffset);
+            const visibleBottom = Math.min(rect.bottom, viewportHeight);
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+            const sectionHeight = rect.height;
+            
+            // Normalize the visibility score (0-1)
+            const visibilityScore = visibleHeight / Math.min(sectionHeight, viewportHeight - headerOffset);
+            
+            visibleSections.set(sectionId, visibilityScore);
           }
         });
         
-        // Only update if we found a visible section and it's different from current
-        if (maxVisibility > 0.1 && mostVisibleSection !== activeSection) {
-          setActiveSection(mostVisibleSection);
+        // Find the section with the highest visibility score
+        let bestSection = 'home';
+        let bestScore = 0;
+        
+        for (const [sectionId, score] of visibleSections.entries()) {
+          if (score > bestScore) {
+            bestScore = score;
+            bestSection = sectionId;
+          }
+        }
+        
+        // Only update if we have a good visibility score and it's different from current
+        if (bestScore > 0.2 && bestSection !== activeSection) {
+          setActiveSection(bestSection);
         }
       },
       {
-        threshold: [0.1, 0.3, 0.5, 0.7], // Multiple thresholds for better detection
-        rootMargin: '-80px 0px -50% 0px' // Account for header and focus on upper part of viewport
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1], // More granular thresholds
+        rootMargin: '-80px 0px -20% 0px' // Less aggressive bottom margin to better detect sections
       }
     );
     
