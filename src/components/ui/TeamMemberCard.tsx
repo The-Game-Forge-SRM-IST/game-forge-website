@@ -1,62 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo, lazy, Suspense } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { TeamMember } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { RippleEffect, MagneticHover } from './MicroAnimations';
-import TeamMemberModal from './TeamMemberModal';
+
+const TeamMemberModal = lazy(() => import('./TeamMemberModal'));
 
 interface TeamMemberCardProps {
   member: TeamMember;
   index: number;
 }
 
-export default function TeamMemberCard({ member, index }: TeamMemberCardProps) {
+const getDepartmentColor = (department: string) => {
+  switch (department) {
+    case 'Development':
+      return 'from-blue-500/20 to-blue-600/20 border-blue-500/30';
+    case 'Design':
+      return 'from-green-500/20 to-green-600/20 border-green-500/30';
+    case 'Art':
+      return 'from-purple-500/20 to-purple-600/20 border-purple-500/30';
+    case 'Management':
+      return 'from-red-500/20 to-red-600/20 border-red-500/30';
+    default:
+      return 'from-gray-500/20 to-gray-600/20 border-gray-500/30';
+  }
+};
+
+function TeamMemberCard({ member, index }: TeamMemberCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isMobile } = useResponsive();
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 50,
-      scale: 0.9
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      scale: 1
-    }
-  };
-
-  const hoverVariants = {
-    rest: { 
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.3 }
-    },
-    hover: { 
-      scale: 1.05,
-      y: -5,
-      transition: { duration: 0.3 }
-    }
-  };
-
-  const getDepartmentColor = (department: string) => {
-    switch (department) {
-      case 'Development':
-        return 'from-blue-500/20 to-blue-600/20 border-blue-500/30';
-      case 'Design':
-        return 'from-green-500/20 to-green-600/20 border-green-500/30';
-      case 'Art':
-        return 'from-purple-500/20 to-purple-600/20 border-purple-500/30';
-      case 'Management':
-        return 'from-red-500/20 to-red-600/20 border-red-500/30';
-      default:
-        return 'from-gray-500/20 to-gray-600/20 border-gray-500/30';
-    }
-  };
 
   const handleCardClick = () => {
     setIsModalOpen(true);
@@ -156,11 +131,17 @@ export default function TeamMemberCard({ member, index }: TeamMemberCardProps) {
       </div>
 
       {/* Modal */}
-      <TeamMemberModal
-        member={member}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <TeamMemberModal
+            member={member}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </Suspense>
+      )}
     </>
   );
 }
+
+export default memo(TeamMemberCard);

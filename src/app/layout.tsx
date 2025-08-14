@@ -4,7 +4,6 @@ import "./globals.css";
 import PerformanceMonitor from "@/components/ui/PerformanceMonitor";
 import ClientOnly from "@/components/ui/ClientOnly";
 import SkipLink from "@/components/ui/SkipLink";
-import { LoadingProvider } from "@/providers/LoadingProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,30 +50,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LoadingProvider>
-          <SkipLink targetId="main-content">Skip to main content</SkipLink>
-          <SkipLink targetId="navigation">Skip to navigation</SkipLink>
-          {children}
-          <ClientOnly>
-            <PerformanceMonitor />
-          </ClientOnly>
-          
-          {/* Live region for screen reader announcements */}
-          <div
-            id="live-region"
-            aria-live="polite"
-            aria-atomic="true"
-            className="sr-only"
-          />
-          
-          {/* Assertive live region for urgent announcements */}
-          <div
-            id="live-region-assertive"
-            aria-live="assertive"
-            aria-atomic="true"
-            className="sr-only"
-          />
-        </LoadingProvider>
+        <SkipLink targetId="main-content">Skip to main content</SkipLink>
+        <SkipLink targetId="navigation">Skip to navigation</SkipLink>
+        {children}
+        <ClientOnly>
+          <PerformanceMonitor />
+        </ClientOnly>
+        
+        {/* Live region for screen reader announcements */}
+        <div
+          id="live-region"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+        />
+        
+        {/* Assertive live region for urgent announcements */}
+        <div
+          id="live-region-assertive"
+          aria-live="assertive"
+          aria-atomic="true"
+          className="sr-only"
+        />
       </body>
     </html>
   );

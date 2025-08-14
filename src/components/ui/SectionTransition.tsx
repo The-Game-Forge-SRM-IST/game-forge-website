@@ -131,8 +131,8 @@ export default function SectionTransition({
       initial={shouldReduceAnimations ? false : "hidden"}
       animate={inView ? "visible" : "hidden"}
       transition={effect === 'gaming' || effect === 'glitch' ? undefined : transition}
-      className={className}
-      style={{ perspective: '1000px' }}
+      className={`${className} transform-gpu`}
+      style={{ perspective: '1000px', willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
