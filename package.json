@@ -15,15 +15,7 @@
     "test:integration": "node scripts/integration-test-fixed.js",
     "deploy:prep": "node scripts/deployment-prep.js",
     "deploy:check": "npm run build && npm run deploy:prep",
-    "test:navigation": "node scripts/test-navigation.js",
-    "test:navigation-fix": "node scripts/test-navigation-fix.js",
-    "test:navigation-simple": "node scripts/test-navigation-simple.js",
-    "debug:navigation-simple": "node scripts/debug-navigation-simple.js",
-    "test:navigation-final": "node scripts/test-navigation-final.js",
-    "debug:navigation": "node scripts/debug-navigation.js",
-    "verify:sections": "node scripts/verify-sections.js",
-    "diagnose:navigation": "node scripts/diagnose-navigation.js",
-    "test:navigation-comprehensive": "node scripts/test-navigation-comprehensive.js",
+
     "data:validate": "node scripts/update-content.js validate",
     "data:stats": "node scripts/update-content.js stats",
     "data:mark-old": "node scripts/update-content.js mark-old",
@@ -32,8 +24,8 @@
     "prebuild": "npm run data:validate && npm run type-check",
     "analyze": "npm run build:analyze",
     "optimize": "node scripts/optimize-bundle.js",
-    "perf:check": "npm run build && node scripts/performance-check.js",
-    "perf:monitor": "node scripts/performance-monitor.js"
+    "test:accessibility": "node scripts/test-accessibility.js",
+    "test:performance": "node scripts/test-performance.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
