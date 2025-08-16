@@ -43,6 +43,7 @@ export default function ApplicationSection() {
     control,
     handleSubmit,
     trigger,
+    setValue,
     formState: { errors }
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
@@ -54,6 +55,7 @@ export default function ApplicationSection() {
         phone: '',
         year: '',
         department: '',
+        course: '',
         registrationNumber: ''
       },
       experience: {
@@ -122,7 +124,7 @@ export default function ApplicationSection() {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 'personal':
-        return <PersonalInfoStep control={control} errors={errors.personalInfo} />;
+        return <PersonalInfoStep control={control} errors={errors.personalInfo} setValue={setValue} />;
       case 'experience':
         return <ExperienceStep control={control} errors={errors.experience} />;
       case 'motivation':

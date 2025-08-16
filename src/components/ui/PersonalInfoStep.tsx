@@ -1,18 +1,36 @@
 'use client';
 
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Control, Controller, FieldErrors, useWatch } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, GraduationCap, Building, Hash, AlertCircle } from 'lucide-react';
-import { ApplicationFormData, PersonalInfoFormData, ACADEMIC_YEARS, DEPARTMENTS } from '@/lib/validations/application';
+import { ApplicationFormData, PersonalInfoFormData, ACADEMIC_YEARS, DEPARTMENTS, getCoursesByDepartment } from '@/lib/validations/application';
 import { useAccessibility } from '@/hooks/useAccessibility';
+import { useEffect } from 'react';
 
 interface PersonalInfoStepProps {
   control: Control<ApplicationFormData>;
   errors?: FieldErrors<PersonalInfoFormData>;
+  setValue?: (name: any, value: any) => void;
 }
 
-export function PersonalInfoStep({ control, errors }: PersonalInfoStepProps) {
+export function PersonalInfoStep({ control, errors, setValue }: PersonalInfoStepProps) {
   const { shouldReduceMotion } = useAccessibility();
+  
+  // Watch the department field to update courses dynamically
+  const selectedDepartment = useWatch({
+    control,
+    name: 'personalInfo.department'
+  });
+  
+  // Get available courses for the selected department
+  const availableCourses = selectedDepartment ? getCoursesByDepartment(selectedDepartment) : [];
+  
+  // Reset course field when department changes
+  useEffect(() => {
+    if (setValue && selectedDepartment) {
+      setValue('personalInfo.course', '');
+    }
+  }, [selectedDepartment, setValue]);
 
   return (
     <div className="space-y-6">
@@ -209,7 +227,6 @@ export function PersonalInfoStep({ control, errors }: PersonalInfoStepProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="md:col-span-2"
         >
           <label className="block text-sm font-medium text-gray-300 mb-2">
             <Building className="w-4 h-4 inline mr-2" />
@@ -248,11 +265,63 @@ export function PersonalInfoStep({ control, errors }: PersonalInfoStepProps) {
           )}
         </motion.div>
 
-        {/* Registration Number Field */}
+        {/* Course Field */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
+        >
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            <GraduationCap className="w-4 h-4 inline mr-2" />
+            Course *
+          </label>
+          <Controller
+            name="personalInfo.course"
+            control={control}
+            render={({ field }) => (
+              <select
+                {...field}
+                disabled={!selectedDepartment || availableCourses.length === 0}
+                className={`
+                  w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white
+                  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
+                  transition-all duration-200
+                  ${!selectedDepartment || availableCourses.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}
+                  ${errors?.course ? 'border-red-500' : 'border-gray-600'}
+                `}
+              >
+                <option value="" className="bg-gray-800">
+                  {!selectedDepartment 
+                    ? 'Select department first' 
+                    : availableCourses.length === 0 
+                    ? 'No courses available' 
+                    : 'Select your course'
+                  }
+                </option>
+                {availableCourses.map((course) => (
+                  <option key={course} value={course} className="bg-gray-800">
+                    {course}
+                  </option>
+                ))}
+              </select>
+            )}
+          />
+          {errors?.course && (
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-1 text-sm text-red-400"
+            >
+              {errors.course.message}
+            </motion.p>
+          )}
+        </motion.div>
+
+        {/* Registration Number Field */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
           className="md:col-span-2"
         >
           <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -291,7 +360,7 @@ export function PersonalInfoStep({ control, errors }: PersonalInfoStepProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
+        transition={{ delay: 0.8 }}
         className="bg-blue-900/20 border border-blue-500/20 rounded-lg p-4 mt-6"
       >
         <p className="text-blue-300 text-sm">

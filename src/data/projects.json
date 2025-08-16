@@ -21,7 +21,9 @@
     "status": "completed",
     "itchUrl": "https://ghostkwebb.itch.io/impossible-pacman",
     "githubUrl": "https://github.com/Ghostkwebb/IITP-Retro-Revive",
-    "awards":["Third Place At IITK Retro Revive Game jam"]
+    "awards": [
+      "Third Place At IITK Retro Revive Game jam"
+    ]
   },
   {
     "id": "head-ball-inspired",
@@ -71,15 +73,15 @@
       "sanjithkumar-sukumar"
     ],
     "status": "completed",
-    "itchUrl":"https://cheesebit27.itch.io/galaxy-ruler",
+    "itchUrl": "https://cheesebit27.itch.io/galaxy-ruler",
     "githubUrl": "https://github.com/Suyash-Abhishek-Kumar/Galaxy-Ruler"
   },
   {
     "id": "speech-recog-game",
     "title": "Speech Recognition Game",
     "description": "Game Made For Indian Institute of Technology (IIT), Guwahati GAMEDΞON GameJam",
-    "longDescription":"A game where specefic words control how we move forward in the game",
-    "images":[],
+    "longDescription": "A game where specefic words control how we move forward in the game",
+    "images": [],
     "technologies": [
       "Unity",
       "C#"
@@ -96,11 +98,9 @@
     "title": "Games Made By Club Members",
     "description": "Groups of teams in the club making games and planning many more.",
     "longDescription": "Our club members are constantly working on exciting new game projects. From indie adventures to innovative gameplay mechanics, our teams collaborate to bring creative visions to life. Stay tuned for upcoming releases and join us in our game development journey!",
-    "images":[],
+    "images": [],
     "technologies": [],
-    "teamMembers": [
-    ],
+    "teamMembers": [],
     "status": "planned"
   }
-
 ]
