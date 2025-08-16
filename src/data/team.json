@@ -406,5 +406,23 @@
       "linkedin": "https://www.linkedin.com/in/sanjithkumar-sukumar/",
       "github": "https://github.com/sanjiri2318"
     }
+  },
+  {
+    "id": "harsh-soni",
+    "name": "Harsh Soni",
+    "role": "Game Development",
+    "department": "Development",
+    "image": "/images/team/harsh-soni.jpeg",
+    "bio": "I'm Sanjithkumar Sukumar, a passionate Computer Science student at SRMIST with strong interests in Python development, UI/UX design, and content creation.",
+    "skills": [
+      "C",
+      "C#",
+      "Python",
+      "JavaScript"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/harsh-soni-91a88432b",
+      "github": "https://github.com/hs5385"
+    }
   }
 ]
