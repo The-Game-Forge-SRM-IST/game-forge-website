@@ -13,7 +13,27 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
   const [isClicking, setIsClicking] = useState(false);
   const [cursorVariant, setCursorVariant] = useState<'default' | 'hover' | 'click' | 'text' | 'gaming'>('default');
   const [mouseVelocity, setMouseVelocity] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
+
+  // Check if device is mobile/touch device
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isMobileUA || isSmallScreen);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Don't render cursor on mobile devices
+  if (isMobile) {
+    return null;
+  }
   
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -138,13 +158,6 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
       <style jsx global>{`
         * {
           cursor: none !important;
-        }
-        
-        /* Show default cursor on mobile */
-        @media (hover: none) and (pointer: coarse) {
-          * {
-            cursor: auto !important;
-          }
         }
       `}</style>
 
