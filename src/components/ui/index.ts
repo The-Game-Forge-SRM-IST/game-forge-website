@@ -11,6 +11,8 @@ export { PersonalInfoStep } from './PersonalInfoStep';
 export { ExperienceStep } from './ExperienceStep';
 export { MotivationStep } from './MotivationStep';
 export { ResponsiveContainer, ResponsiveGrid, ResponsiveText, ResponsiveButton } from './ResponsiveContainer';
+export { default as Logo } from './Logo';
+
 
 // Animation components
 export { default as PageTransition } from './PageTransition';

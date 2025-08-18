@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '../ui/Logo';
+
 
 interface NavigationProps {
   activeSection: string;
@@ -26,6 +28,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
   const navRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   
@@ -39,14 +42,15 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
     setIsMounted(true);
   }, []);
 
-  // Enhanced scroll handling with throttling
+  // Simple scroll handling
   useEffect(() => {
     let ticking = false;
     
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 50);
+          const newIsScrolled = window.scrollY > 100;
+          setIsScrolled(newIsScrolled);
           ticking = false;
         });
         ticking = true;
@@ -135,9 +139,34 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
             role="button"
             aria-label="Go to home section"
           >
-            <span className="text-xl font-bold text-white">
-              The Game <span className="text-green-400">Forge</span>
-            </span>
+            <AnimatePresence mode="wait">
+              {isScrolled ? (
+                <motion.div
+                  key="scrolled-logo"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ 
+                    duration: 0.3,
+                    ease: "easeOut"
+                  }}
+                >
+                  <Logo size="sm" showText={true} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="text-only-logo"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <span className="text-xl font-bold text-white">
+                    The Game <span className="text-green-400">Forge</span>
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Desktop Navigation */}

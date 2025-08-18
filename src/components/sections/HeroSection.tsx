@@ -5,10 +5,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { Linkedin, Instagram, ExternalLink } from 'lucide-react';
 import { AnimatedButton } from '@/components/ui';
 
+
 export default function HeroSection() {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   
   const texts = useMemo(() => [
     'Where creativity meets code',
@@ -16,6 +18,29 @@ export default function HeroSection() {
     'Building tomorrow\'s games today',
     'Crafting digital experiences'
   ], []);
+
+  // Simple scroll detection - just fade the hero logo
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const newIsScrolled = scrollY > 100;
+          setIsScrolled(newIsScrolled);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const currentText = texts[currentIndex];
@@ -61,8 +86,14 @@ export default function HeroSection() {
           {/* Club Logo */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            animate={{ 
+              opacity: isScrolled ? 0.4 : 1,
+              scale: isScrolled ? 0.9 : 1,
+            }}
+            transition={{ 
+              duration: 0.4,
+              ease: "easeOut"
+            }}
             className="mb-6 sm:mb-8 md:mb-10"
           >
             <div className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 mx-auto mb-4 sm:mb-6 relative">
@@ -72,10 +103,12 @@ export default function HeroSection() {
                 alt="The Game Forge Club Logo"
                 className="w-full h-full object-contain rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
               />
-              {/* Animated glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-blue-400/20 to-red-400/20 rounded-lg blur-xl animate-pulse" />
+              {/* Simple glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-blue-400/20 to-red-400/20 rounded-lg blur-xl opacity-60" />
             </div>
           </motion.div>
+
+
 
           {/* Main Title */}
           <motion.h1

@@ -30,7 +30,8 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
     { progress: 15, text: 'Initializing Game Forge...', duration: 300 },
     { progress: 35, text: 'Loading epic components...', duration: 250 },
     { progress: 55, text: 'Preparing gaming content...', duration: 200 },
-    { progress: 75, text: 'Optimizing performance...', duration: 150 },
+    { progress: 70, text: 'Loading ambient music...', duration: 200 },
+    { progress: 85, text: 'Optimizing performance...', duration: 150 },
     { progress: 95, text: 'Finalizing experience...', duration: 150 },
     { progress: 100, text: 'Ready to forge games!', duration: 300 },
   ];
@@ -38,6 +39,21 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
   useEffect(() => {
     // Detect mobile device
     setIsMobileDevice(isMobile());
+
+    // Preload audio during loading screen
+    const preloadAudio = () => {
+      const audio = new Audio();
+      audio.preload = 'auto';
+      audio.src = '/C418  - Sweden - Minecraft Volume Alpha.mp3';
+      audio.load();
+      console.log('🎵 Audio preloading started during loading screen');
+      
+      // Store in window for BackgroundMusic component to use
+      (window as any).__preloadedAudio = audio;
+    };
+
+    // Start audio preload early
+    setTimeout(preloadAudio, 500);
 
     // Staggered animation sequence
     setTimeout(() => setShowLogo(true), 150);
