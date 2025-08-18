@@ -4,6 +4,7 @@ import "./globals.css";
 import PerformanceMonitor from "@/components/ui/PerformanceMonitor";
 import ClientOnly from "@/components/ui/ClientOnly";
 import SkipLink from "@/components/ui/SkipLink";
+import BackgroundMusic from "@/components/ui/BackgroundMusic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,6 +56,7 @@ export default function RootLayout({
         {children}
         <ClientOnly>
           <PerformanceMonitor />
+          <BackgroundMusic />
         </ClientOnly>
         
         {/* Live region for screen reader announcements */}
