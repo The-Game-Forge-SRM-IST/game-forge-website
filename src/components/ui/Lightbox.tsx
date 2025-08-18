@@ -8,7 +8,15 @@ import { GalleryImage } from '@/types';
 
 // --- Helper Components ---
 
-const LightboxButton = ({ onClick, title, ariaLabel, children, disabled = false }) => (
+interface LightboxButtonProps {
+  onClick: () => void;
+  title: string;
+  ariaLabel: string;
+  children: React.ReactNode;
+  disabled?: boolean;
+}
+
+const LightboxButton = ({ onClick, title, ariaLabel, children, disabled = false }: LightboxButtonProps) => (
   <button
     onClick={onClick}
     className="p-2 text-white rounded-full transition-all duration-300 enabled:hover:bg-white/20 enabled:focus:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/50 touch-manipulation"
@@ -20,7 +28,13 @@ const LightboxButton = ({ onClick, title, ariaLabel, children, disabled = false 
   </button>
 );
 
-const Thumbnail = memo(({ image, isSelected, onClick }) => (
+interface ThumbnailProps {
+  image: GalleryImage;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const Thumbnail = memo(({ image, isSelected, onClick }: ThumbnailProps) => (
   <button 
     onClick={onClick}
     className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden transition-all duration-300 transform-gpu focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-white/80 ${
@@ -37,6 +51,8 @@ const Thumbnail = memo(({ image, isSelected, onClick }) => (
     {isSelected && <div className="absolute inset-0 bg-black/50" />}
   </button>
 ));
+
+Thumbnail.displayName = 'Thumbnail';
 
 // --- Main Lightbox Component ---
 
@@ -95,7 +111,7 @@ export function Lightbox({
   if (!currentImage) return null;
 
   const handleShare = async () => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
       try {
         await navigator.share({
           title: currentImage.title,
@@ -131,7 +147,7 @@ export function Lightbox({
               <p className="text-sm text-gray-300">{currentIndex + 1} / {images.length}</p>
             </div>
             <div className="flex items-center gap-2">
-              {navigator.share && (
+              {typeof navigator !== 'undefined' && 'share' in navigator && (
                 <LightboxButton onClick={handleShare} title="Share" ariaLabel="Share image">
                   <Share2 size={20} />
                 </LightboxButton>
@@ -203,9 +219,15 @@ export function Lightbox({
                     image={img}
                     isSelected={index === currentIndex}
                     onClick={() => {
-                      if (index === currentIndex) onNext();
-                      else if (index > currentIndex) onNext();
-                      else onPrevious();
+                      // Navigate to the clicked thumbnail's index
+                      const diff = index - currentIndex;
+                      if (diff > 0) {
+                        // Go forward
+                        for (let i = 0; i < diff; i++) onNext();
+                      } else if (diff < 0) {
+                        // Go backward
+                        for (let i = 0; i < Math.abs(diff); i++) onPrevious();
+                      }
                     }}
                   />
                 ))}
