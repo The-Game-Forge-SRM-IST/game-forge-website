@@ -15,6 +15,14 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
   const [mouseVelocity, setMouseVelocity] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
+  
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  // Smooth spring animation for cursor movement with gaming feel
+  const springConfig = { damping: 20, stiffness: 800, mass: 0.3 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
 
   // Check if device is mobile/touch device
   useEffect(() => {
@@ -29,19 +37,6 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Don't render cursor on mobile devices
-  if (isMobile) {
-    return null;
-  }
-  
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  
-  // Smooth spring animation for cursor movement with gaming feel
-  const springConfig = { damping: 20, stiffness: 800, mass: 0.3 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
     const moveCursor = (e: MouseEvent) => {
@@ -150,7 +145,7 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
     }
   };
 
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined' || isMobile) return null;
 
   return (
     <>
