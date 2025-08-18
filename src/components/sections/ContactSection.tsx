@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { 
   Mail, 
   MapPin, 
-  Clock, 
   Send, 
   CheckCircle, 
   AlertCircle,
@@ -25,10 +24,6 @@ const contactInfo = {
     name: 'SRM Institute of Science and Technology',
     address: 'Kattankulathur, Tamil Nadu 603203',
     campus: 'KTR Campus'
-  },
-  meetingDetails: {
-    time: 'Every Friday, 4:00 PM - 6:00 PM',
-    venue: 'Computer Lab 3, Tech Park Building'
   },
   socialLinks: {
     linkedin: 'https://www.linkedin.com/company/105910279/',
@@ -140,19 +135,7 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* Meeting Details */}
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Club Meetings</h4>
-                    <p className="text-gray-300">
-                      {contactInfo.meetingDetails.time}<br />
-                      <span className="text-purple-400">{contactInfo.meetingDetails.venue}</span>
-                    </p>
-                  </div>
-                </div>
+
 
                 {/* Social Links */}
                 <div className="flex items-start space-x-4">
