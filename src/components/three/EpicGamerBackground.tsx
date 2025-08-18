@@ -27,7 +27,7 @@ function HexGrid({ scrollProgress = 0, theme, activeSection }: {
 
                     hexes.push({
                         position: [x, y, z] as [number, number, number],
-                        opacity: 0.2 + Math.random() * 0.3, // Dimmed base opacity
+                        opacity: 0.1 + Math.random() * 0.15, // Dimmed base opacity
                         pulseSpeed: 1 + Math.random() * 2, // Faster pulsing
                         delay: Math.random() * Math.PI * 2
                     });
@@ -45,7 +45,7 @@ function HexGrid({ scrollProgress = 0, theme, activeSection }: {
                 if (hex && child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
                     // Dimmed section-reactive pulsing for better readability
                     const pulse = Math.sin(state.clock.elapsedTime * hex.pulseSpeed * theme.intensity + hex.delay);
-                    child.material.opacity = Math.min(0.4, (hex.opacity * 0.8 + pulse * 0.2) * theme.intensity);
+                    child.material.opacity = Math.min(0.15, (hex.opacity * 0.4 + pulse * 0.1) * theme.intensity);
 
                     // Dynamic color change based on section
                     child.material.color.setHex(parseInt(theme.primary.replace('#', '0x')));
@@ -101,7 +101,7 @@ function DigitalRain({ scrollProgress = 0, theme, activeSection }: {
                 z: (Math.random() - 0.5) * 20,
                 speed: 0.1 + Math.random() * 0.2,
                 symbol: symbols[Math.floor(Math.random() * symbols.length)],
-                opacity: 0.3 + Math.random() * 0.2 // Dimmed digital rain
+                opacity: 0.15 + Math.random() * 0.1 // Dimmed digital rain
             });
         }
 
@@ -124,7 +124,7 @@ function DigitalRain({ scrollProgress = 0, theme, activeSection }: {
 
                     // Dimmed section-reactive flickering and color
                     if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
-                        child.material.opacity = Math.min(0.5, drop.opacity * (0.3 + Math.sin(state.clock.elapsedTime * 8 * theme.intensity + i) * 0.15));
+                        child.material.opacity = Math.min(0.2, drop.opacity * (0.15 + Math.sin(state.clock.elapsedTime * 8 * theme.intensity + i) * 0.08));
                         child.material.color.setHex(parseInt(theme.secondary.replace('#', '0x')));
 
                         // Scale based on intensity
@@ -193,7 +193,7 @@ function CircuitBoard({ scrollProgress = 0, theme, activeSection }: {
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
             lines.push({
                 geometry,
-                opacity: 0.25 + Math.random() * 0.25, // Dimmed circuit lines
+                opacity: 0.12 + Math.random() * 0.12, // Dimmed circuit lines
                 pulseSpeed: 0.5 + Math.random() * 2
             });
         }
@@ -208,7 +208,7 @@ function CircuitBoard({ scrollProgress = 0, theme, activeSection }: {
                 if (circuit && child instanceof THREE.Line && child.material instanceof THREE.LineBasicMaterial) {
                     // Dimmed pulsing glow effect
                     const pulse = Math.sin(state.clock.elapsedTime * circuit.pulseSpeed * theme.intensity + i);
-                    child.material.opacity = Math.min(0.4, (circuit.opacity * 0.6 + pulse * 0.2) * theme.intensity);
+                    child.material.opacity = Math.min(0.15, (circuit.opacity * 0.3 + pulse * 0.1) * theme.intensity);
                 }
             });
 
@@ -303,7 +303,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
                             <meshBasicMaterial
                                 color={element.color}
                                 transparent
-                                opacity={0.3}
+                                opacity={0.12}
                                 wireframe
                             />
                         </>
@@ -315,7 +315,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
                             <meshBasicMaterial
                                 color={element.color}
                                 transparent
-                                opacity={0.25}
+                                opacity={0.1}
                             />
                         </>
                     )}
@@ -326,7 +326,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
                             <meshBasicMaterial
                                 color={element.color}
                                 transparent
-                                opacity={0.2}
+                                opacity={0.08}
                                 wireframe
                             />
                         </>
@@ -338,7 +338,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
                             <meshBasicMaterial
                                 color={element.color}
                                 transparent
-                                opacity={0.3}
+                                opacity={0.12}
                                 wireframe
                             />
                         </>
@@ -393,7 +393,7 @@ function FloatingOrbs({ scrollProgress = 0, theme, activeSection }: {
                     
                     // Update material opacity and color (dimmed)
                     if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
-                        child.material.opacity = 0.3 + Math.sin(state.clock.elapsedTime * 2 + i) * 0.15;
+                        child.material.opacity = 0.12 + Math.sin(state.clock.elapsedTime * 2 + i) * 0.06;
                         child.material.color.setHex(parseInt(orb.color.replace('#', '0x')));
                     }
                 }
@@ -412,7 +412,7 @@ function FloatingOrbs({ scrollProgress = 0, theme, activeSection }: {
                     <meshBasicMaterial 
                         color={orb.color}
                         transparent
-                        opacity={0.3}
+                        opacity={0.12}
                     />
                 </mesh>
             ))}
@@ -439,7 +439,7 @@ function EnergyWaves({ scrollProgress = 0, theme, activeSection }: {
                 child.scale.setScalar(Math.max(0.1, scale));
 
                 if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
-                    child.material.opacity = Math.max(0, (0.3 - scale * 0.1) * theme.intensity);
+                    child.material.opacity = Math.max(0, (0.12 - scale * 0.04) * theme.intensity);
                     child.material.color.setHex(parseInt(theme.primary.replace('#', '0x')));
                 }
             });
@@ -457,7 +457,7 @@ function EnergyWaves({ scrollProgress = 0, theme, activeSection }: {
                     <meshBasicMaterial
                         color="#00ff88"
                         transparent
-                        opacity={0.15}
+                        opacity={0.06}
                         side={THREE.DoubleSide}
                     />
                 </mesh>
@@ -508,12 +508,12 @@ export default function EpicGamerBackground({
                 performance={{ min: 0.5 }}
             >
                 {/* Dimmed ambient lighting for better text readability */}
-                <ambientLight intensity={0.2 + theme.intensity * 0.1} />
+                <ambientLight intensity={0.1 + theme.intensity * 0.05} />
                 
                 {/* Subtle directional light */}
                 <directionalLight 
                     position={[10, 10, 5]} 
-                    intensity={0.15 + theme.intensity * 0.05}
+                    intensity={0.08 + theme.intensity * 0.02}
                     color={theme.primary}
                 />
 

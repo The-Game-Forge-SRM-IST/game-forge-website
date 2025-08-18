@@ -142,6 +142,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
           scrollProgress={scrollProgress}
           activeSection={activeSection}
         />
+        {/* Additional dimming overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
       </div>
 
       {/* Navigation */}
