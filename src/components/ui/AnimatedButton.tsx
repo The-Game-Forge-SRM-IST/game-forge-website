@@ -5,6 +5,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { buttonVariants, glowVariants } from '@/utils/motionUtils';
 import { ReactNode, useState, useEffect, useMemo } from 'react';
 import { ClientOnly } from '@/components/ui';
+import { useTheme } from '@/providers/ThemeProvider';
 
 interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
@@ -33,6 +34,7 @@ export default function AnimatedButton({
   ...props
 }: AnimatedButtonProps) {
   const { shouldReduceAnimations, getTouchTargetSize } = useResponsive();
+  const { resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
@@ -43,7 +45,7 @@ export default function AnimatedButton({
   // Generate stable particle positions using a seeded random function
   const particles = useMemo(() => {
     if (!isMounted) return [];
-    
+
     // Simple seeded random function for consistent results
     let seed = 12345; // Fixed seed for consistency
     const seededRandom = () => {
@@ -72,18 +74,23 @@ export default function AnimatedButton({
 
   const baseClasses = `
     relative overflow-hidden font-semibold rounded-xl transition-all duration-300
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black
+    focus:outline-none focus:ring-2 focus:ring-offset-2 
     disabled:opacity-50 disabled:cursor-not-allowed
     ${getTouchTargetSize()}
     ${loading ? 'cursor-wait' : ''}
     ${isPressed ? 'transform scale-95' : ''}
+    ${resolvedTheme === 'light' ? 'focus:ring-offset-white' : 'focus:ring-offset-black'}
   `;
 
   const variantClasses = {
     primary: 'bg-green-400 text-black hover:bg-green-300 focus:ring-green-400',
     secondary: 'bg-blue-500 text-white hover:bg-blue-400 focus:ring-blue-500',
-    outline: 'border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/30 focus:ring-white/50',
-    ghost: 'text-white hover:bg-white/10 focus:ring-white/50',
+    outline: resolvedTheme === 'light'
+      ? 'border-2 border-border-color text-foreground hover:bg-background-secondary hover:border-green-400 focus:ring-green-400'
+      : 'border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/30 focus:ring-white/50',
+    ghost: resolvedTheme === 'light'
+      ? 'text-foreground hover:bg-background-secondary focus:ring-green-400'
+      : 'text-white hover:bg-white/10 focus:ring-white/50',
   };
 
   const sizeClasses = {
@@ -139,7 +146,8 @@ export default function AnimatedButton({
             {particles.map((particle) => (
               <motion.div
                 key={particle.id}
-                className="absolute w-1 h-1 bg-white/30 rounded-full"
+                className={`absolute w-1 h-1 rounded-full ${resolvedTheme === 'light' ? 'bg-green-400/50' : 'bg-white/30'
+                  }`}
                 initial={{
                   x: particle.initialX + '%',
                   y: particle.initialY + '%',
@@ -165,7 +173,8 @@ export default function AnimatedButton({
       {/* Shimmer effect */}
       {!shouldReduceAnimations && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+          className={`absolute inset-0 bg-gradient-to-r from-transparent to-transparent -skew-x-12 ${resolvedTheme === 'light' ? 'via-green-400/20' : 'via-white/10'
+            }`}
           initial={{ x: '-100%' }}
           whileHover={{
             x: '200%',

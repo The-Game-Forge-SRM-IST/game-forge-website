@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { detectMobileCapabilities, getTouchTargetSize, getMobileAnimationConfig } from '@/utils/mobileOptimizations';
 
 interface BreakpointConfig {
   xs: number;
@@ -183,9 +184,9 @@ export function useResponsive(breakpoints: Partial<BreakpointConfig> = {}) {
     return lg;
   };
 
-  // Touch-friendly sizing
-  const getTouchTargetSize = () => {
-    return isMobile ? 'min-h-[44px] min-w-[44px]' : 'min-h-[32px] min-w-[32px]';
+  // Touch-friendly sizing using mobile optimizations
+  const getOptimizedTouchTargetSize = (size: 'sm' | 'md' | 'lg' = 'md') => {
+    return getTouchTargetSize(size);
   };
 
   // Responsive padding/margin utilities
@@ -227,7 +228,7 @@ export function useResponsive(breakpoints: Partial<BreakpointConfig> = {}) {
     getColumns,
     getSpacing,
     getFontSize,
-    getTouchTargetSize,
+    getTouchTargetSize: getOptimizedTouchTargetSize,
     getResponsivePadding,
     getResponsiveMargin,
     shouldReduceAnimations,

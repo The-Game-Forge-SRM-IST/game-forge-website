@@ -5,6 +5,7 @@ import PerformanceMonitor from "@/components/ui/PerformanceMonitor";
 import ClientOnly from "@/components/ui/ClientOnly";
 import SkipLink from "@/components/ui/SkipLink";
 import BackgroundMusic from "@/components/ui/BackgroundMusic";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,13 +52,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SkipLink targetId="main-content">Skip to main content</SkipLink>
-        <SkipLink targetId="navigation">Skip to navigation</SkipLink>
-        {children}
-        <ClientOnly>
-          <PerformanceMonitor />
-          <BackgroundMusic />
-        </ClientOnly>
+        <ThemeProvider>
+          <SkipLink targetId="main-content">Skip to main content</SkipLink>
+          <SkipLink targetId="navigation">Skip to navigation</SkipLink>
+          {children}
+          <ClientOnly>
+            <PerformanceMonitor />
+            <BackgroundMusic />
+          </ClientOnly>
         
         {/* Live region for screen reader announcements */}
         <div
@@ -74,6 +76,7 @@ export default function RootLayout({
           aria-atomic="true"
           className="sr-only"
         />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -120,19 +120,19 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 navigation-fixed ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 navigation-fixed safe-area-inset-top ${
         isScrolled
-          ? 'bg-black/95 backdrop-blur-md border-b border-white/10 shadow-lg'
+          ? 'navigation-dark shadow-lg'
           : 'bg-transparent'
       }`}
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-16 lg:h-20 gap-4 lg:gap-8">
           {/* Logo */}
           <div
-            className="flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 rounded-md p-1"
+            className="flex-shrink-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 rounded-md p-2 mr-4 lg:mr-8"
             onClick={() => handleSectionClick('home')}
             onKeyDown={(e) => handleKeyDown(e, 'home')}
             tabIndex={0}
@@ -161,7 +161,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <span className="text-xl font-bold text-white">
+                  <span className="text-xl lg:text-2xl font-bold text-white">
                     The Game <span className="text-green-400">Forge</span>
                   </span>
                 </motion.div>
@@ -170,8 +170,8 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:block">
-            <div className="ml-10 flex items-baseline space-x-1 xl:space-x-2">
+          <div className="hidden lg:flex items-center">
+            <div className="flex items-baseline space-x-1 xl:space-x-1">
               {navigationItems.map((item) => (
                 <button
                   key={item.id}
@@ -181,10 +181,10 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                     handleSectionClick(item.id);
                   }}
                   onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-colors duration-300 relative hover:bg-white/10 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
+                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-colors duration-300 relative whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
                     activeSection === item.id
                       ? 'text-green-400 bg-green-400/10 shadow-lg shadow-green-400/20'
-                      : 'text-gray-300 hover:text-white'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
                   aria-current={activeSection === item.id ? 'page' : undefined}
                   aria-label={`Navigate to ${item.label} section`}
@@ -199,11 +199,12 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
+          {/* Mobile controls */}
+          <div className="lg:hidden flex items-center">
+            {/* Mobile menu button */}
             <button
               onClick={toggleMobileMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-400 transition-all duration-200 touch-manipulation min-h-[44px] min-w-[44px]"
+              className="inline-flex items-center justify-center p-2 rounded-md transition-all duration-200 touch-manipulation min-h-[44px] min-w-[44px] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-400 text-gray-400 hover:text-white hover:bg-gray-700/50"
               aria-expanded={isOpen}
               aria-label={isOpen ? "Close main menu" : "Open main menu"}
               aria-controls="mobile-menu"
@@ -231,7 +232,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden bg-black/95 backdrop-blur-md border-t border-white/10 shadow-xl navigation-mobile z-50"
+            className="lg:hidden navigation-mobile z-50 mobile-menu-dark"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="mobile-menu-button"

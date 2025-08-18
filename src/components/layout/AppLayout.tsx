@@ -6,6 +6,7 @@ import Footer from './Footer';
 import EpicGamerBackground from '../three/EpicGamerBackground';
 import CustomCursor from '../ui/CustomCursor';
 import { createRAFThrottle, optimizeTransforms } from '@/utils/performanceOptimizer';
+import { useTheme } from '@/providers/ThemeProvider';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   // High-performance smooth scroll with RAF
   const scrollToSection = useCallback((sectionId: string) => {
@@ -132,7 +134,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
 
   return (
-    <div className="min-h-screen text-white relative">
+    <div className={`min-h-screen text-foreground relative ${resolvedTheme}`}>
       {/* Custom Gaming Cursor */}
       <CustomCursor />
       
@@ -141,9 +143,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <EpicGamerBackground 
           scrollProgress={scrollProgress}
           activeSection={activeSection}
+          theme={resolvedTheme}
         />
-        {/* Additional dimming overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+        {/* Theme-aware overlay for better text readability */}
+        <div className={`absolute inset-0 pointer-events-none three-background-overlay`} />
       </div>
 
       {/* Navigation */}
@@ -156,7 +159,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       />
 
       {/* Main Content */}
-      <main className="pt-16 relative z-10"> {/* Account for fixed header and ensure content is above background */}
+      <main className="pt-16 lg:pt-20 relative z-10 safe-area-inset-bottom"> {/* Account for fixed header and ensure content is above background */}
         {children}
       </main>
 
@@ -165,3 +168,4 @@ export default function AppLayout({ children }: AppLayoutProps) {
     </div>
   );
 }
+

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useTheme } from '@/providers/ThemeProvider';
 
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
@@ -25,6 +26,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
   const [showProgress, setShowProgress] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   const loadingSteps = [
     { progress: 15, text: 'Initializing Game Forge...', duration: 300 },
@@ -99,7 +101,9 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
     return (
       <AnimatePresence>
         {isVisible && (
-          <div className="fixed inset-0 z-[9999] bg-slate-950 flex items-center justify-center">
+          <div className={`fixed inset-0 z-[9999] flex items-center justify-center ${
+            resolvedTheme === 'light' ? 'loading-screen-light' : 'loading-screen-dark'
+          }`}>
             <div className="text-center max-w-sm mx-auto px-6">
               {/* Simple logo */}
               {showLogo && (
@@ -188,7 +192,9 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
             rotateY: 15
           }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed inset-0 z-[9999] bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 flex items-center justify-center overflow-hidden"
+          className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden ${
+            resolvedTheme === 'light' ? 'loading-screen-light' : 'loading-screen-dark'
+          }`}
           style={{
             background: `
               radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),

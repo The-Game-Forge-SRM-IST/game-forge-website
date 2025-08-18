@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useMemo } from 'react';
 import { Linkedin, Instagram, ExternalLink } from 'lucide-react';
 import { AnimatedButton } from '@/components/ui';
+import { useTheme } from '@/providers/ThemeProvider';
 
 
 export default function HeroSection() {
@@ -11,6 +12,7 @@ export default function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { resolvedTheme } = useTheme();
   
   const texts = useMemo(() => [
     'Where creativity meets code',
@@ -72,9 +74,13 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative safe-area-inset-top">
-      {/* Subtle background overlay for text readability */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+    <section id="home" className="min-h-screen flex items-center justify-center relative safe-area-inset-top px-4 sm:px-6 lg:px-8">
+      {/* Theme-aware background overlay for text readability */}
+      <div className={`absolute inset-0 backdrop-blur-sm ${
+        resolvedTheme === 'light' 
+          ? 'bg-white/10' 
+          : 'bg-black/20'
+      }`} />
       
       <div className="container-responsive text-center relative z-10">
         <motion.div
@@ -115,7 +121,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-responsive-3xl font-bold mb-4 sm:mb-6 leading-tight text-center px-4"
+            className="text-responsive-3xl font-bold mb-4 sm:mb-6 leading-tight text-center text-foreground"
           >
             The Game <span className="text-green-400">Forge</span>
           </motion.h1>
@@ -127,13 +133,17 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0"
           >
-            <p className="text-responsive-xl text-gray-300 max-w-4xl mx-auto leading-relaxed text-center">
+            <p className={`text-responsive-xl max-w-4xl mx-auto leading-relaxed text-center ${
+              resolvedTheme === 'light' ? 'text-text-secondary' : 'text-gray-300'
+            }`}>
               A game development club at <span className="text-blue-400 font-semibold">SRM IST KTR</span>
             </p>
             
             {/* Typewriter Animation */}
             <div className="h-12 sm:h-14 md:h-16 lg:h-20 flex items-center justify-center">
-              <p className="text-responsive-lg text-gray-400 max-w-3xl mx-auto text-center leading-relaxed">
+              <p className={`text-responsive-lg max-w-3xl mx-auto text-center leading-relaxed ${
+                resolvedTheme === 'light' ? 'text-text-muted' : 'text-gray-400'
+              }`}>
                 {displayText}
                 <span className="animate-pulse text-green-400">|</span>
               </p>
@@ -145,7 +155,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-8 sm:mb-10 px-4 sm:px-6 lg:px-0 max-w-lg mx-auto"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-8 sm:mb-10 max-w-lg mx-auto"
           >
             <AnimatedButton
               variant="primary"
@@ -181,7 +191,11 @@ export default function HeroSection() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, y: -5 }}
               whileTap={{ scale: 0.9 }}
-              className="p-4 sm:p-5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-blue-600/20 transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center"
+              className={`p-4 sm:p-5 backdrop-blur-sm rounded-full transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center ${
+                resolvedTheme === 'light' 
+                  ? 'bg-background-secondary/80 hover:bg-blue-600/10 border border-border-color/20' 
+                  : 'bg-white/10 hover:bg-blue-600/20'
+              }`}
               aria-label="Follow us on LinkedIn"
             >
               <Linkedin className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400 group-hover:text-blue-300" />
@@ -192,7 +206,11 @@ export default function HeroSection() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.2, y: -5 }}
               whileTap={{ scale: 0.9 }}
-              className="p-4 sm:p-5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-pink-600/20 transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center"
+              className={`p-4 sm:p-5 backdrop-blur-sm rounded-full transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center ${
+                resolvedTheme === 'light' 
+                  ? 'bg-background-secondary/80 hover:bg-pink-600/10 border border-border-color/20' 
+                  : 'bg-white/10 hover:bg-pink-600/20'
+              }`}
               aria-label="Follow us on Instagram"
             >
               <Instagram className="w-6 h-6 sm:w-7 sm:h-7 text-pink-400 group-hover:text-pink-300" />

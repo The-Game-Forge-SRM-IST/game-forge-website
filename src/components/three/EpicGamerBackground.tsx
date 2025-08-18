@@ -469,6 +469,7 @@ function EnergyWaves({ scrollProgress = 0, theme, activeSection }: {
 interface EpicGamerBackgroundProps {
     scrollProgress?: number;
     activeSection?: string;
+    theme?: 'light' | 'dark';
 }
 
 // Section-based color themes for reactive background
@@ -490,9 +491,16 @@ const getSectionTheme = (section: string) => {
 
 export default function EpicGamerBackground({
     scrollProgress = 0,
-    activeSection = 'home'
+    activeSection = 'home',
+    theme: userTheme = 'dark'
 }: EpicGamerBackgroundProps) {
-    const theme = getSectionTheme(activeSection);
+    const sectionTheme = getSectionTheme(activeSection);
+    
+    // Adjust theme intensity based on user's theme preference
+    const adjustedTheme = {
+        ...sectionTheme,
+        intensity: userTheme === 'light' ? sectionTheme.intensity * 0.3 : sectionTheme.intensity
+    };
     return (
         <div className="fixed inset-0">
             <Canvas
@@ -508,32 +516,32 @@ export default function EpicGamerBackground({
                 performance={{ min: 0.5 }}
             >
                 {/* Dimmed ambient lighting for better text readability */}
-                <ambientLight intensity={0.1 + theme.intensity * 0.05} />
+                <ambientLight intensity={0.1 + adjustedTheme.intensity * 0.05} />
                 
                 {/* Subtle directional light */}
                 <directionalLight 
                     position={[10, 10, 5]} 
-                    intensity={0.08 + theme.intensity * 0.02}
-                    color={theme.primary}
+                    intensity={0.08 + adjustedTheme.intensity * 0.02}
+                    color={adjustedTheme.primary}
                 />
 
                 {/* Hexagonal grid */}
-                <HexGrid scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <HexGrid scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
 
                 {/* Digital rain */}
-                <DigitalRain scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <DigitalRain scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
 
                 {/* Circuit board patterns */}
-                <CircuitBoard scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <CircuitBoard scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
 
                 {/* HUD elements */}
-                <HUDElements scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <HUDElements scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
 
                 {/* Energy waves */}
-                <EnergyWaves scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <EnergyWaves scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
                 
                 {/* Floating energy orbs to fill space */}
-                <FloatingOrbs scrollProgress={scrollProgress} theme={theme} activeSection={activeSection} />
+                <FloatingOrbs scrollProgress={scrollProgress} theme={adjustedTheme} activeSection={activeSection} />
             </Canvas>
         </div>
     );

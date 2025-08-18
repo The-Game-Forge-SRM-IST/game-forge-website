@@ -3,9 +3,45 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ffffff;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #2a2a2a;
+  --border-color: #374151;
+  --text-muted: #9ca3af;
+  --text-secondary: #d1d5db;
   --touch-target-size: 44px;
   --border-radius-mobile: 12px;
   --border-radius-desktop: 8px;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.25);
+  --shadow-heavy: rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme variables */
+:root.light {
+  --background: #ffffff;
+  --foreground: #000000;
+  --background-secondary: #f8fafc;
+  --background-tertiary: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-muted: #64748b;
+  --text-secondary: #475569;
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --shadow-heavy: rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme variables (explicit for clarity) */
+:root.dark {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #2a2a2a;
+  --border-color: #374151;
+  --text-muted: #9ca3af;
+  --text-secondary: #d1d5db;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.25);
+  --shadow-heavy: rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
@@ -16,7 +52,7 @@
 }
 
 body {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   /* Prevent horizontal scroll on mobile */
@@ -29,6 +65,17 @@ body {
   /* Better text selection on mobile */
   -webkit-user-select: text;
   user-select: text;
+  /* Smooth theme transitions */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dynamic background gradients based on theme */
+:root.dark body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+:root.light body {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
 }
 
 /* Smooth scrolling for the entire page */
@@ -524,16 +571,23 @@ img {
   }
 }
 
-/* Color scheme support */
+/* System color scheme detection (only applies when theme is 'system') */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not(.dark):not(.light) {
     --background: #ffffff;
     --foreground: #000000;
+    --background-secondary: #f8fafc;
+    --background-tertiary: #f1f5f9;
+    --border-color: #e2e8f0;
+    --text-muted: #64748b;
+    --text-secondary: #475569;
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --shadow-heavy: rgba(0, 0, 0, 0.25);
   }
   
-  body {
-    background: var(--background);
-    color: var(--foreground);
+  :root:not(.dark):not(.light) body {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
   }
 }
 
@@ -715,4 +769,269 @@ th[aria-sort="descending"]::after {
 
 .team-bio-scroll::-webkit-scrollbar-thumb:active {
   background: rgba(255, 255, 255, 0.9);
+}
+/* 
+Theme-aware utility classes */
+.bg-background {
+  background-color: var(--background);
+}
+
+.bg-background-secondary {
+  background-color: var(--background-secondary);
+}
+
+.bg-background-tertiary {
+  background-color: var(--background-tertiary);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.border-color {
+  border-color: var(--border-color);
+}
+
+/* Theme-aware shadows */
+.shadow-light {
+  box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 6px var(--shadow-medium);
+}
+
+.shadow-heavy {
+  box-shadow: 0 10px 25px var(--shadow-heavy);
+}
+
+/* Theme-aware card backgrounds */
+.card-background {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.card-background-elevated {
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+/* Theme-aware glass morphism */
+.glass-light {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+:root.light .glass-light {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.glass-medium {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:root.light .glass-medium {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile-specific theme improvements */
+@media (max-width: 768px) {
+  /* Better touch targets in light mode */
+  :root.light button,
+  :root.light a,
+  :root.light [role="button"] {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+  }
+  
+  :root.light button:hover,
+  :root.light a:hover,
+  :root.light [role="button"]:hover {
+    background: var(--background-tertiary);
+  }
+  
+  /* Improved contrast for mobile text */
+  :root.light .text-gray-300,
+  :root.light .text-gray-400 {
+    color: var(--text-secondary) !important;
+  }
+  
+  :root.light .text-gray-500 {
+    color: var(--text-muted) !important;
+  }
+}
+
+/* Navigation theme improvements */
+.navigation-light {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navigation-dark {
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile navigation theme improvements */
+@media (max-width: 1023px) {
+  .mobile-menu-light {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 20px var(--shadow-medium);
+  }
+  
+  .mobile-menu-dark {
+    background: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Form improvements for both themes */
+:root.light input,
+:root.light textarea,
+:root.light select {
+  background: var(--background);
+  border: 2px solid var(--border-color);
+  color: var(--foreground);
+}
+
+:root.light input:focus,
+:root.light textarea:focus,
+:root.light select:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Button theme improvements */
+.btn-primary-light {
+  background: #22c55e;
+  color: white;
+  border: none;
+}
+
+.btn-primary-light:hover {
+  background: #16a34a;
+}
+
+.btn-secondary-light {
+  background: var(--background-secondary);
+  color: var(--foreground);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary-light:hover {
+  background: var(--background-tertiary);
+  border-color: #22c55e;
+}
+
+/* Loading screen theme support */
+.loading-screen-light {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+}
+
+.loading-screen-dark {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+/* Three.js background overlay for light mode */
+:root.light .three-background-overlay {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+:root.dark .three-background-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Improved scrollbar for light mode */
+:root.light ::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+}
+
+:root.light ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+
+:root.light ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* High contrast improvements for light mode */
+@media (prefers-contrast: high) {
+  :root.light {
+    --background: #ffffff;
+    --foreground: #000000;
+    --background-secondary: #f0f0f0;
+    --background-tertiary: #e0e0e0;
+    --border-color: #000000;
+    --text-muted: #333333;
+    --text-secondary: #000000;
+  }
+  
+  :root.light .border-gray-700,
+  :root.light .border-gray-600,
+  :root.light .border-white\/10,
+  :root.light .border-white\/20 {
+    border-color: #000000 !important;
+    border-width: 2px !important;
+  }
+  
+  :root.light button,
+  :root.light .button {
+    border: 2px solid #000000 !important;
+  }
+}
+
+/* Reduced motion support for theme transitions */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .glass-light,
+  .glass-medium,
+  .card-background,
+  .card-background-elevated {
+    transition: none !important;
+  }
+}
+
+/* Print styles for light theme */
+@media print {
+  :root {
+    --background: #ffffff !important;
+    --foreground: #000000 !important;
+    --background-secondary: #ffffff !important;
+    --background-tertiary: #ffffff !important;
+    --border-color: #000000 !important;
+    --text-muted: #333333 !important;
+    --text-secondary: #000000 !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .three-background,
+  .glass-light,
+  .glass-medium {
+    display: none !important;
+  }
 }
