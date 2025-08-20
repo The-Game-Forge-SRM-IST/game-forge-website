@@ -2,7 +2,6 @@
 
 import { useState, memo, lazy, Suspense } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { TeamMember } from '@/types';
 import { useResponsive } from '@/hooks/useResponsive';
 import { RippleEffect, MagneticHover } from './MicroAnimations';

@@ -8,25 +8,10 @@ import { Achievement } from '@/types';
 
 interface AchievementCardProps {
   achievement: Achievement;
-  index: number;
   isLeft?: boolean;
 }
-
-export default function AchievementCard({ achievement, index, isLeft = false }: AchievementCardProps) {
+export default function AchievementCard({ achievement, isLeft = false }: AchievementCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      x: isLeft ? -100 : 100,
-      scale: 0.8
-    },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      scale: 1
-    }
-  };
 
   const expandVariants = {
     collapsed: { 

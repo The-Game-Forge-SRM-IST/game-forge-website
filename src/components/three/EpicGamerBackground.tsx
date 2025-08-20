@@ -5,7 +5,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // Hexagonal grid pattern like in sci-fi games
-function HexGrid({ scrollProgress = 0, theme, activeSection }: {
+function HexGrid({ scrollProgress = 0, theme, activeSection: _activeSection }: {
     scrollProgress?: number;
     theme: any;
     activeSection: string;
@@ -40,6 +40,8 @@ function HexGrid({ scrollProgress = 0, theme, activeSection }: {
 
     useFrame((state) => {
         if (groupRef.current) {
+            void theme;
+                void _activeSection;
             groupRef.current.children.forEach((child, i) => {
                 const hex = hexagons[i];
                 if (hex && child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
@@ -83,7 +85,7 @@ function HexGrid({ scrollProgress = 0, theme, activeSection }: {
 }
 
 // Digital rain effect like Matrix but cooler
-function DigitalRain({ scrollProgress = 0, theme, activeSection }: {
+function DigitalRain({ scrollProgress = 0, theme, activeSection: _activeSection }: {
     scrollProgress?: number;
     theme: any;
     activeSection: string;
@@ -110,6 +112,7 @@ function DigitalRain({ scrollProgress = 0, theme, activeSection }: {
 
     useFrame((state) => {
         if (groupRef.current) {
+            void _activeSection;
             groupRef.current.children.forEach((child, i) => {
                 const drop = rainDrops[i];
                 if (drop) {
@@ -156,7 +159,7 @@ function DigitalRain({ scrollProgress = 0, theme, activeSection }: {
 }
 
 // Glowing circuit board patterns
-function CircuitBoard({ scrollProgress = 0, theme, activeSection }: {
+function CircuitBoard({ scrollProgress = 0, theme, activeSection: _activeSection }: {
     scrollProgress?: number;
     theme: any;
     activeSection: string;
@@ -203,6 +206,7 @@ function CircuitBoard({ scrollProgress = 0, theme, activeSection }: {
 
     useFrame((state) => {
         if (linesRef.current) {
+            void _activeSection;
             linesRef.current.children.forEach((child, i) => {
                 const circuit = circuits[i];
                 if (circuit && child instanceof THREE.Line && child.material instanceof THREE.LineBasicMaterial) {
@@ -238,7 +242,7 @@ function CircuitBoard({ scrollProgress = 0, theme, activeSection }: {
 }
 
 // Floating HUD elements like in games
-function HUDElements({ scrollProgress = 0, theme, activeSection }: {
+function HUDElements({ scrollProgress = 0, theme, activeSection: _activeSection }: {
     scrollProgress?: number;
     theme: any;
     activeSection: string;
@@ -267,6 +271,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
 
     useFrame((state) => {
         if (groupRef.current) {
+            void _activeSection;
             groupRef.current.children.forEach((child, i) => {
                 const element = hudElements[i];
                 if (element) {
@@ -350,7 +355,7 @@ function HUDElements({ scrollProgress = 0, theme, activeSection }: {
 }
 
 // Floating energy orbs to fill empty space
-function FloatingOrbs({ scrollProgress = 0, theme, activeSection }: { 
+function FloatingOrbs({ scrollProgress = 0, theme, activeSection: _activeSection }: { 
     scrollProgress?: number; 
     theme: any; 
     activeSection: string;
@@ -379,6 +384,7 @@ function FloatingOrbs({ scrollProgress = 0, theme, activeSection }: {
     
     useFrame((state) => {
         if (orbsRef.current) {
+            void _activeSection;
             orbsRef.current.children.forEach((child, i) => {
                 const orb = orbs[i];
                 if (orb) {
@@ -430,6 +436,7 @@ function EnergyWaves({ scrollProgress = 0, theme, activeSection }: {
 
     useFrame((state) => {
         if (wavesRef.current) {
+            void activeSection;
             wavesRef.current.children.forEach((child, i) => {
                 // Expanding waves
                 const time = state.clock.elapsedTime;

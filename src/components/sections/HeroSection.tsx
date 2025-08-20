@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
 import { Linkedin, Instagram, ExternalLink } from 'lucide-react';
 import { AnimatedButton } from '@/components/ui';
@@ -104,10 +105,11 @@ export default function HeroSection() {
           >
             <div className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 mx-auto mb-4 sm:mb-6 relative">
               {/* The Game Forge Club Logo */}
-              <img 
-                src="/images/ClubLogo.png" 
+              <Image
+                src="/images/ClubLogo.png"
                 alt="The Game Forge Club Logo"
-                className="w-full h-full object-contain rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
+                fill
+                className="object-contain rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
               />
               {/* Simple glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-blue-400/20 to-red-400/20 rounded-lg blur-xl opacity-60" />

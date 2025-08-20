@@ -1,9 +1,9 @@
 'use client';
 
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import { useResponsive } from '@/hooks/useResponsive';
-import { microAnimations, interactiveFeedback } from '@/utils/motionUtils';
+import { microAnimations } from '@/utils/motionUtils';
 
 // Ripple effect component for buttons
 interface RippleEffectProps {

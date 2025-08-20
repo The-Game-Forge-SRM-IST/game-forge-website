@@ -44,12 +44,11 @@ export default function ApplicationSection() {
   const [submitMessage, setSubmitMessage] = useState('');
 
   const {
-    control,
-    handleSubmit,
-    trigger,
-    setValue,
-    getValues,
-    reset,
+  control,
+  handleSubmit,
+  trigger,
+  setValue,
+  reset,
     formState: { errors }
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
@@ -69,7 +68,7 @@ export default function ApplicationSection() {
         gameEngines: [],
         previousProjects: '',
         portfolioUrl: '',
-        // @ts-ignore
+  // @ts-expect-error default-value-extra
         optional1: '',
         optional2: ''
       },
@@ -126,30 +125,30 @@ export default function ApplicationSection() {
         Course: data.personalInfo.course,
         "Registration Number": data.personalInfo.registrationNumber,
         "Programming Languages": data.experience.programmingLanguages.join(", "),
-        // @ts-ignore
-        "Game Engines": data.experience.gameEngines.join(", "),
+  // @ts-expect-error array-join
+  "Game Engines": data.experience.gameEngines.join(", "),
         "Previous Projects": data.experience.previousProjects,
         "Portfolio URL": data.experience.portfolioUrl || '',
         "Why Join": data.motivation.whyJoin,
         Goals: data.motivation.goals,
         Availability: data.motivation.availability,
-        // @ts-ignore
-        Optional1: data.experience.optional1 || '',
-        // @ts-ignore
-        Optional2: data.experience.optional2 || '',
+  // @ts-expect-error extra-optional
+  Optional1: data.experience.optional1 || '',
+  // @ts-expect-error extra-optional
+  Optional2: data.experience.optional2 || '',
       };
 
       const params = new URLSearchParams();
       for (const [k, v] of Object.entries(payload)) params.append(k, v);
 
       // Convert + in keys into %20 so Apps Script matches your sheet headers
-      let encodedBody = params.toString().replace(/\+/g, "%20");
+  const encodedBody = params.toString().replace(/\+/g, "%20");
 
       // Debug logs
       console.table(payload);
       console.log("Encoded body (fixed):", encodedBody);
 
-      const res = await fetch(ENDPOINT, {
+  await fetch(ENDPOINT, {
         method: "POST",
         mode: "no-cors", // avoid CORS errors with Apps Script; response will be opaque
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -166,22 +165,22 @@ export default function ApplicationSection() {
     } catch (err) {
       console.error("Submit error:", err);
       setSubmissionStatus("error");
-      // @ts-ignore
-      setSubmitMessage(`There was an error submitting your application: ${err.message}. Please check the console and try again.`);
+      const message = (err instanceof Error) ? err.message : String(err);
+      setSubmitMessage(`There was an error submitting your application: ${message}. Please check the console and try again.`);
     }
   };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 'personal':
-        // @ts-ignore
+        // @ts-expect-error runtime-prop
         return <PersonalInfoStep control={control} errors={errors.personalInfo} setValue={setValue} />;
       case 'experience':
-        // @ts-ignore
-        return <ExperienceStep control={control} errors={errors.experience} />;
+          // @ts-expect-error runtime-prop
+          return <ExperienceStep control={control} errors={errors.experience} />;
       case 'motivation':
-        // @ts-ignore
-        return <MotivationStep control={control} errors={errors.motivation} />;
+          // @ts-expect-error runtime-prop
+          return <MotivationStep control={control} errors={errors.motivation} />;
       default:
         return null;
     }
@@ -352,8 +351,8 @@ export default function ApplicationSection() {
                 {isLastStep ? (
                   <motion.button
                     type="button"
-                    // @ts-ignore
-                    onClick={handleSubmit(onSubmit)}
+                      // @ts-expect-error handleSubmit-callback
+                      onClick={handleSubmit(onSubmit)}
                     disabled={submissionStatus === 'submitting'}
                     whileHover={submissionStatus !== 'submitting' ? { scale: 1.02 } : {}}
                     whileTap={submissionStatus !== 'submitting' ? { scale: 0.98 } : {}}

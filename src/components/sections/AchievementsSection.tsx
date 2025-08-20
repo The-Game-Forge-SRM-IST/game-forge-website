@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, memo } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Award, Target, Filter } from 'lucide-react';
 import { Achievement } from '@/types';
@@ -237,7 +237,6 @@ const AchievementsSection = memo(function AchievementsSection() {
               >
                 <AchievementCard
                   achievement={achievement}
-                  index={index}
                   isLeft={index % 2 === 0}
                 />
               </motion.div>

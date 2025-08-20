@@ -10,7 +10,7 @@ interface CustomCursorProps {
 export default function CustomCursor({ className = '' }: CustomCursorProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
+  // clicking state intentionally removed; cursorVariant covers click visuals
   const [cursorVariant, setCursorVariant] = useState<'default' | 'hover' | 'click' | 'text' | 'gaming'>('default');
   const [mouseVelocity, setMouseVelocity] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
@@ -54,12 +54,10 @@ export default function CustomCursor({ className = '' }: CustomCursorProps) {
     const handleMouseLeave = () => setIsVisible(false);
     
     const handleMouseDown = () => {
-      setIsClicking(true);
       setCursorVariant('click');
     };
-    
+
     const handleMouseUp = () => {
-      setIsClicking(false);
       setCursorVariant(isHovering ? 'hover' : 'default');
     };
 
