@@ -425,5 +425,61 @@
       "linkedin": "https://www.linkedin.com/in/harsh-soni-91a88432b",
       "github": "https://github.com/hs5385"
     }
+  },
+  {
+    "id": "vidyut-arun",
+    "name": "Vidyut Arun",
+    "role": "Game Development",
+    "department": "Development",
+    "image": "/images/team/vidyut-arun.jpg",
+    "bio": "I’m a Vidyut Arun , I am pursuing B.Tech ECE with specialization in Data Science. I’m passionate about Machine learning, data science, quantitative finance, applied mathematics and enjoy building projects that bridge theory with real-world applications.",
+    "skills": [
+      "C",
+      "C#",
+      "Python",
+      "GDScript"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/vidyut-arun-020853326/",
+      "github": "https://github.com/VidyutArun"
+    }
+  },
+  {
+    "id": "r-mukesh",
+    "name": "Regalagadda Mukesh",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/r-mukesh.jpeg",
+    "bio": "I am a third-year undergraduate student at SRM Institute of Science and Technology (SRMIST), pursuing a degree in Computer Science and Engineering with specialization Artificial intelligence and machine learning. My academic journey focuses on building strong programming skills like c, c++, java",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "DBMS"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/mukesh-regalagadda-18b083328",
+      "github": "https://github.com/MUKESH-234"
+    }
+  },
+  {
+    "id": "reddy-manoj-kumar",
+    "name": "Reddy Manoj Kumar",
+    "role": "Game Design",
+    "department": "Design",
+    "image": "/images/team/reddy-manoj-kumar.jpg",
+    "bio": "I am a third-year undergraduate student at SRM Institute of Science and Technology (SRMIST), pursuing a degree in Computer Science and Engineering with specialization Artificial intelligence and machine learning. My academic journey focuses on building strong programming skills like c, c++, java",
+    "skills": [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "DBMS"
+    ],
+    "socialLinks": {
+      "linkedin": "https://www.linkedin.com/in/manoj-kumar-reddy-ba0b87299/",
+      "github": "https://github.com/manoj22-prog"
+    }
   }
 ]
