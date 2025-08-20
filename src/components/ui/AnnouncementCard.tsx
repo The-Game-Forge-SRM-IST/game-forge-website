@@ -41,14 +41,6 @@ export default function AnnouncementCard({ announcement, index }: AnnouncementCa
     });
   };
 
-  const isRecent = () => {
-    const announcementDate = new Date(announcement.date);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - announcementDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 7; // Consider announcements from last 7 days as recent
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

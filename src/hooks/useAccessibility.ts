@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 interface AccessibilityPreferences {
   prefersReducedMotion: boolean;
@@ -27,7 +27,7 @@ export function useAccessibility() {
   });
 
   const [isKeyboardUser, setIsKeyboardUser] = useState(false);
-  const [currentFocus, setCurrentFocus] = useState<HTMLElement | null>(null);
+  const [currentFocus] = useState<HTMLElement | null>(null);
   const lastFocusedElement = useRef<HTMLElement | null>(null);
   const liveRegionRef = useRef<HTMLDivElement | null>(null);
 
@@ -108,82 +108,87 @@ export function useAccessibility() {
     };
   }, []);
 
-  // Focus management utilities
-  const focusManagement: FocusManagement = {
-    trapFocus: useCallback((container: HTMLElement) => {
-      const focusableElements = container.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      ) as NodeListOf<HTMLElement>;
+  // Focus management utilities: keep stable identity by memoizing the object
+  const restoreFocus = useCallback((element?: HTMLElement) => {
+    const elementToFocus = element || lastFocusedElement.current;
+    if (elementToFocus && typeof elementToFocus.focus === 'function') {
+      elementToFocus.focus();
+    }
+  }, []);
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+  const trapFocus = useCallback((container: HTMLElement) => {
+    const focusableElements = container.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as NodeListOf<HTMLElement>;
 
-      const handleTabKey = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return;
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
 
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement.focus();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement.focus();
-          }
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
         }
-      };
-
-      const handleEscapeKey = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          focusManagement.restoreFocus();
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
         }
-      };
-
-      // Store the currently focused element
-      lastFocusedElement.current = document.activeElement as HTMLElement;
-
-      // Focus the first element
-      firstElement?.focus();
-
-      document.addEventListener('keydown', handleTabKey);
-      document.addEventListener('keydown', handleEscapeKey);
-
-      return () => {
-        document.removeEventListener('keydown', handleTabKey);
-        document.removeEventListener('keydown', handleEscapeKey);
-      };
-    }, []),
-
-    restoreFocus: useCallback((element?: HTMLElement) => {
-      const elementToFocus = element || lastFocusedElement.current;
-      if (elementToFocus && typeof elementToFocus.focus === 'function') {
-        elementToFocus.focus();
       }
-    }, []),
+    };
 
-    announceLiveRegion: useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
-      if (liveRegionRef.current) {
-        liveRegionRef.current.setAttribute('aria-live', priority);
-        liveRegionRef.current.textContent = message;
-        
-        // Clear the message after a short delay to allow for re-announcements
-        setTimeout(() => {
-          if (liveRegionRef.current) {
-            liveRegionRef.current.textContent = '';
-          }
-        }, 1000);
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        restoreFocus();
       }
-    }, []),
+    };
 
-    skipToContent: useCallback(() => {
-      const mainContent = document.getElementById('main-content') || document.querySelector('main');
-      if (mainContent) {
-        mainContent.focus();
-        mainContent.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, []),
-  };
+    // Store the currently focused element
+    lastFocusedElement.current = document.activeElement as HTMLElement;
+
+    // Focus the first element
+    firstElement?.focus();
+
+    document.addEventListener('keydown', handleTabKey);
+    document.addEventListener('keydown', handleEscapeKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleTabKey);
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [restoreFocus]);
+
+  const announceLiveRegion = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    if (liveRegionRef.current) {
+      liveRegionRef.current.setAttribute('aria-live', priority);
+      liveRegionRef.current.textContent = message;
+      
+      // Clear the message after a short delay to allow for re-announcements
+      setTimeout(() => {
+        if (liveRegionRef.current) {
+          liveRegionRef.current.textContent = '';
+        }
+      }, 1000);
+    }
+  }, []);
+
+  const skipToContent = useCallback(() => {
+    const mainContent = document.getElementById('main-content') || document.querySelector('main');
+    if (mainContent) {
+      (mainContent as HTMLElement).focus();
+      mainContent.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
+  const focusManagement: FocusManagement = useMemo(() => ({
+    trapFocus,
+    restoreFocus,
+    announceLiveRegion,
+    skipToContent
+  }), [trapFocus, restoreFocus, announceLiveRegion, skipToContent]);
 
   // Keyboard navigation helpers
   const handleArrowNavigation = useCallback((
@@ -268,15 +273,15 @@ export function useAccessibility() {
 
   // Screen reader utilities
   const announcePageChange = useCallback((pageName: string) => {
-    focusManagement.announceLiveRegion(`Navigated to ${pageName}`, 'assertive');
-  }, [focusManagement]);
+    announceLiveRegion(`Navigated to ${pageName}`, 'assertive');
+  }, [announceLiveRegion]);
 
   const announceLoadingState = useCallback((isLoading: boolean, context?: string) => {
     const message = isLoading 
       ? `Loading${context ? ` ${context}` : ''}...` 
       : `${context || 'Content'} loaded`;
-    focusManagement.announceLiveRegion(message, 'polite');
-  }, [focusManagement]);
+    announceLiveRegion(message, 'polite');
+  }, [announceLiveRegion]);
 
   // Generate accessible IDs
   const generateId = useCallback((prefix: string = 'accessible'): string => {

@@ -238,7 +238,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
             aria-labelledby="mobile-menu-button"
           >
             <div className="px-4 pt-2 pb-4 space-y-1 max-h-[70vh] overflow-y-auto">
-              {navigationItems.map((item, index) => (
+              {navigationItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"

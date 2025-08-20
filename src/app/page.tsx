@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { HeroSection, TeamSection, ProjectsSection, AchievementsSection, GallerySection, EventsSection, AnnouncementsSection, AlumniSection, ApplicationSection, ContactSection } from '@/components/sections';
+import { HeroSection, TeamSection, ProjectsSection, AchievementsSection, GallerySection, EventsSection, AnnouncementsSection, ApplicationSection, ContactSection } from '@/components/sections';
 import { PageTransition, SectionTransition, HeroSkeleton, GridSkeleton } from '@/components/ui';
 import AppWithLoading from '@/components/ui/AppWithLoading';
 import AccessibilityTester from '@/components/ui/AccessibilityTester';

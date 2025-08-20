@@ -27,7 +27,7 @@ export default function TeamSection() {
   }, [activeFilter, teamMembers]);
 
   // Calculate items to show (3 rows = 9 items on desktop, 6 on tablet, 3 on mobile)
-  const itemsPerRow = { mobile: 1, tablet: 2, desktop: 3 };
+  // layout sizing constants (currently unused)
   const initialItemsToShow = 9; // 3 rows on desktop
   const displayedMembers = showAll ? filteredMembers : filteredMembers.slice(0, initialItemsToShow);
   const hasMoreItems = filteredMembers.length > initialItemsToShow;
@@ -55,44 +55,7 @@ export default function TeamSection() {
     return () => clearTimeout(timer);
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: { 
-      opacity: 1, 
-      y: 0
-    }
-  };
-
-  const filterVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6, delay: 0.3 }
-    }
-  };
-
-  const gridVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.4
-      }
-    }
-  };
+  // animation variant placeholders (intentionally unused)
 
   // Memoize department counts to avoid recalculating on every render
   const departmentCounts = useMemo(() => {

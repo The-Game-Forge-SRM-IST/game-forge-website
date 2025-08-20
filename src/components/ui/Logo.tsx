@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -27,10 +28,11 @@ export default function Logo({ size = 'md', showText = true, className = '', onC
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.2 }}
       >
-        <img 
-          src="/images/ClubLogo.png" 
+        <Image
+          src="/images/ClubLogo.png"
           alt="The Game Forge Club Logo"
-          className="w-full h-full object-contain rounded-lg shadow-lg"
+          fill
+          className="object-contain rounded-lg shadow-lg"
         />
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-blue-400/10 to-red-400/10 rounded-lg blur-sm" />

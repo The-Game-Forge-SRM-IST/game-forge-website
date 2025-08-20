@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+// motion intentionally unused in this file
 import { ExternalLink, Github, Play, Users, Wrench } from 'lucide-react';
 import { Project } from '@/types';
 import { RippleEffect, MagneticHover, BouncingIcon } from './MicroAnimations';

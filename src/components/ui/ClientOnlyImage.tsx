@@ -18,5 +18,6 @@ export default function ClientOnlyImage({ fallback, ...props }: ClientOnlyImageP
     return fallback || <div className="animate-pulse bg-gray-700 w-full h-full" />;
   }
 
-  return <Image {...props} />;
+  const { alt, ...rest } = props as any;
+  return <Image {...(rest as ImageProps)} alt={alt ?? ''} />;
 }
