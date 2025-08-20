@@ -13,6 +13,10 @@ import { PersonalInfoStep } from '@/components/ui/PersonalInfoStep';
 import { ExperienceStep } from '@/components/ui/ExperienceStep';
 import { MotivationStep } from '@/components/ui/MotivationStep';
 
+// === Configure your endpoint here (same as working first form) ===
+const ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbxO9ZF19tr8TfxJy9CXkYM28cGc4uP9ZkQX16Pjk_CAmKKeEVDq1_N7HT9F4R2FLlpt/exec";
+
 type FormStep = 'personal' | 'experience' | 'motivation';
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -44,6 +48,8 @@ export default function ApplicationSection() {
     handleSubmit,
     trigger,
     setValue,
+    getValues,
+    reset,
     formState: { errors }
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
@@ -62,7 +68,9 @@ export default function ApplicationSection() {
         programmingLanguages: [],
         gameEngines: [],
         previousProjects: '',
-        portfolioUrl: ''
+        portfolioUrl: '',
+        optional1: '',
+        optional2: ''
       },
       motivation: {
         whyJoin: '',
@@ -104,20 +112,57 @@ export default function ApplicationSection() {
 
   const onSubmit = async (data: ApplicationFormData) => {
     setSubmissionStatus('submitting');
-    
+    setSubmitMessage('');
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real application, you would send the data to your backend
-      console.log('Application submitted:', data);
-      
-      setSubmissionStatus('success');
-      setSubmitMessage('Your application has been submitted successfully! We&apos;ll get back to you soon.');
-    } catch (error) {
-      setSubmissionStatus('error');
-      setSubmitMessage('There was an error submitting your application. Please try again.');
-      console.error('Submission error:', error);
+      // Prepare payload exactly like the working first form with proper field names for Google Sheets
+      const payload = {
+        Name: data.personalInfo.name,
+        Email: data.personalInfo.email,
+        Phone: data.personalInfo.phone,
+        Year: data.personalInfo.year,
+        Department: data.personalInfo.department,
+        Course: data.personalInfo.course,
+        "Registration Number": data.personalInfo.registrationNumber,
+        "Programming Languages": data.experience.programmingLanguages.join(", "),
+        "Game Engines": data.experience.gameEngines.join(", "),
+        "Previous Projects": data.experience.previousProjects,
+        "Portfolio URL": data.experience.portfolioUrl || '',
+        "Why Join": data.motivation.whyJoin,
+        Goals: data.motivation.goals,
+        Availability: data.motivation.availability,
+        Optional1: data.experience.optional1 || '',
+        Optional2: data.experience.optional2 || '',
+      };
+
+      const params = new URLSearchParams();
+      for (const [k, v] of Object.entries(payload)) params.append(k, v);
+
+      // Convert + in keys into %20 so Apps Script matches your sheet headers
+      let encodedBody = params.toString().replace(/\+/g, "%20");
+
+      // Debug logs
+      console.table(payload);
+      console.log("Encoded body (fixed):", encodedBody);
+
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        mode: "no-cors", // avoid CORS errors with Apps Script; response will be opaque
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodedBody,
+      });
+
+      // With no-cors, we can't read res.ok. Assume success if no network error.
+      setSubmissionStatus("success");
+      setSubmitMessage('Your application has been submitted successfully! We\'ll get back to you soon.');
+
+      // Reset form
+      reset();
+      setCurrentStep('personal');
+    } catch (err) {
+      console.error("Submit error:", err);
+      setSubmissionStatus("error");
+      setSubmitMessage(`There was an error submitting your application: ${err.message}. Please check the console and try again.`);
     }
   };
 
@@ -155,6 +200,7 @@ export default function ApplicationSection() {
                 onClick={() => {
                   setSubmissionStatus('idle');
                   setCurrentStep('personal');
+                  reset();
                 }}
                 className="mt-8 px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
               >
@@ -249,7 +295,7 @@ export default function ApplicationSection() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-700/50">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -297,7 +343,8 @@ export default function ApplicationSection() {
 
                 {isLastStep ? (
                   <motion.button
-                    type="submit"
+                    type="button"
+                    onClick={handleSubmit(onSubmit)}
                     disabled={submissionStatus === 'submitting'}
                     whileHover={submissionStatus !== 'submitting' ? { scale: 1.02 } : {}}
                     whileTap={submissionStatus !== 'submitting' ? { scale: 0.98 } : {}}
@@ -337,7 +384,7 @@ export default function ApplicationSection() {
                 )}
               </div>
             </div>
-          </form>
+          </div>
         </motion.div>
       </div>
     </section>
