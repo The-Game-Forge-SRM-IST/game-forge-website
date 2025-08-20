@@ -3,7 +3,8 @@
 import { useState, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Filter, Grid, List } from 'lucide-react';
+import { Filter } from 'lucide-react';
+
 import { GalleryImage } from '@/types';
 import { Lightbox } from '@/components/ui/Lightbox';
 import { 
@@ -38,7 +39,6 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number>(-1);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'masonry'>('masonry');
   const [imagesLoaded, setImagesLoaded] = useState<Set<string>>(new Set());
 
   // Filter images based on selected category
@@ -166,41 +166,11 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
               </button>
             ))}
           </div>
-
-          {/* View mode toggle */}
-          <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('masonry')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'masonry'
-                  ? 'bg-white text-gray-900'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-              title="Masonry view"
-            >
-              <Grid size={16} />
-            </button>
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white text-gray-900'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-              title="Grid view"
-            >
-              <List size={16} />
-            </button>
-          </div>
         </div>
 
         {/* Image grid */}
         <motion.div
-          className={
-            viewMode === 'masonry'
-              ? 'columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6'
-              : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-          }
+          className='columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6'
           variants={canAnimate && loadingStage === 'animations' ? variants.container : {}}
           initial={canAnimate && loadingStage === 'animations' ? "hidden" : false}
           animate={canAnimate && loadingStage === 'animations' ? "visible" : {}}
@@ -208,7 +178,7 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
           {filteredImages.map((image, index) => (
             <motion.div
               key={`${selectedCategory}-${image.id}`}
-              className={`group cursor-pointer ${viewMode === 'masonry' ? 'break-inside-avoid' : ''}`}
+              className="group cursor-pointer break-inside-avoid"
               onClick={() => openLightbox(index)}
               variants={canAnimate ? variants.item : {}}
             >
@@ -266,16 +236,7 @@ const GallerySection = memo(function GallerySection({ images }: GallerySectionPr
           ))}
         </motion.div>
 
-        {/* Empty state */}
-        {filteredImages.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-gray-400 mb-4">
-              <Grid size={64} className="mx-auto mb-4 opacity-50" />
-              <p className="text-xl">No images found in this category</p>
-              <p className="text-sm mt-2">Try selecting a different category</p>
-            </div>
-          </div>
-        )}
+        
       </div>
 
       {/* Lightbox */}

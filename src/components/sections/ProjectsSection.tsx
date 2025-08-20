@@ -2,7 +2,7 @@
 
 import { useState, useMemo, memo } from 'react';
 import { motion } from 'framer-motion';
-import { Filter, Grid, List } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Project, TeamMember } from '@/types';
 import { ProjectCard } from '@/components/ui/ProjectCard';
 import { ProjectModal } from '@/components/ui/ProjectModal';
@@ -18,7 +18,6 @@ interface ProjectsSectionProps {
 }
 
 type FilterType = 'all' | 'completed' | 'in-progress' | 'planned';
-type ViewType = 'grid' | 'list';
 
 const ProjectsSection = memo(function ProjectsSection({ projects, teamMembers }: ProjectsSectionProps) {
   const { ref, loadingStage } = useProgressiveLoading(0.1);
@@ -26,7 +25,6 @@ const ProjectsSection = memo(function ProjectsSection({ projects, teamMembers }:
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
-  const [viewType, setViewType] = useState<ViewType>('grid');
   const [showAll, setShowAll] = useState(false);
   
   const initialProjectsToShow = 6; // Show 6 projects initially (2 rows of 3)
@@ -155,41 +153,13 @@ const ProjectsSection = memo(function ProjectsSection({ projects, teamMembers }:
               ))}
             </div>
           </div>
-
-          {/* View Toggle */}
-          <div className="flex items-center gap-2 bg-gray-800/50 rounded-lg p-1 border border-gray-700/50">
-            <button
-              onClick={() => setViewType('grid')}
-              className={`p-2 rounded-md transition-colors duration-200 touch-manipulation ${
-                viewType === 'grid'
-                  ? 'bg-green-500 text-white'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              <Grid className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewType('list')}
-              className={`p-2 rounded-md transition-colors duration-200 touch-manipulation ${
-                viewType === 'list'
-                  ? 'bg-green-500 text-white'
-                  : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              <List className="w-4 h-4" />
-            </button>
-          </div>
         </div>
 
         {/* Projects Grid/List */}
         {filteredProjects.length > 0 ? (
           <>
             <motion.div
-              className={
-                viewType === 'grid'
-                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-0'
-                  : 'space-y-4 sm:space-y-6 px-4 sm:px-0'
-              }
+              className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-0'
               variants={canAnimate && loadingStage === 'animations' ? variants.container : {}}
               initial={canAnimate && loadingStage === 'animations' ? "hidden" : false}
               animate={canAnimate && loadingStage === 'animations' ? "visible" : {}}

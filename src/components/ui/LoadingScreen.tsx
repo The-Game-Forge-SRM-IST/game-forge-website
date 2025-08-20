@@ -684,7 +684,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                     </motion.span>
                   </motion.h1>
 
-                  <motion.p
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{
                       opacity: [0, 1, 0.8, 1],
@@ -723,7 +723,7 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
                       }}
                       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                     />
-                  </motion.p>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
