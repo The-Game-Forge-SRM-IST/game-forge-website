@@ -91,7 +91,7 @@
     "name": "Pawani Gupta",
     "role": "Creative Lead",
     "department": "Management",
-    "image": "/images/team/pawani.jpeg",
+    "image": "/images/team/pawani.webp",
     "bio": "Leading creative direction and coordinating ideas from concept to design.",
     "skills": [
       "Canva",
@@ -109,7 +109,7 @@
     "name": "Shashvat Rajora",
     "role": "AI Research Lead",
     "department": "AI For Game Dev",
-    "image": "/images/team/rajora.jpeg",
+    "image": "/images/team/rajora.webp",
     "bio": "AI researcher specializing in game AI, procedural content generation, and machine learning applications in game development. Leading innovative AI solutions for next-generation gaming experiences.",
     "skills": [
       "Machine Learning",
@@ -147,7 +147,7 @@
     "name": "Dineshwar Nagubothu",
     "role": "Corporate for Sponsers",
     "department": "Management",
-    "image": "/images/team/dinesh.jpeg",
+    "image": "/images/team/dinesh.webp",
     "bio": "wannabe a android dev , B.Tech student SRMIST don't hesitate to dm lets connect through telegram @dinonomous",
     "skills": [
       "MERN Stack",
@@ -169,7 +169,7 @@
     "name": "Prajjwal Rawat",
     "role": "AI For Game Dev Researcher",
     "department": "AI For Game Dev",
-    "image": "/images/team/prajjwal.jpeg",
+    "image": "/images/team/prajjwal.webp",
     "bio": "I'm Prajjwal, currently pursuing a B.Tech in Computer Science and Artificial Intelligence & Machine Learning (CSE AIML) at SRM Chennai. I have a deep passion for AI and Data Science, which aligns with my specialization. My interest in coding comes from its ability to solve real-world problems through well-crafted algorithms and software. I love the logical thinking it demands and the satisfaction of creating solutions from scratch.",
     "skills": [
       "Web Development",
@@ -192,7 +192,7 @@
     "name": "Saswat Kumar Adibhatia",
     "role": "Corporate Member",
     "department": "Management",
-    "image": "/images/team/saswat.jpeg",
+    "image": "/images/team/saswat.webp",
     "bio": "He too cool to mention something for his bio.",
     "skills": [
       "MERN Stack",
@@ -212,7 +212,7 @@
     "name": "Vivek Aryan",
     "role": "Creatives and Corporate",
     "department": "Management",
-    "image": "/images/team/vivek-aryan.jpeg",
+    "image": "/images/team/vivek-aryan.webp",
     "bio": "Gym Rat and Great Cook",
     "skills": [
       "C",
@@ -229,7 +229,7 @@
     "name": "Surya Kancharana",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/surya-kancharana.jpeg",
+    "image": "/images/team/surya-kancharana.webp",
     "bio": "I'm Surya Game forge club member",
     "skills": [
       "C",
@@ -249,7 +249,7 @@
     "name": "Anshu Aman",
     "role": "Creatives Memeber",
     "department": "Management",
-    "image": "/images/team/anshu.jpeg",
+    "image": "/images/team/anshu.webp",
     "bio": "I'm Surya Game forge club member",
     "skills": [
       "C",
@@ -267,7 +267,7 @@
     "name": "Menaha Bhandari",
     "role": "Game Design/Art",
     "department": "Art",
-    "image": "/images/team/menahaha.jpeg",
+    "image": "/images/team/menahaha.webp",
     "bio": "My name is menaha, I'm a beginner game dev and I like games that look visually interesting.",
     "skills": [
       "C",
@@ -285,7 +285,7 @@
     "name": "Sulthan Thasleem",
     "role": "Game Development",
     "department": "Development",
-    "image": "/images/team/thasleem.jpeg",
+    "image": "/images/team/thasleem.webp",
     "bio": "I'm thasleem Game forge club member",
     "skills": [
       "C",
@@ -302,7 +302,7 @@
     "name": "Suyash Abhishek Kumar",
     "role": "Game Development",
     "department": "Development",
-    "image": "/images/team/suyash.jpeg",
+    "image": "/images/team/suyash.webp",
     "bio": "I'm suyash Game forge club member",
     "skills": [
       "C",
@@ -322,7 +322,7 @@
     "name": "Adamya Srivastava",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/adamya.png",
+    "image": "/images/team/adamya.webp",
     "bio": "Passionate about game design and development, I love blending technology and creativity to build immersive experiences. Currently pursuing BTech in Electronics and Communication Engineering at SRMIST, I’m exploring programming, AI, and interactive design to bring ideas to life. Always eager to learn, collaborate, and create something exciting!",
     "skills": [
       "C",
@@ -340,7 +340,7 @@
     "name": "T.Siddhartha Reddy",
     "role": "Game Development",
     "department": "Development",
-    "image": "/images/team/t.siddharthareddy.jpeg",
+    "image": "/images/team/t.siddharthareddy.webp",
     "bio": "I'm Thimmareddygari Siddhartha Reddy — a Computer Science student passionate about building interactive, meaningful digital experiences. As a game developer at SRM's Game Forge club, I design 🕹️ gameplay mechanics, program 👾 character logic, and bring ideas to life using Unity and C#.",
     "skills": [
       "C",
@@ -356,7 +356,7 @@
     "name": "Udayan Singh",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/udayan.jpeg",
+    "image": "/images/team/udayan.webp",
     "bio": "I'm Udayan Game forge club member",
     "skills": [
       "C",
@@ -375,7 +375,7 @@
     "name": "Radhvik Sai",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/RADHVIK.jpeg",
+    "image": "/images/team/RADHVIK.webp",
     "bio": "I am an engineering student at SRMIST KTR chennai, with a keen interest in technology innovation. I am member of Business Development and External at AIESEC in Chennai. Photography, videograhy, 3D modeling and animation, dancing, playing football and writing are my hobbies.",
     "skills": [
       "C",
@@ -394,7 +394,7 @@
     "name": "Sanjithkumar Sukumar",
     "role": "Game Art",
     "department": "Art",
-    "image": "/images/team/sanjithkumar.jpg",
+    "image": "/images/team/sanjithkumar.webp",
     "bio": "I'm Sanjithkumar Sukumar, a passionate Computer Science student at SRMIST with strong interests in Python development, UI/UX design, and content creation.",
     "skills": [
       "C",
@@ -413,7 +413,7 @@
     "name": "Harsh Soni",
     "role": "Game Development",
     "department": "Development",
-    "image": "/images/team/harsh-soni.jpeg",
+    "image": "/images/team/harsh-soni.webp",
     "bio": "I'm Sanjithkumar Sukumar, a passionate Computer Science student at SRMIST with strong interests in Python development, UI/UX design, and content creation.",
     "skills": [
       "C",
@@ -431,7 +431,7 @@
     "name": "Vidyut Arun",
     "role": "Game Development",
     "department": "Development",
-    "image": "/images/team/vidyut-arun.jpg",
+    "image": "/images/team/vidyut-arun.webp",
     "bio": "I’m a Vidyut Arun , I am pursuing B.Tech ECE with specialization in Data Science. I’m passionate about Machine learning, data science, quantitative finance, applied mathematics and enjoy building projects that bridge theory with real-world applications.",
     "skills": [
       "C",
@@ -449,7 +449,7 @@
     "name": "Regalagadda Mukesh",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/r-mukesh.jpeg",
+    "image": "/images/team/r-mukesh.webp",
     "bio": "I am a third-year undergraduate student at SRM Institute of Science and Technology (SRMIST), pursuing a degree in Computer Science and Engineering with specialization Artificial intelligence and machine learning. My academic journey focuses on building strong programming skills like c, c++, java",
     "skills": [
       "C",
@@ -468,7 +468,7 @@
     "name": "Reddy Manoj Kumar",
     "role": "Game Design",
     "department": "Design",
-    "image": "/images/team/reddy-manoj-kumar.jpg",
+    "image": "/images/team/reddy-manoj-kumar.webp",
     "bio": "I am a third-year undergraduate student at SRM Institute of Science and Technology (SRMIST), pursuing a degree in Computer Science and Engineering with specialization Artificial intelligence and machine learning. My academic journey focuses on building strong programming skills like c, c++, java",
     "skills": [
       "C",
