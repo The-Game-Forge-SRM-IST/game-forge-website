@@ -15,7 +15,6 @@
     "test:integration": "node scripts/integration-test-fixed.js",
     "deploy:prep": "node scripts/deployment-prep.js",
     "deploy:check": "npm run build && npm run deploy:prep",
-
     "data:validate": "node scripts/update-content.js validate",
     "data:stats": "node scripts/update-content.js stats",
     "data:mark-old": "node scripts/update-content.js mark-old",
@@ -28,9 +27,11 @@
     "test:performance": "node scripts/test-performance.js"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^5.2.1",
     "@react-three/drei": "^10.6.1",
     "@react-three/fiber": "^9.3.0",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.534.0",
     "next": "15.4.5",

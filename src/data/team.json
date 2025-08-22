@@ -170,13 +170,13 @@
     "role": "AI For Game Dev Researcher",
     "department": "AI For Game Dev",
     "image": "/images/team/prajjwal.webp",
-    "bio": "I'm Prajjwal, currently pursuing a B.Tech in Computer Science and Artificial Intelligence & Machine Learning (CSE AIML) at SRM Chennai. I have a deep passion for AI and Data Science, which aligns with my specialization. My interest in coding comes from its ability to solve real-world problems through well-crafted algorithms and software. I love the logical thinking it demands and the satisfaction of creating solutions from scratch.",
+    "bio": "A web developer passionate about the MERN stack, I love building apps that are fast, scalable, and user-friendly. With a background in AI & ML, I’m always exploring how intelligent systems can be woven into web experiences, making them smarter and more impactful. For me, coding isn’t just problem-solving — it’s about creating something exciting from scratch and pushing ideas into reality.",
     "skills": [
-      "Web Development",
+      "MERN Stack",
       "Machine Learning",
       "Game AI",
-      "Neural Networks",
-      "Python",
+      "Web Scraping",
+      "NextJs",
       "TensorFlow",
       "Unity ML-Agents",
       "Reinforcement Learning"

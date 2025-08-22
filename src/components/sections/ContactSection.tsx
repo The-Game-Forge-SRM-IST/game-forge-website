@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import { 
   Mail, 
   MapPin, 
@@ -16,7 +17,13 @@ import {
 } from 'lucide-react';
 import { contactFormSchema, type ContactFormData, CONTACT_TYPES } from '@/lib/validations/contact';
 
-type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
+// === Configuration from environment variables ===
+const ENDPOINT = process.env.NEXT_PUBLIC_GOOGLE_SCRIPTS_URL;
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'partial' | 'error';
 
 const contactInfo = {
   email: 'thegameforge@srmist.edu.in',
@@ -52,23 +59,141 @@ export default function ContactSection() {
     }
   });
 
+  const submitToGoogleSheets = async (data: ContactFormData): Promise<boolean> => {
+    try {
+      if (!ENDPOINT) {
+        console.error("Google Scripts URL not configured");
+        return false;
+      }
+
+      const payload = {
+        Name: data.name,
+        Email: data.email,
+        ContactType: CONTACT_TYPES.find(t => t.value === data.type)?.label || data.type,
+        Subject: data.subject,
+        Message: data.message,
+      };
+
+      const params = new URLSearchParams();
+      for (const [k, v] of Object.entries(payload)) params.append(k, v);
+      const encodedBody = params.toString().replace(/\+/g, "%20");
+
+      await fetch(ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodedBody,
+      });
+
+      return true; // Assume success with no-cors
+    } catch (error) {
+      console.error("Google Sheets submission error:", error);
+      return false;
+    }
+  };
+
+  const submitToEmailJS = async (data: ContactFormData): Promise<boolean> => {
+    try {
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        console.error("EmailJS configuration missing");
+        return false;
+      }
+
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name: data.name,
+          email: data.email,
+          contact_type: CONTACT_TYPES.find(t => t.value === data.type)?.label || data.type,
+          subject: data.subject,
+          message: data.message,
+          time: new Date().toLocaleString(),
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      return true;
+    } catch (error) {
+      console.error("EmailJS submission error:", error);
+      return false;
+    }
+  };
+
   const onSubmit = async (data: ContactFormData) => {
     setSubmissionStatus('submitting');
+    setSubmitMessage('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real application, you would send the data to your backend
-      console.log('Contact form submitted:', data);
-      
-      setSubmissionStatus('success');
-      setSubmitMessage('Thank you for your message! We&apos;ll get back to you within 24-48 hours.');
-      reset();
+      // Submit to both services simultaneously
+      const [sheetsSuccess, emailSuccess] = await Promise.all([
+        submitToGoogleSheets(data),
+        submitToEmailJS(data)
+      ]);
+
+      console.log('Submission results:', { sheetsSuccess, emailSuccess });
+
+      // Determine status based on results
+      if (sheetsSuccess && emailSuccess) {
+        setSubmissionStatus('success');
+        setSubmitMessage('We have received your message and will contact you shortly!');
+      } else if (sheetsSuccess && !emailSuccess) {
+        setSubmissionStatus('partial');
+        setSubmitMessage('We have received your message but it would take some time to reply due to email service issues.');
+      } else if (!sheetsSuccess && emailSuccess) {
+        setSubmissionStatus('partial');
+        setSubmitMessage('Your message was sent via email, but there was an issue with our database. We will still get back to you shortly.');
+      } else {
+        setSubmissionStatus('error');
+        setSubmitMessage('This service is not available right now. Please try again later or contact us directly via email.');
+      }
+
+      // Reset form only on success or partial success
+      if (sheetsSuccess || emailSuccess) {
+        reset();
+      }
     } catch (error) {
+      console.error("Submit error:", error);
       setSubmissionStatus('error');
-      setSubmitMessage('There was an error sending your message. Please try again or contact us directly via email.');
-      console.error('Submission error:', error);
+      setSubmitMessage('This service is not available right now. Please try again later or contact us directly via email.');
+    }
+  };
+
+  const getStatusIcon = () => {
+    switch (submissionStatus) {
+      case 'success':
+        return <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />;
+      case 'partial':
+        return <AlertCircle className="w-5 h-5 text-yellow-500 mr-3 flex-shrink-0" />;
+      case 'error':
+        return <AlertCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />;
+      default:
+        return null;
+    }
+  };
+
+  const getStatusStyles = () => {
+    switch (submissionStatus) {
+      case 'success':
+        return 'p-4 bg-green-900/20 border border-green-500/20 rounded-lg flex items-center';
+      case 'partial':
+        return 'p-4 bg-yellow-900/20 border border-yellow-500/20 rounded-lg flex items-center';
+      case 'error':
+        return 'p-4 bg-red-900/20 border border-red-500/20 rounded-lg flex items-center';
+      default:
+        return '';
+    }
+  };
+
+  const getStatusTextColor = () => {
+    switch (submissionStatus) {
+      case 'success':
+        return 'text-green-300';
+      case 'partial':
+        return 'text-yellow-300';
+      case 'error':
+        return 'text-red-300';
+      default:
+        return '';
     }
   };
 
@@ -134,8 +259,6 @@ export default function ContactSection() {
                     </p>
                   </div>
                 </div>
-
-
 
                 {/* Social Links */}
                 <div className="flex items-start space-x-4">
@@ -268,25 +391,14 @@ export default function ContactSection() {
                   </div>
 
                   {/* Status Messages */}
-                  {submissionStatus === 'success' && (
+                  {submissionStatus !== 'idle' && submissionStatus !== 'submitting' && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-green-900/20 border border-green-500/20 rounded-lg flex items-center"
+                      className={getStatusStyles()}
                     >
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                      <p className="text-green-300">{submitMessage}</p>
-                    </motion.div>
-                  )}
-
-                  {submissionStatus === 'error' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-4 bg-red-900/20 border border-red-500/20 rounded-lg flex items-center"
-                    >
-                      <AlertCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
-                      <p className="text-red-300">{submitMessage}</p>
+                      {getStatusIcon()}
+                      <p className={getStatusTextColor()}>{submitMessage}</p>
                     </motion.div>
                   )}
 
