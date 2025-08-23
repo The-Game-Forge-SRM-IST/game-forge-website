@@ -9,105 +9,28 @@ export default function BackgroundMusic() {
     const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
-        // Use preloaded audio if available
-        const preloadedAudio = (window as any).__preloadedAudio;
-        if (preloadedAudio && audioRef.current) {
-            console.log('🎵 Using preloaded audio from loading screen');
-            audioRef.current.src = preloadedAudio.src;
-            audioRef.current.load();
-        }
+        const audio = audioRef.current;
 
-        let hasTriggered = false;
-
-        // Mobile-optimized audio starter
-        const startOnInteraction = async (event: Event) => {
-            if (hasTriggered) return;
-            hasTriggered = true;
-
-            console.log('📱 MOBILE INTERACTION DETECTED:', event.type, 'isTrusted:', event.isTrusted);
-
-            const audio = audioRef.current;
-            if (audio) {
-                console.log('🔍 Audio state before play:', {
-                    readyState: audio.readyState,
-                    paused: audio.paused,
-                    src: audio.src,
-                    currentSrc: audio.currentSrc
-                });
-
+        const startOnInteraction = async () => {
+            if (audio && audio.paused) {
                 try {
-                    // Mobile-specific: Start with muted play first
-                    audio.muted = true;
-                    audio.volume = 0.3;
-
-                    // Ensure audio is loaded
-                    if (audio.readyState < 2) {
-                        console.log('⏳ Audio not ready, loading...');
-                        audio.load();
-                        await new Promise((resolve, reject) => {
-                            const timeout = setTimeout(() => reject(new Error('Load timeout')), 5000);
-                            const onCanPlay = () => {
-                                clearTimeout(timeout);
-                                audio.removeEventListener('canplay', onCanPlay);
-                                audio.removeEventListener('error', onError);
-                                resolve(true);
-                            };
-                            const onError = (e: Event) => {
-                                clearTimeout(timeout);
-                                audio.removeEventListener('canplay', onCanPlay);
-                                audio.removeEventListener('error', onError);
-                                reject(e);
-                            };
-                            audio.addEventListener('canplay', onCanPlay);
-                            audio.addEventListener('error', onError);
-                        });
-                    }
-
-                    console.log('▶️ Starting muted play for mobile...');
                     await audio.play();
-
-                    // Unmute after successful start
-                    setTimeout(() => {
-                        audio.muted = false;
-                        console.log('🔊 Unmuted audio');
-                    }, 100);
-
                     setIsPlaying(true);
-                    console.log('✅ Mobile music started from', event.type);
                 } catch (error) {
-                    console.error('❌ Mobile music failed:', error);
-                    console.log('🔍 Final audio state:', {
-                        readyState: audio.readyState,
-                        paused: audio.paused,
-                        error: audio.error,
-                        networkState: audio.networkState
-                    });
+                    console.error("Audio play failed:", error);
                 }
-            } else {
-                console.error('❌ Audio element not found!');
             }
+            // Remove the listener after first interaction
+            document.removeEventListener('click', startOnInteraction);
+            document.removeEventListener('touchstart', startOnInteraction);
         };
 
-        // Add multiple mobile-friendly event listeners
-        const events = [
-            { type: 'click', options: { once: true } },
-            { type: 'touchstart', options: { once: true, passive: false } },
-            { type: 'touchend', options: { once: true, passive: false } },
-            { type: 'touchmove', options: { once: true, passive: false } },
-            { type: 'pointerdown', options: { once: true } },
-            { type: 'keydown', options: { once: true } }
-        ];
-
-        events.forEach(({ type, options }) => {
-            document.addEventListener(type, startOnInteraction, options);
-        });
-
-        console.log('🔧 Click-anywhere music enabled');
+        document.addEventListener('click', startOnInteraction);
+        document.addEventListener('touchstart', startOnInteraction);
 
         return () => {
-            events.forEach(({ type }) => {
-                document.removeEventListener(type, startOnInteraction);
-            });
+            document.removeEventListener('click', startOnInteraction);
+            document.removeEventListener('touchstart', startOnInteraction);
         };
     }, []);
 

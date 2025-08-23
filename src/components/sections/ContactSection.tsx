@@ -19,7 +19,7 @@ import { contactFormSchema, type ContactFormData, CONTACT_TYPES } from '@/lib/va
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 const contactInfo = {
-  email: 'thegameforge@srmist.edu.in',
+  email: 'thegameforge00@gmail.com',
   location: {
     name: 'SRM Institute of Science and Technology',
     address: 'Kattankulathur, Tamil Nadu 603203',

@@ -42,21 +42,6 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
     // Detect mobile device
     setIsMobileDevice(isMobile());
 
-    // Preload audio during loading screen
-    const preloadAudio = () => {
-      const audio = new Audio();
-      audio.preload = 'auto';
-      audio.src = '/C418  - Sweden - Minecraft Volume Alpha.mp3';
-      audio.load();
-      console.log('🎵 Audio preloading started during loading screen');
-      
-      // Store in window for BackgroundMusic component to use
-      (window as any).__preloadedAudio = audio;
-    };
-
-    // Start audio preload early
-    setTimeout(preloadAudio, 500);
-
     // Staggered animation sequence
     setTimeout(() => setShowLogo(true), 150);
     // Only show particles on desktop for performance
