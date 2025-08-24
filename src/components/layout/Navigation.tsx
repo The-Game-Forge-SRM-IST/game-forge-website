@@ -31,7 +31,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
 
   const navRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
-  
+
   // Debug logging
   useEffect(() => {
     console.log('🎯 Navigation component - activeSection is now:', activeSection);
@@ -45,7 +45,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
   // Simple scroll handling
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -94,7 +94,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
   const handleSectionClick = (sectionId: string) => {
     // Immediate UI feedback - close mobile menu first
     setIsOpen(false);
-    
+
     // Use RAF for smooth state update
     requestAnimationFrame(() => {
       onSectionClick(sectionId);
@@ -120,11 +120,10 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 navigation-fixed safe-area-inset-top ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 navigation-fixed safe-area-inset-top ${isScrolled
           ? 'navigation-dark shadow-lg'
           : 'bg-transparent'
-      }`}
+        }`}
       role="navigation"
       aria-label="Main navigation"
     >
@@ -146,7 +145,7 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ 
+                  transition={{
                     duration: 0.3,
                     ease: "easeOut"
                   }}
@@ -181,11 +180,10 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                     handleSectionClick(item.id);
                   }}
                   onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-colors duration-300 relative whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
-                    activeSection === item.id
+                  className={`px-2 xl:px-3 py-2 rounded-md text-sm xl:text-base font-medium transition-colors duration-300 relative whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${activeSection === item.id
                       ? 'text-green-400 bg-green-400/10 shadow-lg shadow-green-400/20'
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
+                    }`}
                   aria-current={activeSection === item.id ? 'page' : undefined}
                   aria-label={`Navigate to ${item.label} section`}
                   tabIndex={0}
@@ -247,11 +245,10 @@ export default function Navigation({ activeSection, onSectionClick }: Navigation
                     handleSectionClick(item.id);
                   }}
                   onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 touch-manipulation relative min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${
-                    activeSection === item.id
+                  className={`block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 touch-manipulation relative min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black ${activeSection === item.id
                       ? 'text-green-400 bg-green-400/10 border border-green-400/20'
                       : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                  }`}
+                    }`}
                   role="menuitem"
                   aria-current={activeSection === item.id ? 'page' : undefined}
                   aria-label={`Navigate to ${item.label} section`}

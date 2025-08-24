@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Game Forge - Game Development Club at SRM IST KTR",
+  title: "The Game Forge",
   description: "The Game Forge is a game development club at SRM IST KTR, fostering creativity and innovation in game development through collaboration and learning.",
   keywords: "game development, programming, SRM IST KTR, student club, gaming, technology",
   authors: [{ name: "The Game Forge" }],
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
   publisher: "The Game Forge",
   robots: "index, follow",
   openGraph: {
-    title: "The Game Forge - Game Development Club at SRM IST KTR",
+    title: "The Game Forge",
     description: "The Game Forge is a game development club at SRM IST KTR, fostering creativity and innovation in game development through collaboration and learning.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Game Forge - Game Development Club at SRM IST KTR",
+    title: "The Game Forge",
     description: "The Game Forge is a game development club at SRM IST KTR, fostering creativity and innovation in game development through collaboration and learning.",
   },
 };
