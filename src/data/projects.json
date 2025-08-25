@@ -77,6 +77,18 @@
     "githubUrl": "https://github.com/Suyash-Abhishek-Kumar/Galaxy-Ruler"
   },
   {
+    "id": "endless-runner",
+    "title": "Endless Runner",
+    "description": "Endless Runner Game 🦖--An Endless Runner game built using the Godot Engine by Harsh and Vidyut. We developed this project as a fun experiment to learn game development concepts like physics, collision handling, scene management, and procedural level generation.",
+    "longDescription": "Endless Runner Game 🦖--An Endless Runner game built using the Godot Engine by Harsh and Vidyut. We developed this project as a fun experiment to learn game development concepts like physics, collision handling, scene management, and procedural level generation.",
+    "images": ["/images/projects/endless-runner.webp"],
+    "technologies": ["Godot","GDScript"],
+    "teamMembers": ["harsh-soni","vidyut-arun",""],
+    "status": "completed",
+    "githubUrl":"https://github.com/hs5385/EndlessRunner-GameForge",
+    "itchUrl":"https://primesceptre.itch.io/pixel-pursuit"
+  },
+  {
     "id": "speech-recog-game",
     "title": "Speech Recognition Game",
     "description": "Game Made For Indian Institute of Technology (IIT), Guwahati GAMEDΞON GameJam",
@@ -102,17 +114,5 @@
     "technologies": [],
     "teamMembers": [],
     "status": "planned"
-  },
-  {
-    "id": "endless-runner",
-    "title": "Endless Runner",
-    "description": "Endless Runner Game 🦖--An Endless Runner game built using the Godot Engine by Harsh and Vidyut. We developed this project as a fun experiment to learn game development concepts like physics, collision handling, scene management, and procedural level generation.",
-    "longDescription": "Endless Runner Game 🦖--An Endless Runner game built using the Godot Engine by Harsh and Vidyut. We developed this project as a fun experiment to learn game development concepts like physics, collision handling, scene management, and procedural level generation.",
-    "images": ["/images/projects/endless-runner.webp"],
-    "technologies": ["Godot","GDScript"],
-    "teamMembers": ["harsh-soni","vidyut-arun",""],
-    "status": "completed",
-    "githubUrl":"https://github.com/hs5385/EndlessRunner-GameForge",
-    "itchUrl":"https://primesceptre.itch.io/pixel-pursuit"
   }
 ]
