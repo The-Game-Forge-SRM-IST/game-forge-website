@@ -89,21 +89,30 @@
     "itchUrl":"https://primesceptre.itch.io/pixel-pursuit"
   },
   {
-    "id": "speech-recog-game",
-    "title": "Speech Recognition Game",
-    "description": "Game Made For Indian Institute of Technology (IIT), Guwahati GAMEDΞON GameJam",
-    "longDescription": "A game where specefic words control how we move forward in the game",
-    "images": [],
+    "id": "the-quota",
+    "title": "The Quota",
+    "description": "A game project made for brackeys game jam",
+    "longDescription": "The Quota Must Be Met. You are trapped in a cursed maze with one goal: escape. But the exit demands a price—a constantly increasing quota of gold that you must gather from the labyrinth's treacherous halls. This is a top-down roguelike where every decision matters. Each coin you snatch from the darkness comes with a risk. Will you be blessed with fortune, or will you trigger a debilitating curse that makes your escape that much harde",
+    "images": [
+      "/images/projects/the-quota-1.png",
+      "/images/projects/the-quota-2.png",
+      "/images/projects/the-quota-3.png",
+      "/images/projects/the-quota-4.png"
+    ],
     "technologies": [
       "Unity",
-      "C#"
+      "C#",
+      "VSCode",
+      "VS"
     ],
     "teamMembers": [
       "sharad-mayank-sinha",
-      "gaurav-mahaptra"
+      "gaurav-mahaptra",
+      "md-mushir-alam"
     ],
-    "status": "in-progress",
-    "githubUrl": "https://github.com/Ghostkwebb/Speech-Recognition-Concept-Game"
+    "status": "completed",
+    "githubUrl": "https://github.com/Ghostkwebb/RiskIt-For-The-Biscuit_Brackeys",
+    "itchUrl":"https://ghostkwebb.itch.io/the-quota"
   },
   {
     "id": "club-members-game",
