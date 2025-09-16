@@ -39,3 +39,11 @@ Edit the `OPEN_MESSAGE` section to change:
 The application form is currently: **CLOSED** ❌
 
 To open it, change `APPLICATION_OPEN: false` to `APPLICATION_OPEN: true` in `src/config/application.ts`
+
+## Testing
+
+You can test the system by:
+1. Running `npm run dev` to start the development server
+2. Navigate to the application section on your website
+3. You should see the "Applications Currently Closed" message
+4. Change `APPLICATION_OPEN` to `true` and refresh to see the form

@@ -44,49 +44,6 @@ export default function ApplicationSection() {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
 
-  // Check if applications are closed
-  if (!APPLICATION_CONFIG.APPLICATION_OPEN) {
-    return (
-      <section id="apply" className="min-h-screen bg-gradient-to-br from-orange-900/20 via-gray-900 to-red-900/20 py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-orange-500/20">
-              <Clock className="w-16 h-16 text-orange-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">
-                {APPLICATION_CONFIG.CLOSED_MESSAGE.title}
-              </h2>
-              <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                {APPLICATION_CONFIG.CLOSED_MESSAGE.description}
-              </p>
-              <div className="bg-orange-900/20 border border-orange-500/20 rounded-lg p-4 mb-8">
-                <div className="flex items-center justify-center mb-2">
-                  <Bell className="w-5 h-5 text-orange-400 mr-2" />
-                  <span className="text-orange-400 font-medium">Stay Updated</span>
-                </div>
-                <p className="text-orange-300 text-sm">
-                  {APPLICATION_CONFIG.CLOSED_MESSAGE.reopenMessage}
-                </p>
-              </div>
-              <motion.a
-                href="#contact"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-block px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
-              >
-                Contact Us for Updates
-              </motion.a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    );
-  }
-
   const {
   control,
   handleSubmit,
@@ -229,6 +186,49 @@ export default function ApplicationSection() {
         return null;
     }
   };
+
+  // Check if applications are closed
+  if (!APPLICATION_CONFIG.APPLICATION_OPEN) {
+    return (
+      <section id="apply" className="min-h-screen bg-gradient-to-br from-orange-900/20 via-gray-900 to-red-900/20 py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-orange-500/20">
+              <Clock className="w-16 h-16 text-orange-500 mx-auto mb-6" />
+              <h2 className="text-3xl font-bold text-white mb-4">
+                {APPLICATION_CONFIG.CLOSED_MESSAGE.title}
+              </h2>
+              <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                {APPLICATION_CONFIG.CLOSED_MESSAGE.description}
+              </p>
+              <div className="bg-orange-900/20 border border-orange-500/20 rounded-lg p-4 mb-8">
+                <div className="flex items-center justify-center mb-2">
+                  <Bell className="w-5 h-5 text-orange-400 mr-2" />
+                  <span className="text-orange-400 font-medium">Stay Updated</span>
+                </div>
+                <p className="text-orange-300 text-sm">
+                  {APPLICATION_CONFIG.CLOSED_MESSAGE.reopenMessage}
+                </p>
+              </div>
+              <motion.a
+                href="#contact"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-block px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
+              >
+                Contact Us for Updates
+              </motion.a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
 
   if (submissionStatus === 'success') {
     return (
