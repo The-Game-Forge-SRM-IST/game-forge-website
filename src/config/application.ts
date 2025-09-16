@@ -8,7 +8,7 @@
 
 export const APPLICATION_CONFIG = {
   // 🎯 CHANGE THIS VALUE TO OPEN/CLOSE APPLICATIONS
-  APPLICATION_OPEN: false,
+  APPLICATION_OPEN: true,
   
   // Message shown when applications are closed
   CLOSED_MESSAGE: {
