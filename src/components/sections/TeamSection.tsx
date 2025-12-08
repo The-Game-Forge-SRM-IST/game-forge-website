@@ -82,28 +82,28 @@ export default function TeamSection() {
   const getFilterButtonColor = (dept: Department) => {
     switch (dept) {
       case 'Development':
-        return activeFilter === dept 
-          ? 'bg-blue-500/30 text-blue-300 border-blue-500/50' 
+        return activeFilter === dept
+          ? 'bg-blue-500/30 text-blue-300 border-blue-500/50'
           : 'hover:bg-blue-500/20 hover:text-blue-300 hover:border-blue-500/30';
       case 'Design':
-        return activeFilter === dept 
-          ? 'bg-green-500/30 text-green-300 border-green-500/50' 
+        return activeFilter === dept
+          ? 'bg-green-500/30 text-green-300 border-green-500/50'
           : 'hover:bg-green-500/20 hover:text-green-300 hover:border-green-500/30';
       case 'Art':
-        return activeFilter === dept 
-          ? 'bg-purple-500/30 text-purple-300 border-purple-500/50' 
+        return activeFilter === dept
+          ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
           : 'hover:bg-purple-500/20 hover:text-purple-300 hover:border-purple-500/30';
       case 'Management':
-        return activeFilter === dept 
-          ? 'bg-red-500/30 text-red-300 border-red-500/50' 
+        return activeFilter === dept
+          ? 'bg-red-500/30 text-red-300 border-red-500/50'
           : 'hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30';
       case 'AI For Game Dev':
-        return activeFilter === dept 
-          ? 'bg-cyan-500/30 text-cyan-300 border-cyan-500/50' 
+        return activeFilter === dept
+          ? 'bg-cyan-500/30 text-cyan-300 border-cyan-500/50'
           : 'hover:bg-cyan-500/20 hover:text-cyan-300 hover:border-cyan-500/30';
       default:
-        return activeFilter === dept 
-          ? 'bg-white/20 text-white border-white/50' 
+        return activeFilter === dept
+          ? 'bg-white/20 text-white border-white/50'
           : 'hover:bg-white/10 hover:text-white hover:border-white/30';
     }
   };
@@ -117,7 +117,7 @@ export default function TeamSection() {
             <div className="w-64 h-12 bg-gray-700/50 rounded mx-auto mb-4 animate-pulse" />
             <div className="w-96 h-6 bg-gray-700/50 rounded mx-auto animate-pulse" />
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-gray-800/30 rounded-xl overflow-hidden animate-pulse">
@@ -143,7 +143,7 @@ export default function TeamSection() {
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-200px" }}
+        viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.3 }}
         className="max-w-7xl mx-auto"
       >
@@ -155,16 +155,16 @@ export default function TeamSection() {
               Our Team
             </span>
           </div>
-          
+
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Meet the{' '}
             <span className="bg-gradient-to-r from-blue-400 via-green-400 to-red-400 bg-clip-text text-transparent">
               Game Forge
             </span>
           </h2>
-          
+
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Meet the talented individuals behind The Game Forge, each bringing unique skills 
+            Meet the talented individuals behind The Game Forge, each bringing unique skills
             and passion to game development. Together, we create extraordinary gaming experiences.
           </p>
         </div>
@@ -261,7 +261,7 @@ export default function TeamSection() {
               Management: 'text-red-400 border-red-500/30 bg-red-500/5',
               'AI For Game Dev': 'text-cyan-400 border-cyan-500/30 bg-cyan-500/5'
             };
-            
+
             return (
               <motion.div
                 key={dept}
@@ -273,7 +273,7 @@ export default function TeamSection() {
                 </div>
                 <div className="text-gray-300 font-medium text-sm sm:text-base lg:text-lg">
                   <div className="hidden sm:block">{dept} Team{count !== 1 ? ' Members' : ' Member'}</div>
-                  <div className="sm:hidden">{dept}<br/>{count !== 1 ? 'Members' : 'Member'}</div>
+                  <div className="sm:hidden">{dept}<br />{count !== 1 ? 'Members' : 'Member'}</div>
                 </div>
               </motion.div>
             );

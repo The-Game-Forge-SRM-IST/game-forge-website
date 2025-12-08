@@ -4,24 +4,25 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig & { [key: string]: any } = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ['three', '@react-three/fiber', '@react-three/drei', 'framer-motion', 'lucide-react'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  turbo: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
-  
+
   // Compression and optimization
   compress: true,
   poweredByHeader: false,
-  
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -55,11 +56,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
+
   // Headers for security and performance
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
-    
+
     return [
       {
         source: '/(.*)',
@@ -113,14 +114,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
+
   webpack: (config, { dev, isServer }) => {
     // Optimize Three.js imports
     config.externals = config.externals || [];
     config.externals.push({
       canvas: 'canvas',
     });
-    
+
     // Production optimizations
     if (!dev && !isServer) {
       config.optimization = {
@@ -151,7 +152,7 @@ const nextConfig: NextConfig = {
         },
       };
     }
-    
+
     return config;
   },
 };
