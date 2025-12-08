@@ -80,7 +80,7 @@ body {
 
 /* Smooth scrolling for the entire page */
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth;  <-- Removed to support Lenis */
   /* Prevent horizontal scroll */
   overflow-x: hidden;
   /* Improve scroll performance */

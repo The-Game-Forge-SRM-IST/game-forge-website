@@ -12,15 +12,22 @@ export default function BackgroundMusic() {
         const audio = audioRef.current;
 
         const startOnInteraction = async () => {
+            // NOTE: Auto-play on arbitrary interaction is disabled for performance.
+            // User must explicitly click the music button to load and play the 2MB file.
+
+            // Only auto-play if we decide to change policy, but for now we optimise by NOT auto-loading
+            // on random clicks, only on the music button click.
+
+            /* 
             if (audio && audio.paused) {
                 try {
-                    await audio.play();
-                    setIsPlaying(true);
+                   // Logic removed to prevent unwanted download
                 } catch (error) {
                     console.error("Audio play failed:", error);
                 }
             }
-            // Remove the listener after first interaction
+            */
+            // Remove the listener immediately
             document.removeEventListener('click', startOnInteraction);
             document.removeEventListener('touchstart', startOnInteraction);
         };
@@ -51,6 +58,13 @@ export default function BackgroundMusic() {
 
         try {
             // Mobile-optimized play sequence
+
+            // LAZY LOAD: Only set source when user clicks play
+            if (!audio.src) {
+                console.log('📥 Lazy loading audio...');
+                audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
+            }
+
             audio.load(); // Force reload
 
             // Start muted for mobile compatibility
@@ -88,12 +102,10 @@ export default function BackgroundMusic() {
             <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 md:p-3 flex items-center gap-1 md:gap-2 shadow-lg border border-white/10">
                 <audio
                     ref={audioRef}
-                    preload="auto"
+                    preload="none"
                     loop
                 >
-                    <source src="/C418  - Sweden - Minecraft Volume Alpha.mp3" type="audio/mpeg" />
-                    <source src="/C418%20-%20Sweden%20-%20Minecraft%20Volume%20Alpha.mp3" type="audio/mpeg" />
-                    Your browser does not support the audio element.
+                    {/* Source will be added dynamically when play is requested to prevent initial download */}
                 </audio>
 
                 {!isPlaying && (

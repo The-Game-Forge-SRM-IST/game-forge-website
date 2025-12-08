@@ -28,41 +28,12 @@ export default function AppWithLoading({ children }: AppWithLoadingProps) {
     }, 100);
   };
 
-  // Preload critical resources in parallel with loading screen
+  // Preload critical resources - Optimized:
+  // We utilize Next.js <Image priority> for LCP elements (Hero Logo).
+  // Heavy manual preloading is removed to improve initial load performance on mobile.
   useEffect(() => {
-    if (!mounted) return;
-    
-    const preloadResources = async () => {
-      // Preload critical images that will be needed immediately
-      const criticalImages = [
-        '/images/ClubLogo.png',
-        '/images/team/adamya.png', // First few team member images
-        '/images/team/anshu.jpeg',
-        '/images/projects/galaxy-ruler-1.png', // Featured project images
-      ];
-
-      // Start preloading immediately, don't wait for loading screen
-      const imagePromises = criticalImages.map((src) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = resolve; // Don't fail loading for missing images
-          img.src = src;
-          // Set a timeout to prevent hanging
-          setTimeout(resolve, 2000);
-        });
-      });
-
-      try {
-        // Use Promise.allSettled to not fail if some images don't load
-        await Promise.allSettled(imagePromises);
-      } catch (error) {
-        console.warn('Some images failed to preload:', error);
-      }
-    };
-
-    // Start preloading immediately
-    preloadResources();
+    // Optional: Only preload very specific assets if absolutely necessary, 
+    // but for now we rely on Next.js optimization.
   }, [mounted]);
 
   if (!mounted) {

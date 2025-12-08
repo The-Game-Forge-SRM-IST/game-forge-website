@@ -49,27 +49,27 @@ export class ExtremeFPSMonitor {
   private tick = () => {
     const currentTime = performance.now();
     const frameTime = currentTime - this.lastFrameTime;
-    
+
     // Track frame timing
     this.frameTimeBuffer.push(frameTime);
     if (this.frameTimeBuffer.length > this.maxBufferSize) {
       this.frameTimeBuffer.shift();
     }
-    
+
     this.frames++;
     this.lastFrameTime = currentTime;
-    
+
     const elapsed = currentTime - this.startTime;
 
     if (elapsed >= 1000) {
       this.fps = Math.round((this.frames * 1000) / elapsed);
-      
+
       // Calculate advanced metrics
       const avgFrameTime = this.frameTimeBuffer.reduce((a, b) => a + b, 0) / this.frameTimeBuffer.length;
       const maxFrameTime = Math.max(...this.frameTimeBuffer);
       const minFrameTime = Math.min(...this.frameTimeBuffer);
       const frameTimeVariance = this.calculateVariance(this.frameTimeBuffer);
-      
+
       const metrics: PerformanceMetrics = {
         fps: this.fps,
         avgFrameTime,
@@ -82,9 +82,9 @@ export class ExtremeFPSMonitor {
         frameDrops: this.frameTimeBuffer.filter(t => t > PERFORMANCE_TARGETS.FRAME_TIME_MS * 2).length,
         stability: this.calculateStability(),
       };
-      
+
       this.callback?.(metrics);
-      
+
       this.frames = 0;
       this.startTime = currentTime;
     }
@@ -100,10 +100,10 @@ export class ExtremeFPSMonitor {
 
   private calculateStability(): number {
     if (this.frameTimeBuffer.length < 10) return 1;
-    
+
     const variance = this.calculateVariance(this.frameTimeBuffer);
     const avgFrameTime = this.frameTimeBuffer.reduce((a, b) => a + b, 0) / this.frameTimeBuffer.length;
-    
+
     // Stability is inverse of coefficient of variation (lower variance = higher stability)
     const coefficientOfVariation = variance / avgFrameTime;
     return Math.max(0, 1 - coefficientOfVariation);
@@ -156,10 +156,10 @@ export class MemoryManager {
   // Intelligent garbage collection
   forceGarbageCollection(): void {
     const now = performance.now();
-    
+
     // Don't GC too frequently
     if (now - this.lastGCTime < 5000) return;
-    
+
     // Dispose unused objects
     this.disposableObjects.forEach(obj => {
       try {
@@ -169,17 +169,17 @@ export class MemoryManager {
       }
     });
     this.disposableObjects.clear();
-    
+
     // Clear caches if memory is high
     if (this.getMemoryUsage() > this.gcThreshold) {
       this.clearCaches();
     }
-    
+
     // Suggest browser GC
     if ('gc' in window && typeof (window as any).gc === 'function') {
       (window as any).gc();
     }
-    
+
     this.lastGCTime = now;
   }
 
@@ -187,11 +187,11 @@ export class MemoryManager {
     // Clear texture cache
     this.textureCache.forEach(texture => texture.dispose());
     this.textureCache.clear();
-    
+
     // Clear geometry cache
     this.geometryCache.forEach(geometry => geometry.dispose());
     this.geometryCache.clear();
-    
+
     // Clear material cache
     this.materialCache.forEach(material => material.dispose());
     this.materialCache.clear();
@@ -252,9 +252,19 @@ export class AdaptiveQualityManager {
     return AdaptiveQualityManager.instance;
   }
 
+  constructor() {
+    // Detect mobile and set default quality lower
+    if (typeof window !== 'undefined') {
+      const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase());
+      if (isMobile) {
+        this.currentQuality = 'medium';
+      }
+    }
+  }
+
   updateQuality(metrics: PerformanceMetrics): QualityLevel {
     const now = performance.now();
-    
+
     // Don't change quality too frequently
     if (now - this.lastQualityChange < 2000) {
       return this.currentQuality;
@@ -294,7 +304,7 @@ export class AdaptiveQualityManager {
       const qualityOrder: QualityLevel[] = ['minimal', 'low', 'medium', 'high', 'ultra'];
       const currentIndex = qualityOrder.indexOf(this.currentQuality);
       const newIndex = qualityOrder.indexOf(newQuality);
-      
+
       // Only allow one step changes to prevent jarring transitions
       if (Math.abs(newIndex - currentIndex) <= 1) {
         this.currentQuality = newQuality;
@@ -435,10 +445,10 @@ export class ResourcePreloader {
 
   async preloadAll(onProgress?: (progress: number) => void): Promise<void> {
     if (this.isPreloading) return;
-    
+
     this.isPreloading = true;
     this.preloadProgress = 0;
-    
+
     const total = this.preloadQueue.length;
     let completed = 0;
 
@@ -446,7 +456,7 @@ export class ResourcePreloader {
     const batchSize = 3;
     for (let i = 0; i < this.preloadQueue.length; i += batchSize) {
       const batch = this.preloadQueue.slice(i, i + batchSize);
-      
+
       await Promise.all(batch.map(async (loader) => {
         try {
           await loader();
@@ -460,11 +470,11 @@ export class ResourcePreloader {
           onProgress?.(this.preloadProgress);
         }
       }));
-      
+
       // Small delay between batches to prevent blocking
       await new Promise(resolve => setTimeout(resolve, 10));
     }
-    
+
     this.preloadQueue = [];
     this.isPreloading = false;
   }
@@ -496,17 +506,17 @@ export class FrameRateLimiter {
   shouldRender(): boolean {
     const now = performance.now();
     const elapsed = now - this.lastFrameTime;
-    
+
     if (this.adaptiveMode) {
       // Adaptive frame limiting based on recent performance
       this.frameTimeBuffer.push(elapsed);
       if (this.frameTimeBuffer.length > 10) {
         this.frameTimeBuffer.shift();
       }
-      
+
       const avgFrameTime = this.frameTimeBuffer.reduce((a, b) => a + b, 0) / this.frameTimeBuffer.length;
       const adaptiveTarget = Math.max(this.targetFrameTime, avgFrameTime * 0.9);
-      
+
       if (elapsed >= adaptiveTarget) {
         this.lastFrameTime = now;
         return true;
@@ -518,7 +528,7 @@ export class FrameRateLimiter {
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -552,7 +562,7 @@ export class PerformanceScheduler {
       lastRun: 0,
       interval
     });
-    
+
     // Sort by priority (higher number = higher priority)
     this.tasks.sort((a, b) => b.priority - a.priority);
   }
@@ -689,10 +699,10 @@ export class ExtremeOptimizationCoordinator {
   private adaptiveQualityCheck(): void {
     const currentFPS = this.fpsMonitor.getFPS();
     const memoryUsage = this.memoryManager.getMemoryUsage();
-    
+
     // Emergency quality reduction
-    if (currentFPS < PERFORMANCE_TARGETS.LOW_FPS || 
-        memoryUsage > PERFORMANCE_TARGETS.GC_THRESHOLD_MB * 1024 * 1024) {
+    if (currentFPS < PERFORMANCE_TARGETS.LOW_FPS ||
+      memoryUsage > PERFORMANCE_TARGETS.GC_THRESHOLD_MB * 1024 * 1024) {
       this.triggerEmergencyOptimization();
     }
   }
@@ -700,13 +710,13 @@ export class ExtremeOptimizationCoordinator {
   private triggerEmergencyOptimization(): void {
     // Force lowest quality
     this.qualityManager['currentQuality'] = 'minimal';
-    
+
     // Aggressive memory cleanup
     this.memoryManager.forceGarbageCollection();
-    
+
     // Clear all caches
     this.memoryManager['clearCaches']();
-    
+
     // Reduce frame rate target
     this.frameRateLimiter.setTargetFPS(30);
   }

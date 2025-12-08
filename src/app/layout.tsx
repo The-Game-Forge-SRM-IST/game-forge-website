@@ -5,6 +5,7 @@ import PerformanceMonitor from "@/components/ui/PerformanceMonitor";
 import ClientOnly from "@/components/ui/ClientOnly";
 import SkipLink from "@/components/ui/SkipLink";
 import BackgroundMusic from "@/components/ui/BackgroundMusic";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
@@ -57,25 +58,26 @@ export default function RootLayout({
           <SkipLink targetId="navigation">Skip to navigation</SkipLink>
           {children}
           <ClientOnly>
+            <SmoothScroll />
             <PerformanceMonitor />
             <BackgroundMusic />
           </ClientOnly>
-        
-        {/* Live region for screen reader announcements */}
-        <div
-          id="live-region"
-          aria-live="polite"
-          aria-atomic="true"
-          className="sr-only"
-        />
-        
-        {/* Assertive live region for urgent announcements */}
-        <div
-          id="live-region-assertive"
-          aria-live="assertive"
-          aria-atomic="true"
-          className="sr-only"
-        />
+
+          {/* Live region for screen reader announcements */}
+          <div
+            id="live-region"
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+          />
+
+          {/* Assertive live region for urgent announcements */}
+          <div
+            id="live-region-assertive"
+            aria-live="assertive"
+            aria-atomic="true"
+            className="sr-only"
+          />
         </ThemeProvider>
       </body>
     </html>
