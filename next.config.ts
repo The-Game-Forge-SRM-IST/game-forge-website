@@ -108,7 +108,7 @@ const nextConfig: NextConfig & { [key: string]: any } = {
         headers: [
           {
             key: 'Cache-Control',
-            value: isDev ? 'no-cache, no-store, must-revalidate' : 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache, no-store, must-revalidate' : 'public, max-age=0, must-revalidate',
           },
         ],
       },
