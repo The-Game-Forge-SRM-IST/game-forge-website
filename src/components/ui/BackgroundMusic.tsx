@@ -12,28 +12,52 @@ export default function BackgroundMusic() {
         const audio = audioRef.current;
 
         const startOnInteraction = async () => {
-            // NOTE: Auto-play on arbitrary interaction is disabled for performance.
-            // User must explicitly click the music button to load and play the 2MB file.
+            // "Autoplay" strategy:
+            // Browser policy prevents automatic audio without interaction.
+            // We listen for the FIRST user interaction anywhere to trigger the music.
 
-            // Only auto-play if we decide to change policy, but for now we optimise by NOT auto-loading
-            // on random clicks, only on the music button click.
-
-            /* 
             if (audio && audio.paused) {
+                console.log('User interacted, attempting to start music...');
                 try {
-                   // Logic removed to prevent unwanted download
+                    // Lazy load if needed
+                    if (!audio.src) {
+                        audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
+                        audio.load();
+                    }
+
+                    // Try to play
+                    await audio.play();
+                    setIsPlaying(true);
+                    console.log('🎵 Autoplay success after interaction');
                 } catch (error) {
-                    console.error("Audio play failed:", error);
+                    console.log("Autoplay prevented even after interaction (rare):", error);
                 }
             }
-            */
-            // Remove the listener immediately
+
+            // Remove the listener immediately to essentially "run once"
             document.removeEventListener('click', startOnInteraction);
             document.removeEventListener('touchstart', startOnInteraction);
+            document.removeEventListener('keydown', startOnInteraction);
         };
 
+        // Add listeners for any interaction
         document.addEventListener('click', startOnInteraction);
         document.addEventListener('touchstart', startOnInteraction);
+        document.addEventListener('keydown', startOnInteraction);
+
+        // Attempt "true" autoplay just in case the browser allows it (e.g. user already interacted with domain previously)
+        const attemptInstantPlay = async () => {
+            if (audio && audio.paused) {
+                try {
+                    if (!audio.src) audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
+                    await audio.play();
+                    setIsPlaying(true);
+                } catch (e) {
+                    // Expected failure, wait for interaction
+                }
+            }
+        };
+        attemptInstantPlay();
 
         return () => {
             document.removeEventListener('click', startOnInteraction);
