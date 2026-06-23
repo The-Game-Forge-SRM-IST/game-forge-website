@@ -5,7 +5,7 @@ export { default as TeamSection } from './TeamSection';
 export { default as AchievementsSection } from './AchievementsSection';
 export { default as EventsSection } from './EventsSection';
 export { default as AnnouncementsSection } from './AnnouncementsSection';
-export { ProjectsSection } from './ProjectsSection';
+export { default as ProjectsSection } from './ProjectsSection';
 export { GallerySection } from './GallerySection';
 export { AlumniSection } from './AlumniSection';
 export { default as ApplicationSection } from './ApplicationSection';

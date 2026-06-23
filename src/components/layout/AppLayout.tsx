@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
+import { usePathname } from 'next/navigation';
 import Navigation from './Navigation';
 import Footer from './Footer';
-import EpicGamerBackground from '../three/EpicGamerBackground';
 import CustomCursor from '../ui/CustomCursor';
-import { createRAFThrottle, optimizeTransforms } from '@/utils/performanceOptimizer';
 import { useTheme } from '@/providers/ThemeProvider';
 
 interface AppLayoutProps {
@@ -13,153 +12,48 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const [activeSection, setActiveSection] = useState('home');
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const pathname = usePathname();
   const { resolvedTheme } = useTheme();
 
-  // High-performance smooth scroll with RAF
-  const scrollToSection = useCallback((sectionId: string) => {
-    // Immediate state update for instant UI feedback
-    setActiveSection(sectionId);
-    setIsNavigating(true);
-
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerOffset = 80;
-      const rect = element.getBoundingClientRect();
-      const absoluteTop = rect.top + window.scrollY;
-      const targetPosition = absoluteTop - headerOffset;
-      const finalPosition = Math.max(0, targetPosition);
-
-      // Custom smooth scroll with RAF for better performance
-      const startPosition = window.scrollY;
-      const distance = finalPosition - startPosition;
-      const duration = 600; // 600ms for smooth but fast scroll
-      let startTime: number | null = null;
-
-      const easeInOutCubic = (t: number): number => {
-        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-      };
-
-      const animateScroll = (currentTime: number) => {
-        if (startTime === null) startTime = currentTime;
-        const timeElapsed = currentTime - startTime;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        const easedProgress = easeInOutCubic(progress);
-        const currentPosition = startPosition + (distance * easedProgress);
-        
-        window.scrollTo(0, currentPosition);
-        
-        if (progress < 1) {
-          requestAnimationFrame(animateScroll);
-        } else {
-          // Brief delay before re-enabling section detection
-          setTimeout(() => setIsNavigating(false), 100);
-        }
-      };
-
-      requestAnimationFrame(animateScroll);
-    } else {
-      setIsNavigating(false);
-    }
-  }, []);
-
-  // Simple, elegant scroll-based section detection
-  const updateActiveSection = useCallback(() => {
-    if (isNavigating) return;
-
-    const sections = ['home', 'team', 'projects', 'achievements', 'gallery', 'events', 'announcements', 'apply', 'contact'];
-    const scrollY = window.scrollY;
-    const headerOffset = 100;
-
-    // Handle top of page
-    if (scrollY < 200) {
-      if (activeSection !== 'home') {
-        setActiveSection('home');
-      }
-      return;
-    }
-
-    // Find the section that's currently most visible
-    let currentSection = 'home';
-    
-    for (const sectionId of sections) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + scrollY;
-        
-        // Check if we've scrolled past this section's start point
-        if (scrollY >= elementTop - headerOffset) {
-          currentSection = sectionId;
-        }
-      }
-    }
-
-    if (currentSection !== activeSection) {
-      setActiveSection(currentSection);
-    }
-  }, [activeSection, isNavigating]);
-
-  // Ultra-optimized scroll handler with RAF throttling
-  const throttledScrollHandler = useMemo(() => 
-    createRAFThrottle(() => {
-      const scrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(scrollY / maxScroll);
-      
-      // Update active section based on scroll position
-      updateActiveSection();
-    }), [updateActiveSection]
-  );
-
-  // Simple scroll-based section detection
-  useEffect(() => {
-    // Initialize GPU optimizations
-    optimizeTransforms();
-    
-    // Set up scroll progress tracking and section detection
-    window.addEventListener('scroll', throttledScrollHandler, { passive: true });
-    
-    // Initial section detection
-    updateActiveSection();
-    
-    return () => {
-      window.removeEventListener('scroll', throttledScrollHandler);
-    };
-  }, [throttledScrollHandler, updateActiveSection]);
-
-
+  // Determine active section based on the Next.js current pathname
+  const activeSection = useMemo(() => {
+    if (pathname === '/') return 'home';
+    if (pathname.startsWith('/projects')) return 'projects';
+    if (pathname.startsWith('/smiths')) return 'smiths';
+    if (pathname.startsWith('/events')) return 'events';
+    if (pathname.startsWith('/recruitment')) return 'recruitment';
+    if (pathname.startsWith('/contact')) return 'contact';
+    return 'home';
+  }, [pathname]);
 
   return (
     <div className={`min-h-screen text-foreground relative ${resolvedTheme}`}>
       {/* Custom Gaming Cursor */}
       <CustomCursor />
       
-      {/* Three.js Background */}
-      <div className="three-background">
-        <EpicGamerBackground 
-          scrollProgress={scrollProgress}
-          activeSection={activeSection}
-          theme={resolvedTheme}
-        />
-        {/* Theme-aware overlay for better text readability */}
-        <div className={`absolute inset-0 pointer-events-none three-background-overlay`} />
+      {/* Custom CSS Grid and Ambient Background */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-background">
+        {/* Fine grid pattern overlay */}
+        <div className="absolute inset-0 opacity-10 bg-grid-pattern" />
+        {/* Radial ambient glow centered on screen top/center */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+        
+        {/* Ambient Rising Sparks */}
+        <div className="sparks-container opacity-30">
+          <div className="bg-spark" style={{ left: '8%', animationDelay: '0s', '--drift': '50px' } as any} />
+          <div className="bg-spark" style={{ left: '22%', animationDelay: '3s', '--drift': '-30px' } as any} />
+          <div className="bg-spark" style={{ left: '38%', animationDelay: '7s', '--drift': '60px' } as any} />
+          <div className="bg-spark" style={{ left: '55%', animationDelay: '1.5s', '--drift': '-40px' } as any} />
+          <div className="bg-spark" style={{ left: '72%', animationDelay: '9s', '--drift': '30px' } as any} />
+          <div className="bg-spark" style={{ left: '88%', animationDelay: '4.5s', '--drift': '-60px' } as any} />
+        </div>
       </div>
 
       {/* Navigation */}
-      <Navigation
-        activeSection={activeSection}
-        onSectionClick={(sectionId) => {
-          console.log(`🔥 AppLayout: Received navigation click for ${sectionId}`);
-          scrollToSection(sectionId);
-        }}
-      />
+      <Navigation activeSection={activeSection} />
 
       {/* Main Content */}
-      <main className="pt-16 lg:pt-20 relative z-10 safe-area-inset-bottom"> {/* Account for fixed header and ensure content is above background */}
+      <main className="pt-20 relative z-10 safe-area-inset-bottom">
         {children}
       </main>
 
@@ -168,4 +62,3 @@ export default function AppLayout({ children }: AppLayoutProps) {
     </div>
   );
 }
-

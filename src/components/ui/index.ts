@@ -1,7 +1,7 @@
 // UI components exports
 export { default as TeamMemberCard } from './TeamMemberCard';
 export { default as AchievementCard } from './AchievementCard';
-export { default as EventCard } from './EventCard';
+
 export { default as AnnouncementCard } from './AnnouncementCard';
 export { ProjectCard } from './ProjectCard';
 export { ProjectModal } from './ProjectModal';

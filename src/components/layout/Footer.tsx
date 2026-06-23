@@ -1,120 +1,70 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
-import { useTheme } from '@/providers/ThemeProvider';
+import Link from 'next/link';
+import { Terminal, Flame } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { resolvedTheme } = useTheme();
-
-  const socialLinks = [
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/company/105910279/',
-      icon: Linkedin,
-    },
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/the_game_forge/',
-      icon: Instagram,
-    },
-  ];
 
   return (
-    <footer className={`py-8 sm:py-12 safe-area-inset-bottom ${
-      resolvedTheme === 'light' 
-        ? 'bg-background-secondary/90 border-t border-border-color' 
-        : 'bg-black/90 border-t border-white/10'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {/* Club Info */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h3 className={`text-xl font-bold ${
-                resolvedTheme === 'light' ? 'text-foreground' : 'text-white'
-              }`}>
-                The Game <span className="text-green-400">Forge</span>
-              </h3>
-              <p className={`mt-2 text-sm sm:text-base ${
-                resolvedTheme === 'light' ? 'text-text-muted' : 'text-gray-400'
-              }`}>
-                A game development club at SRM IST KTR, fostering creativity and innovation
-                in game development through collaboration and learning.
-              </p>
-            </motion.div>
+    <footer className="w-full py-16 px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-t border-white/5 relative z-10 font-mono">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+        <div className="flex flex-col gap-6 max-w-xs">
+          <div className="flex items-center gap-3">
+            <img
+              alt="Logo"
+              className="w-10 h-10 pixelated"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxZVETh4X_svRmDPTcf37f6591KVsra3YltQfjDIZnk6WwJN5OBr5S4psWyUOTZOFomUQzUQP6YlPaTlgA9t5DFSelaS_WZpN7OvrdNzc_HQKvhkFPXT9a6vKa8mJWezThEyq-9C4GFYddiiGXOXmuIUNZ85JvW_To-XdebYjdI5raZQm7SkN3Lbf0SGahVLV9el8ILOVSEm0676lNvJHhtR-bF4OS8HLzOCOoxP_EFH6sjOnlcyeX4dZnFYkJnJf4FXx4DYHs70Q"
+              style={{ imageRendering: 'pixelated' }}
+            />
+            <div className="font-sans text-lg font-bold text-white uppercase tracking-tight">THE GAME FORGE</div>
           </div>
-
-          {/* Contact Info */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <h4 className={`text-lg font-semibold mb-4 ${
-                resolvedTheme === 'light' ? 'text-foreground' : 'text-white'
-              }`}>Contact</h4>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <MapPin className="h-4 w-4" />
-                  <span>SRM IST KTR, Chennai</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <Mail className="h-4 w-4" />
-                  <span>contact@gameforge.com</span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Social Links */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
-              <div className="flex space-x-4">
-                {socialLinks.map((link) => {
-                  const IconComponent = link.icon;
-                  return (
-                    <motion.a
-                      key={link.name}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-white transition-colors duration-200"
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <IconComponent className="h-6 w-6" />
-                      <span className="sr-only">{link.name}</span>
-                    </motion.a>
-                  );
-                })}
-              </div>
-            </motion.div>
+          <div className="text-[10px] text-outline-variant uppercase tracking-wider">
+            © {currentYear} THE GAME FORGE. FOUNDRY_ACTIVE.
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-8 pt-8 border-t border-white/10 text-center"
-        >
-          <p className="text-gray-400">
-            © {currentYear} The Game Forge. All rights reserved.
-          </p>
-        </motion.div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-16 uppercase text-xs">
+          <div className="flex flex-col gap-4">
+            <span className="text-white/30 font-bold mb-1">Registry</span>
+            <Link className="text-on-surface-variant hover:text-tertiary transition-colors" href="/projects">Archive</Link>
+            <Link className="text-on-surface-variant hover:text-tertiary transition-colors" href="/smiths">Changelogs</Link>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="text-white/30 font-bold mb-1">Comms</span>
+            <a className="text-on-surface-variant hover:text-tertiary transition-colors" href="https://instagram.com/the_game_forge" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <Link className="text-on-surface-variant hover:text-tertiary transition-colors" href="/events">Conclave</Link>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="text-white/30 font-bold mb-1">Liaison</span>
+            <Link className="text-on-surface-variant hover:text-tertiary transition-colors" href="/recruitment">Join the Forge</Link>
+            <Link className="text-on-surface-variant hover:text-tertiary transition-colors" href="/contact">Contact</Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto flex justify-between items-center pt-8 border-t border-white/5">
+        <div className="flex gap-4">
+          <a
+            className="w-10 h-10 border border-white/10 flex items-center justify-center hover:border-tertiary hover:text-tertiary transition-colors"
+            href="https://github.com/The-Game-Forge-SRM-IST"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <Terminal className="w-5 h-5" />
+          </a>
+          <a
+            className="w-10 h-10 border border-white/10 flex items-center justify-center hover:border-secondary-container hover:text-secondary-container transition-colors"
+            href="https://www.linkedin.com/company/105910279/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <Flame className="w-5 h-5" />
+          </a>
+        </div>
+        <div className="text-xs text-white/20 uppercase tracking-widest">SYSTEMS_TEMP: 2400K</div>
       </div>
     </footer>
   );

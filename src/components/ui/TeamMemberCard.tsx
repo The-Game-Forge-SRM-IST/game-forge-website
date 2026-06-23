@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, memo, lazy, Suspense } from 'react';
-import Image from 'next/image';
 import { TeamMember } from '@/types';
-import { useResponsive } from '@/hooks/useResponsive';
-import { RippleEffect, MagneticHover } from './MicroAnimations';
+import { Globe, Shield, Terminal, Settings } from 'lucide-react';
 
 const TeamMemberModal = lazy(() => import('./TeamMemberModal'));
 
@@ -13,125 +11,140 @@ interface TeamMemberCardProps {
   index: number;
 }
 
-const getDepartmentColor = (department: string) => {
-  switch (department) {
-    case 'Development':
-      return 'from-blue-500/20 to-blue-600/20 border-blue-500/30';
-    case 'Design':
-      return 'from-green-500/20 to-green-600/20 border-green-500/30';
-    case 'Art':
-      return 'from-purple-500/20 to-purple-600/20 border-purple-500/30';
-    case 'Management':
-      return 'from-red-500/20 to-red-600/20 border-red-500/30';
-    default:
-      return 'from-gray-500/20 to-gray-600/20 border-gray-500/30';
-  }
-};
-
 function TeamMemberCard({ member, index }: TeamMemberCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isMobile } = useResponsive();
 
-  const handleCardClick = () => {
-    setIsModalOpen(true);
+  // Generate a mock unique reference ID based on name and role
+  const refCode = `REF: ${String(index + 1).padStart(3, '0')}_${member.name.split(' ')[0].toUpperCase()}`;
+
+  // Map departments to cool guild classifications
+  const getGuildBadge = (dept: string) => {
+    switch (dept) {
+      case 'Development':
+        return 'Engineering';
+      case 'Design':
+        return 'Crafting';
+      case 'Art':
+        return 'Harmonics';
+      case 'Management':
+        return 'Operations';
+      case 'AI For Game Dev':
+        return 'Cognitive';
+      default:
+        return 'Artisans';
+    }
+  };
+
+  const getBorderGlowClass = (dept: string) => {
+    return dept === 'Development' || dept === 'AI For Game Dev' ? 'glow-forest' : 'glow-forge';
   };
 
   return (
     <>
-      <div className="group perspective-1000">
-        <MagneticHover strength={4}>
-          <RippleEffect
-            color="rgba(34, 197, 94, 0.2)"
-            className={`relative bg-gradient-to-br ${getDepartmentColor(member.department)} 
-                       backdrop-blur-sm border rounded-xl overflow-hidden
-                       transform-gpu transition-all duration-300 cursor-pointer
-                       hover:shadow-2xl hover:shadow-black/50 h-[424px] flex flex-col`}
-            onClick={handleCardClick}
-          >
-            <div>
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
-              </div>
-
-              {/* Image Container - Fixed height for consistency */}
-              <div className="relative h-64 overflow-hidden bg-gray-800/50">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 475px) 100vw, (max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                  priority={index < 4}
-                  quality={85}
-                  onError={(e) => {
-                    console.error(`Failed to load image for ${member.name}:`, member.image);
-                    // Fallback to a placeholder or default image
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=400&background=1f2937&color=ffffff`;
-                  }}
-                />
-                
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                
-                {/* Department Badge */}
-                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10">
-                  <span className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium shadow-lg bg-black text-white border border-white/20">
-                    <span className="hidden sm:inline">{member.department}</span>
-                    <span className="sm:hidden">{member.department.substring(0, 3)}</span>
-                  </span>
-                </div>
-
-                {/* Click to View Overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/20">
-                      <p className="text-white text-sm font-medium">Click to view details</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content - Fixed height for consistency */}
-              <div className="p-4 sm:p-5 lg:p-6 h-40 flex flex-col justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2 line-clamp-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-300 text-sm sm:text-base font-medium mb-3 line-clamp-2">
-                    {member.role}
-                  </p>
-                </div>
-                
-                {/* Skills Preview - Fixed at bottom */}
-                <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-auto">
-                  {member.skills.slice(0, isMobile ? 2 : 3).map((skill, skillIndex) => (
-                    <span
-                      key={skillIndex}
-                      className="px-2.5 py-1 bg-white/5 text-xs sm:text-sm rounded-md text-gray-400 border border-white/10 truncate max-w-24 sm:max-w-none"
-                      title={skill}
-                    >
-                      {skill.length > 8 ? skill.substring(0, 8) + '...' : skill}
-                    </span>
-                  ))}
-                  {member.skills.length > (isMobile ? 2 : 3) && (
-                    <span className="px-2.5 py-1 bg-white/5 text-xs sm:text-sm rounded-md text-gray-400 border border-white/10 font-medium">
-                      +{member.skills.length - (isMobile ? 2 : 3)}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Animated Border */}
-              <div className="absolute inset-0 rounded-xl border-2 border-transparent bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div
+        className={`group bg-surface-container-low border border-outline-variant p-4 transition-all duration-300 ${getBorderGlowClass(
+          member.department
+        )} industrial-edge flex flex-col h-full`}
+      >
+        {/* Grayscale Image Container with Industrial Edge */}
+        <div className="w-full h-48 border border-outline-variant p-1 relative overflow-hidden bg-surface-container-high mb-4">
+          <img
+            alt={`Portrait of ${member.name}`}
+            className="w-full h-full object-cover transition-all select-none pointer-events-none"
+            src={member.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=300&background=1f2937&color=ffffff`}
+            onError={(e) => {
+              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=300&background=1f2937&color=ffffff`;
+            }}
+          />
+          <div
+            className={`absolute inset-0 border-t-2 ${
+              member.department === 'Development' || member.department === 'AI For Game Dev'
+                ? 'border-tertiary/30'
+                : 'border-secondary/30'
+            }`}
+          />
+          <div className="absolute bottom-2 right-2 bg-background/90 px-2 py-1 border border-outline-variant">
+            <div
+              className={`font-mono text-[9px] uppercase tracking-widest font-bold ${
+                member.department === 'Development' || member.department === 'AI For Game Dev'
+                  ? 'text-tertiary'
+                  : 'text-secondary'
+              }`}
+            >
+              {getGuildBadge(member.department)}
             </div>
-          </RippleEffect>
-        </MagneticHover>
+          </div>
+        </div>
+
+        {/* Identity Details */}
+        <div className="mb-4">
+          <div className="text-outline font-mono text-[9px] mb-1">{refCode}</div>
+          <h3 className="font-sans text-lg text-white uppercase font-bold tracking-tight line-clamp-1">
+            {member.name}
+          </h3>
+          <p className="text-[11px] font-mono text-on-surface-variant uppercase tracking-wider mt-1 line-clamp-1">
+            {member.role}
+          </p>
+        </div>
+
+        {/* Skills Chips */}
+        <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
+          {member.skills.slice(0, 3).map((skill, i) => (
+            <span
+              key={i}
+              className="px-2 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant font-mono text-[9px] uppercase"
+            >
+              {skill}
+            </span>
+          ))}
+          {member.skills.length > 3 && (
+            <span className="px-2 py-0.5 bg-surface-container-high border border-outline-variant text-on-surface-variant font-mono text-[9px]">
+              +{member.skills.length - 3}
+            </span>
+          )}
+        </div>
+
+        {/* Interactive Bar */}
+        <div className="flex justify-between items-center pt-4 border-t border-outline-variant/30">
+          <div className="flex gap-4">
+            {member.socialLinks.linkedin && (
+              <a
+                href={member.socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-outline hover:text-tertiary transition-colors"
+                aria-label="LinkedIn Profile"
+              >
+                <Globe className="w-4 h-4" />
+              </a>
+            )}
+            {member.socialLinks.github && (
+              <a
+                href={member.socialLinks.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-outline hover:text-tertiary transition-colors"
+                aria-label="GitHub Profile"
+              >
+                <Terminal className="w-4 h-4" />
+              </a>
+            )}
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className={`font-mono text-[10px] hover:underline tracking-tighter uppercase font-bold ${
+              member.department === 'Development' || member.department === 'AI For Game Dev'
+                ? 'text-tertiary'
+                : 'text-secondary'
+            }`}
+          >
+            INSPECT_WORK
+          </button>
+        </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div className="font-mono text-xs text-outline p-4">Loading details...</div>}>
           <TeamMemberModal
             member={member}
             isOpen={isModalOpen}

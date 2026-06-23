@@ -1,285 +1,165 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Filter } from 'lucide-react';
+import { Search, Plus, RefreshCw } from 'lucide-react';
 import { TeamMember } from '@/types';
-import { TeamMemberCard } from '@/components/ui';
+import TeamMemberCard from '@/components/ui/TeamMemberCard';
 import teamData from '@/data/team.json';
 
-const departments = ['All', 'Development', 'Design', 'Art', 'Management', 'AI For Game Dev'] as const;
-type Department = typeof departments[number];
+const GUILDS = [
+  { id: 'ALL', label: 'ALL_GUILDS' },
+  { id: 'ENGINEERING', label: 'ENGINEERING' }, // Development
+  { id: 'CRAFTING', label: 'CRAFTING' },       // Design & Art
+  { id: 'OPERATIONS', label: 'OPERATIONS' },   // Management
+  { id: 'COGNITIVE', label: 'COGNITIVE' },     // AI For Game Dev
+] as const;
+
+type GuildId = typeof GUILDS[number]['id'];
 
 export default function TeamSection() {
-  const [activeFilter, setActiveFilter] = useState<Department>('All');
-  const [isLoading, setIsLoading] = useState(true);
-  const [showAll, setShowAll] = useState(false);
+  const [activeGuild, setActiveGuild] = useState<GuildId>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [itemsToShow, setItemsToShow] = useState(5); // Initial visible members
 
-  // Memoize team data to avoid re-parsing JSON on every render
   const teamMembers = useMemo(() => teamData as TeamMember[], []);
 
-  // Memoize filtered members to avoid recalculating on every render
+  // Filter members by search query AND guild department mapping
   const filteredMembers = useMemo(() => {
-    if (activeFilter === 'All') {
-      return teamMembers;
-    }
-    return teamMembers.filter(member => member.department === activeFilter);
-  }, [activeFilter, teamMembers]);
+    return teamMembers.filter((member) => {
+      // 1. Guild filter
+      let matchesGuild = false;
+      if (activeGuild === 'ALL') {
+        matchesGuild = true;
+      } else if (activeGuild === 'ENGINEERING') {
+        matchesGuild = member.department === 'Development';
+      } else if (activeGuild === 'CRAFTING') {
+        matchesGuild = member.department === 'Design' || member.department === 'Art';
+      } else if (activeGuild === 'OPERATIONS') {
+        matchesGuild = member.department === 'Management';
+      } else if (activeGuild === 'COGNITIVE') {
+        matchesGuild = member.department === 'AI For Game Dev';
+      }
 
-  // Calculate items to show (3 rows = 9 items on desktop, 6 on tablet, 3 on mobile)
-  // layout sizing constants (currently unused)
-  const initialItemsToShow = 9; // 3 rows on desktop
-  const displayedMembers = showAll ? filteredMembers : filteredMembers.slice(0, initialItemsToShow);
-  const hasMoreItems = filteredMembers.length > initialItemsToShow;
+      // 2. Search query filter
+      const q = searchQuery.toLowerCase();
+      const matchesSearch =
+        member.name.toLowerCase().includes(q) ||
+        member.role.toLowerCase().includes(q) ||
+        member.skills.some((s) => s.toLowerCase().includes(q));
 
-  // Use callback to prevent unnecessary re-renders of filter buttons
-  const handleFilterChange = useCallback((dept: Department) => {
-    setActiveFilter(dept);
-    setShowAll(false); // Reset show all when filter changes
-  }, []);
-
-  const handleShowMore = useCallback(() => {
-    setShowAll(true);
-  }, []);
-
-  const handleShowLess = useCallback(() => {
-    setShowAll(false);
-  }, []);
-
-  useEffect(() => {
-    // Reduce loading time for better UX
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // animation variant placeholders (intentionally unused)
-
-  // Memoize department counts to avoid recalculating on every render
-  const departmentCounts = useMemo(() => {
-    const counts: Record<Department, number> = {
-      'All': teamMembers.length,
-      'Development': 0,
-      'Design': 0,
-      'Art': 0,
-      'Management': 0,
-      'AI For Game Dev': 0
-    };
-
-    teamMembers.forEach(member => {
-      counts[member.department as Department]++;
+      return matchesGuild && matchesSearch;
     });
+  }, [activeGuild, searchQuery, teamMembers]);
 
-    return counts;
-  }, [teamMembers]);
+  const displayedMembers = useMemo(() => {
+    return filteredMembers.slice(0, itemsToShow);
+  }, [filteredMembers, itemsToShow]);
 
-  const getDepartmentCount = useCallback((dept: Department) => {
-    return departmentCounts[dept];
-  }, [departmentCounts]);
+  const hasMore = filteredMembers.length > itemsToShow;
 
-  const getFilterButtonColor = (dept: Department) => {
-    switch (dept) {
-      case 'Development':
-        return activeFilter === dept
-          ? 'bg-blue-500/30 text-blue-300 border-blue-500/50'
-          : 'hover:bg-blue-500/20 hover:text-blue-300 hover:border-blue-500/30';
-      case 'Design':
-        return activeFilter === dept
-          ? 'bg-green-500/30 text-green-300 border-green-500/50'
-          : 'hover:bg-green-500/20 hover:text-green-300 hover:border-green-500/30';
-      case 'Art':
-        return activeFilter === dept
-          ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
-          : 'hover:bg-purple-500/20 hover:text-purple-300 hover:border-purple-500/30';
-      case 'Management':
-        return activeFilter === dept
-          ? 'bg-red-500/30 text-red-300 border-red-500/50'
-          : 'hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30';
-      case 'AI For Game Dev':
-        return activeFilter === dept
-          ? 'bg-cyan-500/30 text-cyan-300 border-cyan-500/50'
-          : 'hover:bg-cyan-500/20 hover:text-cyan-300 hover:border-cyan-500/30';
-      default:
-        return activeFilter === dept
-          ? 'bg-white/20 text-white border-white/50'
-          : 'hover:bg-white/10 hover:text-white hover:border-white/30';
-    }
-  };
+  const loadMore = useCallback(() => {
+    setItemsToShow((prev) => prev + 6);
+  }, []);
 
-  if (isLoading) {
-    return (
-      <section id="team" className="min-h-screen py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="w-16 h-8 bg-gray-700/50 rounded mx-auto mb-4 animate-pulse" />
-            <div className="w-64 h-12 bg-gray-700/50 rounded mx-auto mb-4 animate-pulse" />
-            <div className="w-96 h-6 bg-gray-700/50 rounded mx-auto animate-pulse" />
+  return (
+    <section id="team" className="py-24 border-b border-white/5 relative z-10">
+      <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+        
+        {/* Header Section */}
+        <header className="mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-high border border-outline-variant text-tertiary font-mono text-[10px] uppercase mb-4 tracking-widest">
+            <span className="w-1.5 h-1.5 bg-secondary animate-pulse rounded-full" />
+            REGISTRY_CORE // MASTER_SMITHS
+          </div>
+          <h2 className="font-sans text-4xl md:text-5xl text-on-surface mb-4 uppercase tracking-tighter font-extrabold">
+            FORGE ARTISANS
+          </h2>
+          <p className="font-mono text-xs md:text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+            The master craftsmen shaping digital realms from raw code and pixels. Filter by guild or explore the full registry.
+          </p>
+        </header>
+
+        {/* Search & Filter Bar */}
+        <div className="mb-12 flex flex-col lg:flex-row gap-4 items-center justify-between border-b border-outline-variant/30 pb-8">
+          {/* Search box */}
+          <div className="relative w-full lg:w-96">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-outline w-4 h-4" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-surface-container-low border border-outline-variant focus:border-tertiary focus:ring-0 text-on-surface font-mono text-xs py-3 pl-12 pr-4 transition-all uppercase placeholder:text-outline-variant outline-none"
+              placeholder="LOCATE_ARTISAN_ID..."
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-gray-800/30 rounded-xl overflow-hidden animate-pulse">
-                <div className="h-64 bg-gray-700/50" />
-                <div className="p-6 space-y-3">
-                  <div className="w-32 h-6 bg-gray-700/50 rounded" />
-                  <div className="w-24 h-4 bg-gray-700/50 rounded" />
-                  <div className="flex gap-2">
-                    <div className="w-16 h-6 bg-gray-700/50 rounded" />
-                    <div className="w-20 h-6 bg-gray-700/50 rounded" />
-                  </div>
-                </div>
-              </div>
+          {/* Guild filters */}
+          <div className="flex gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+            {GUILDS.map((guild) => (
+              <button
+                key={guild.id}
+                onClick={() => {
+                  setActiveGuild(guild.id);
+                  setItemsToShow(5); // Reset visible count
+                }}
+                className={`px-4 py-2 font-mono text-[10px] uppercase border transition-all whitespace-nowrap ${
+                  activeGuild === guild.id
+                    ? 'bg-tertiary border-tertiary text-on-tertiary font-bold'
+                    : 'border-outline-variant text-on-surface-variant hover:border-tertiary/50'
+                }`}
+              >
+                {guild.label}
+              </button>
             ))}
           </div>
         </div>
-      </section>
-    );
-  }
 
-  return (
-    <section id="team" className="min-h-screen py-20 px-4 bg-gray-900/10 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.3 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-4">
-            <Users className="w-8 h-8 text-blue-400 mr-3" />
-            <span className="text-blue-400 font-semibold tracking-wider uppercase text-sm">
-              Our Team
-            </span>
-          </div>
-
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Meet the{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-green-400 to-red-400 bg-clip-text text-transparent">
-              Game Forge
-            </span>
-          </h2>
-
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Meet the talented individuals behind The Game Forge, each bringing unique skills
-            and passion to game development. Together, we create extraordinary gaming experiences.
-          </p>
-        </div>
-
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-12 px-4">
-          {departments.map((dept) => (
-            <button
-              key={dept}
-              onClick={() => handleFilterChange(dept)}
-              className={`px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 rounded-full border transition-all duration-300 font-medium
-                         flex items-center gap-2 ${getFilterButtonColor(dept)}
-                         ${activeFilter === dept ? 'scale-105 shadow-lg' : 'scale-100'}
-                         text-gray-300 border-gray-600/50 text-sm sm:text-base touch-manipulation min-h-[48px]`}
-            >
-              <Filter size={16} className="flex-shrink-0" />
-              <span className="hidden xs:inline">{dept}</span>
-              <span className="xs:hidden">{dept.length > 6 ? dept.substring(0, 6) + '...' : dept}</span>
-              <span className="bg-white/20 px-2 py-1 rounded-full text-xs font-semibold min-w-[24px] text-center">
-                {getDepartmentCount(dept)}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-0">
+        {/* Directory Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
           {displayedMembers.map((member, index) => (
-            <TeamMemberCard
-              key={member.id}
-              member={member}
-              index={index}
-            />
+            <TeamMemberCard key={member.id} member={member} index={index} />
           ))}
+
+          {/* Dynamic "Strike the Anvil" recruitment slot */}
+          <div
+            onClick={() => document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' })}
+            className="group border border-dashed border-outline-variant/40 p-6 flex flex-col items-center justify-center text-center hover:border-secondary/50 hover:bg-secondary/[0.03] transition-all cursor-pointer bg-surface-container-low min-h-[300px]"
+          >
+            <div className="w-16 h-16 border border-dashed border-outline-variant/40 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-secondary transition-transform">
+              <Plus className="w-6 h-6 text-outline group-hover:text-secondary" />
+            </div>
+            <h3 className="font-sans text-lg text-on-surface mb-2 uppercase font-bold tracking-tight">
+              STRIKE_THE_ANVIL
+            </h3>
+            <p className="font-mono text-xs text-on-surface-variant mb-6 leading-relaxed max-w-[240px]">
+              Join the Forge registry and showcase your craftsmanship to the master smiths.
+            </p>
+            <button className="font-mono text-[10px] text-secondary flex items-center gap-2 group-hover:gap-4 transition-all uppercase font-bold">
+              SUBMIT_APPLICATION &rarr;
+            </button>
+          </div>
         </div>
 
-        {/* Show More/Less Button */}
-        {hasMoreItems && (
-          <div className="flex justify-center mt-8 sm:mt-12">
-            {!showAll ? (
-              <button
-                onClick={handleShowMore}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-full
-                         hover:from-blue-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105
-                         shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <span>Show More Members</span>
-                <span className="text-sm opacity-80">({filteredMembers.length - initialItemsToShow} more)</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleShowLess}
-                className="px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-full
-                         hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-105
-                         shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <span>Show Less</span>
-              </button>
-            )}
+        {/* Load More Button */}
+        {hasMore && (
+          <div className="mt-20 flex justify-center">
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-4 px-8 py-4 bg-surface-container-low border border-outline-variant font-mono text-xs uppercase text-on-surface hover:bg-tertiary hover:text-on-tertiary hover:border-tertiary transition-all group"
+            >
+              ACTIVATE_NEXT_SECTOR <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+            </button>
           </div>
         )}
 
-        {/* Empty State */}
-        {filteredMembers.length === 0 && !isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
-          >
-            <Users className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">
-              No team members found
-            </h3>
-            <p className="text-gray-500">
-              Try selecting a different department filter.
-            </p>
-          </motion.div>
+        {/* Empty state */}
+        {filteredMembers.length === 0 && (
+          <div className="text-center py-16 font-mono text-xs text-outline-variant border border-dashed border-outline-variant/30">
+            NO_SMITH_IDS_FOUND_IN_SECTOR
+          </div>
         )}
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-12 sm:mt-16 lg:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-0"
-        >
-          {departments.slice(1).map((dept) => {
-            const count = getDepartmentCount(dept);
-            const colors = {
-              Development: 'text-blue-400 border-blue-500/30 bg-blue-500/5',
-              Design: 'text-green-400 border-green-500/30 bg-green-500/5',
-              Art: 'text-purple-400 border-purple-500/30 bg-purple-500/5',
-              Management: 'text-red-400 border-red-500/30 bg-red-500/5',
-              'AI For Game Dev': 'text-cyan-400 border-cyan-500/30 bg-cyan-500/5'
-            };
-
-            return (
-              <motion.div
-                key={dept}
-                whileHover={{ scale: 1.02, y: -2 }}
-                className={`text-center p-6 sm:p-8 rounded-xl border backdrop-blur-sm transition-all duration-300 ${colors[dept as keyof typeof colors]}`}
-              >
-                <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 ${colors[dept as keyof typeof colors].split(' ')[0]}`}>
-                  {count}
-                </div>
-                <div className="text-gray-300 font-medium text-sm sm:text-base lg:text-lg">
-                  <div className="hidden sm:block">{dept} Team{count !== 1 ? ' Members' : ' Member'}</div>
-                  <div className="sm:hidden">{dept}<br />{count !== 1 ? 'Members' : 'Member'}</div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -7,16 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig & { [key: string]: any } = {
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['three', '@react-three/fiber', '@react-three/drei', 'framer-motion', 'lucide-react'],
-  },
-
-  turbo: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
+    optimizePackageImports: ['framer-motion', 'lucide-react'],
   },
 
   // Compression and optimization
@@ -51,6 +42,12 @@ const nextConfig: NextConfig & { [key: string]: any } = {
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
         port: '',
         pathname: '/**',
       },
@@ -95,6 +92,15 @@ const nextConfig: NextConfig & { [key: string]: any } = {
         ],
       },
       {
+        source: '/api/application-status',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+        ],
+      },
+      {
         source: '/api/(.*)',
         headers: [
           {
@@ -116,7 +122,6 @@ const nextConfig: NextConfig & { [key: string]: any } = {
   },
 
   webpack: (config, { dev, isServer }) => {
-    // Optimize Three.js imports
     config.externals = config.externals || [];
     config.externals.push({
       canvas: 'canvas',
@@ -130,12 +135,6 @@ const nextConfig: NextConfig & { [key: string]: any } = {
           ...config.optimization.splitChunks,
           cacheGroups: {
             ...config.optimization.splitChunks.cacheGroups,
-            three: {
-              name: 'three',
-              test: /[\\/]node_modules[\\/](three|@react-three)[\\/]/,
-              chunks: 'all',
-              priority: 30,
-            },
             framerMotion: {
               name: 'framer-motion',
               test: /[\\/]node_modules[\\/]framer-motion[\\/]/,

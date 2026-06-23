@@ -3,22 +3,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-import { 
-  Mail, 
-  MapPin, 
-  Send, 
-  CheckCircle, 
-  AlertCircle,
-  Instagram,
-  Linkedin,
-  Users
-} from 'lucide-react';
 import { contactFormSchema, type ContactFormData, CONTACT_TYPES } from '@/lib/validations/contact';
 
 // === Configuration from environment variables ===
-const ENDPOINT = process.env.NEXT_PUBLIC_GOOGLE_SCRIPTS_URL;
+const ENDPOINT = process.env.NEXT_PUBLIC_GOOGLE_SCRIPTS_URL || "https://script.google.com/macros/s/AKfycbxO9ZF19tr8TfxJy9CXkYM28cGc4uP9ZkQX16Pjk_CAmKKeEVDq1_N7HT9F4R2FLlpt/exec";
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
@@ -61,11 +50,6 @@ export default function ContactSection() {
 
   const submitToGoogleSheets = async (data: ContactFormData): Promise<boolean> => {
     try {
-      if (!ENDPOINT) {
-        console.error("Google Scripts URL not configured");
-        return false;
-      }
-
       const payload = {
         Name: data.name,
         Email: data.email,
@@ -85,7 +69,7 @@ export default function ContactSection() {
         body: encodedBody,
       });
 
-      return true; // Assume success with no-cors
+      return true;
     } catch (error) {
       console.error("Google Sheets submission error:", error);
       return false;
@@ -95,7 +79,7 @@ export default function ContactSection() {
   const submitToEmailJS = async (data: ContactFormData): Promise<boolean> => {
     try {
       if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-        console.error("EmailJS configuration missing");
+        console.warn("EmailJS configuration missing, skipping email dispatch");
         return false;
       }
 
@@ -124,315 +108,278 @@ export default function ContactSection() {
     setSubmitMessage('');
     
     try {
-      // Submit to both services simultaneously
-      const [sheetsSuccess, emailSuccess] = await Promise.all([
-        submitToGoogleSheets(data),
-        submitToEmailJS(data)
-      ]);
+      // Submit to Google Sheets and EmailJS
+      const sheetsSuccess = await submitToGoogleSheets(data);
+      const emailSuccess = await submitToEmailJS(data);
 
-      console.log('Submission results:', { sheetsSuccess, emailSuccess });
-
-      // Determine status based on results
-      if (sheetsSuccess && emailSuccess) {
+      if (sheetsSuccess && (emailSuccess || !EMAILJS_SERVICE_ID)) {
         setSubmissionStatus('success');
-        setSubmitMessage('We have received your message and will contact you shortly!');
+        setSubmitMessage('COMM_LINK_ESTABLISHED: Message has been logged in our databases.');
+        reset();
       } else if (sheetsSuccess && !emailSuccess) {
         setSubmissionStatus('partial');
-        setSubmitMessage('We have received your message but it would take some time to reply due to email service issues.');
+        setSubmitMessage('LOGGED: Message recorded in database but email dispatch failed.');
+        reset();
       } else if (!sheetsSuccess && emailSuccess) {
         setSubmissionStatus('partial');
-        setSubmitMessage('Your message was sent via email, but there was an issue with our database. We will still get back to you shortly.');
+        setSubmitMessage('DISPATCHED: Message sent via mail. Database sync pending.');
+        reset();
       } else {
         setSubmissionStatus('error');
-        setSubmitMessage('This service is not available right now. Please try again later or contact us directly via email.');
-      }
-
-      // Reset form only on success or partial success
-      if (sheetsSuccess || emailSuccess) {
-        reset();
+        setSubmitMessage('TRANSMISSION_FAILED: Re-verify link parameters and retry.');
       }
     } catch (error) {
       console.error("Submit error:", error);
       setSubmissionStatus('error');
-      setSubmitMessage('This service is not available right now. Please try again later or contact us directly via email.');
-    }
-  };
-
-  const getStatusIcon = () => {
-    switch (submissionStatus) {
-      case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />;
-      case 'partial':
-        return <AlertCircle className="w-5 h-5 text-yellow-500 mr-3 flex-shrink-0" />;
-      case 'error':
-        return <AlertCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusStyles = () => {
-    switch (submissionStatus) {
-      case 'success':
-        return 'p-4 bg-green-900/20 border border-green-500/20 rounded-lg flex items-center';
-      case 'partial':
-        return 'p-4 bg-yellow-900/20 border border-yellow-500/20 rounded-lg flex items-center';
-      case 'error':
-        return 'p-4 bg-red-900/20 border border-red-500/20 rounded-lg flex items-center';
-      default:
-        return '';
-    }
-  };
-
-  const getStatusTextColor = () => {
-    switch (submissionStatus) {
-      case 'success':
-        return 'text-green-300';
-      case 'partial':
-        return 'text-yellow-300';
-      case 'error':
-        return 'text-red-300';
-      default:
-        return '';
+      setSubmitMessage('TRANSMISSION_FAILED: Check local link connection.');
     }
   };
 
   return (
-    <section id="contact" className="min-h-screen bg-gradient-to-br from-blue-900/20 via-gray-900 to-green-900/20 py-20">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Get In Touch
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Have questions about The Game Forge? Want to collaborate or join our community? 
-              We&apos;d love to hear from you!
-            </p>
-          </div>
+    <section id="contact" className="py-24 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto w-full">
+      <div className="mb-16 border-b border-outline-variant/30 pb-8">
+        <h2 className="font-sans text-4xl md:text-5xl font-bold text-on-surface uppercase tracking-tight">
+          GET_IN_TOUCH
+        </h2>
+        <p className="font-mono text-xs md:text-sm text-on-surface-variant mt-2 leading-relaxed">
+          Open communication channels to the conclave. Report bugs, establish partnerships, or request clearance.
+        </p>
+      </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="space-y-8"
-            >
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
-                <h3 className="text-2xl font-bold text-white mb-6">Contact Information</h3>
-                
-                {/* Email */}
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Email</h4>
-                    <a 
-                      href={`mailto:${contactInfo.email}`}
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
-                    >
-                      {contactInfo.email}
-                    </a>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Left Column: Technical Contact Info */}
+        <div className="lg:col-span-5 space-y-8">
+          <div className="forge-border bg-surface-container-low p-6 sm:p-8 relative overflow-hidden">
+            <div className="absolute top-2 right-2 flex gap-1">
+              <div className="rivet" />
+              <div className="rivet" />
+            </div>
 
-                {/* Location */}
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-green-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Location</h4>
-                    <p className="text-gray-300">
-                      {contactInfo.location.name}<br />
-                      {contactInfo.location.address}<br />
-                      <span className="text-green-400">{contactInfo.location.campus}</span>
-                    </p>
-                  </div>
-                </div>
-
-                {/* Social Links */}
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-red-600/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Users className="w-6 h-6 text-red-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-3">Follow Us</h4>
-                    <div className="flex space-x-4">
-                      <a
-                        href={contactInfo.socialLinks.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center hover:bg-blue-600/30 transition-colors group"
-                      >
-                        <Linkedin className="w-5 h-5 text-blue-400 group-hover:text-blue-300" />
-                      </a>
-                      <a
-                        href={contactInfo.socialLinks.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 bg-pink-600/20 rounded-lg flex items-center justify-center hover:bg-pink-600/30 transition-colors group"
-                      >
-                        <Instagram className="w-5 h-5 text-pink-400 group-hover:text-pink-300" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
+            <h3 className="font-sans text-lg font-bold text-on-surface uppercase mb-8 border-b border-outline-variant/30 pb-2">
+              STATION_COORDINATES
+            </h3>
+            
+            {/* Email */}
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 border border-outline-variant/50 bg-surface-container flex items-center justify-center flex-shrink-0 text-primary">
+                <span className="material-symbols-outlined text-2xl">mail</span>
               </div>
-            </motion.div>
+              <div className="font-mono">
+                <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Email Connection</h4>
+                <a 
+                  href={`mailto:${contactInfo.email}`}
+                  className="text-xs text-primary hover:text-white transition-colors"
+                >
+                  {contactInfo.email.toUpperCase()}
+                </a>
+              </div>
+            </div>
 
-            {/* Contact Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
-                <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
-                
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Name */}
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                      Name *
-                    </label>
-                    <input
-                      {...register('name')}
-                      type="text"
-                      id="name"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Your full name"
-                    />
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
-                    )}
-                  </div>
+            {/* Location */}
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 border border-outline-variant/50 bg-surface-container flex items-center justify-center flex-shrink-0 text-tertiary">
+                <span className="material-symbols-outlined text-2xl">factory</span>
+              </div>
+              <div className="font-mono text-xs text-on-surface-variant">
+                <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Foundry Address</h4>
+                <p className="leading-relaxed">
+                  {contactInfo.location.name.toUpperCase()}<br />
+                  {contactInfo.location.address.toUpperCase()}<br />
+                  <span className="text-tertiary font-bold">{contactInfo.location.campus.toUpperCase()}</span>
+                </p>
+              </div>
+            </div>
 
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                      Email *
-                    </label>
-                    <input
-                      {...register('email')}
-                      type="email"
-                      id="email"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="your.email@example.com"
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
-                    )}
-                  </div>
-
-                  {/* Contact Type */}
-                  <div>
-                    <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-2">
-                      Contact Type *
-                    </label>
-                    <select
-                      {...register('type')}
-                      id="type"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    >
-                      {CONTACT_TYPES.map((type) => (
-                        <option key={type.value} value={type.value} className="bg-gray-700">
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.type && (
-                      <p className="mt-1 text-sm text-red-400">{errors.type.message}</p>
-                    )}
-                  </div>
-
-                  {/* Subject */}
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
-                      Subject *
-                    </label>
-                    <input
-                      {...register('subject')}
-                      type="text"
-                      id="subject"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="What's this about?"
-                    />
-                    {errors.subject && (
-                      <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
-                    )}
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                      Message *
-                    </label>
-                    <textarea
-                      {...register('message')}
-                      id="message"
-                      rows={5}
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                      placeholder="Tell us more about your inquiry..."
-                    />
-                    {errors.message && (
-                      <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
-                    )}
-                  </div>
-
-                  {/* Status Messages */}
-                  {submissionStatus !== 'idle' && submissionStatus !== 'submitting' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={getStatusStyles()}
-                    >
-                      {getStatusIcon()}
-                      <p className={getStatusTextColor()}>{submitMessage}</p>
-                    </motion.div>
-                  )}
-
-                  {/* Submit Button */}
-                  <motion.button
-                    type="submit"
-                    disabled={submissionStatus === 'submitting' || !isValid}
-                    whileHover={submissionStatus !== 'submitting' && isValid ? { scale: 1.02 } : {}}
-                    whileTap={submissionStatus !== 'submitting' && isValid ? { scale: 0.98 } : {}}
-                    className={`
-                      w-full flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all
-                      ${submissionStatus === 'submitting' || !isValid
-                        ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }
-                    `}
+            {/* Social Links */}
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 border border-outline-variant/50 bg-surface-container flex items-center justify-center flex-shrink-0 text-secondary">
+                <span className="material-symbols-outlined text-2xl">groups</span>
+              </div>
+              <div className="font-mono">
+                <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">Comms Array</h4>
+                <div className="flex gap-2">
+                  <a
+                    href={contactInfo.socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 border border-outline-variant bg-surface flex items-center justify-center text-outline hover:border-primary hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all font-bold text-xs"
+                    title="LinkedIn"
                   >
-                    {submissionStatus === 'submitting' ? (
-                      <>
-                        <div className="w-5 h-5 mr-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                        Sending Message...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5 mr-3" />
-                        Send Message
-                      </>
-                    )}
-                  </motion.button>
-                </form>
+                    LN
+                  </a>
+                  <a
+                    href={contactInfo.socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 border border-outline-variant bg-surface flex items-center justify-center text-outline hover:border-secondary hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all font-bold text-xs"
+                    title="Instagram"
+                  >
+                    IG
+                  </a>
+                </div>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
+
+        {/* Right Column: Contact Form */}
+        <div className="lg:col-span-7">
+          <div className="forge-border bg-surface-container p-6 sm:p-8 lg:p-12 relative overflow-hidden shadow-2xl">
+            {/* Form decorative background pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 90% 90%, #91d78a 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            
+            <h3 className="font-sans text-lg font-bold text-on-surface uppercase mb-6 relative z-10">
+              TRANSMIT_INQUIRY
+            </h3>
+            
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative z-10">
+              {/* Name */}
+              <div className="space-y-2">
+                <label htmlFor="name" className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Sender Identity *
+                </label>
+                <input
+                  {...register('name')}
+                  type="text"
+                  id="name"
+                  className="w-full bg-surface-container-low border border-outline-variant p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant focus:outline-none focus:border-tertiary"
+                  placeholder="FULL_NAME"
+                />
+                {errors.name && (
+                  <p className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">warning</span>
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <label htmlFor="email" className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Return Comm Link *
+                </label>
+                <input
+                  {...register('email')}
+                  type="email"
+                  id="email"
+                  className="w-full bg-surface-container-low border border-outline-variant p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant focus:outline-none focus:border-tertiary"
+                  placeholder="EMAIL_ADDRESS"
+                />
+                {errors.email && (
+                  <p className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">warning</span>
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Contact Type */}
+              <div className="space-y-2">
+                <label htmlFor="type" className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Signal Frequency *
+                </label>
+                <select
+                  {...register('type')}
+                  id="type"
+                  className="w-full bg-surface-container-low border border-outline-variant p-3 text-on-surface font-mono text-xs appearance-none focus:outline-none focus:border-tertiary"
+                >
+                  {CONTACT_TYPES.map((type) => (
+                    <option key={type.value} value={type.value} className="bg-surface-container-high">
+                      {type.label.toUpperCase()}
+                    </option>
+                  ))}
+                </select>
+                {errors.type && (
+                  <p className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">warning</span>
+                    {errors.type.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Subject */}
+              <div className="space-y-2">
+                <label htmlFor="subject" className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Signal Subject *
+                </label>
+                <input
+                  {...register('subject')}
+                  type="text"
+                  id="subject"
+                  className="w-full bg-surface-container-low border border-outline-variant p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant focus:outline-none focus:border-tertiary"
+                  placeholder="SUBJECT_HEADER"
+                />
+                {errors.subject && (
+                  <p className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">warning</span>
+                    {errors.subject.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Message */}
+              <div className="space-y-2">
+                <label htmlFor="message" className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Signal Payload *
+                </label>
+                <textarea
+                  {...register('message')}
+                  id="message"
+                  rows={4}
+                  className="w-full bg-surface-container-low border border-outline-variant p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant resize-none focus:outline-none focus:border-tertiary"
+                  placeholder="ENTER_PAYLOAD_DATA..."
+                />
+                {errors.message && (
+                  <p className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">warning</span>
+                    {errors.message.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Status Banner */}
+              {submissionStatus !== 'idle' && submissionStatus !== 'submitting' && (
+                <div className={`p-4 font-mono text-xs flex items-start gap-2 border ${
+                  submissionStatus === 'success'
+                    ? 'bg-tertiary/5 border-tertiary text-tertiary'
+                    : submissionStatus === 'partial'
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'bg-secondary/5 border-secondary text-secondary'
+                }`}>
+                  <span className="material-symbols-outlined text-sm mt-0.5">
+                    {submissionStatus === 'success' ? 'check_circle' : 'warning'}
+                  </span>
+                  <p>{submitMessage}</p>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={submissionStatus === 'submitting' || !isValid}
+                className={`
+                  w-full py-4 font-mono text-xs font-bold uppercase active:scale-[0.98] transition-all flex items-center justify-center gap-2
+                  ${submissionStatus === 'submitting' || !isValid
+                    ? 'bg-outline-variant/40 text-outline-variant/40 cursor-not-allowed border border-outline-variant/10'
+                    : 'bg-secondary text-white hover:brightness-110 shadow-[0_0_15px_rgba(172,1,44,0.3)]'
+                  }
+                `}
+              >
+                {submissionStatus === 'submitting' ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    TRANSMITTING_PAYLOAD...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-sm">send</span>
+                    TRANSMIT_SIGNAL
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
   );

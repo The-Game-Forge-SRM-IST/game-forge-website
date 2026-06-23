@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Send, CheckCircle, AlertCircle, Clock, Bell } from 'lucide-react';
 import { 
   applicationFormSchema, 
   type ApplicationFormData
@@ -14,42 +13,54 @@ import { PersonalInfoStep } from '@/components/ui/PersonalInfoStep';
 import { ExperienceStep } from '@/components/ui/ExperienceStep';
 import { MotivationStep } from '@/components/ui/MotivationStep';
 
-// === Configure your endpoint here (same as working first form) ===
+// === Configure Apps Script endpoint ===
 const ENDPOINT =
   "https://script.google.com/macros/s/AKfycbxO9ZF19tr8TfxJy9CXkYM28cGc4uP9ZkQX16Pjk_CAmKKeEVDq1_N7HT9F4R2FLlpt/exec";
 
 type FormStep = 'personal' | 'experience' | 'motivation';
 type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
 
-const STEPS: { key: FormStep; title: string; description: string }[] = [
+const STEPS: { key: FormStep; title: string; subtitle: string }[] = [
   {
     key: 'personal',
     title: 'Personal Information',
-    description: 'Tell us about yourself'
+    subtitle: 'Personal Identity'
   },
   {
     key: 'experience',
     title: 'Technical Experience',
-    description: 'Share your skills and projects'
+    subtitle: 'Technical Expertise'
   },
   {
     key: 'motivation',
     title: 'Motivation & Goals',
-    description: 'Why do you want to join us?'
+    subtitle: 'Intent & Commitment'
   }
 ];
 
-export default function ApplicationSection() {
+export default function ApplicationSection({ isOpen = false }: { isOpen?: boolean }) {
   const [currentStep, setCurrentStep] = useState<FormStep>('personal');
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+  const [isAppOpen, setIsAppOpen] = useState<boolean>(isOpen);
+
+  useEffect(() => {
+    fetch(`/api/application-status?t=${Date.now()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.isOpen === 'boolean') {
+          setIsAppOpen(data.isOpen);
+        }
+      })
+      .catch((err) => console.error('Failed to load live application status:', err));
+  }, []);
 
   const {
-  control,
-  handleSubmit,
-  trigger,
-  setValue,
-  reset,
+    control,
+    handleSubmit,
+    trigger,
+    setValue,
+    reset,
     formState: { errors }
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
@@ -69,7 +80,7 @@ export default function ApplicationSection() {
         gameEngines: [],
         previousProjects: '',
         portfolioUrl: '',
-  // @ts-expect-error default-value-extra
+        // @ts-expect-error extra-default-props
         optional1: '',
         optional2: ''
       },
@@ -116,7 +127,6 @@ export default function ApplicationSection() {
     setSubmitMessage('');
 
     try {
-      // Prepare payload exactly like the working first form with proper field names for Google Sheets
       const payload = {
         Name: data.personalInfo.name,
         Email: data.personalInfo.email,
@@ -126,320 +136,263 @@ export default function ApplicationSection() {
         Course: data.personalInfo.course,
         "Registration Number": data.personalInfo.registrationNumber,
         "Programming Languages": data.experience.programmingLanguages.join(", "),
-  // @ts-expect-error array-join
-  "Game Engines": data.experience.gameEngines.join(", "),
+        "Game Engines": data.experience.gameEngines?.join(", ") || "",
         "Previous Projects": data.experience.previousProjects,
         "Portfolio URL": data.experience.portfolioUrl || '',
         "Why Join": data.motivation.whyJoin,
         Goals: data.motivation.goals,
         Availability: data.motivation.availability,
-  // @ts-expect-error extra-optional
-  Optional1: data.experience.optional1 || '',
-  // @ts-expect-error extra-optional
-  Optional2: data.experience.optional2 || '',
+        // @ts-expect-error extra-optional-check
+        Optional1: data.experience.optional1 || '',
+        // @ts-expect-error extra-optional-check
+        Optional2: data.experience.optional2 || '',
       };
 
       const params = new URLSearchParams();
       for (const [k, v] of Object.entries(payload)) params.append(k, v);
+      const encodedBody = params.toString().replace(/\+/g, "%20");
 
-      // Convert + in keys into %20 so Apps Script matches your sheet headers
-  const encodedBody = params.toString().replace(/\+/g, "%20");
-
-      // Debug logs
-      console.table(payload);
-      console.log("Encoded body (fixed):", encodedBody);
-
-  await fetch(ENDPOINT, {
+      await fetch(ENDPOINT, {
         method: "POST",
-        mode: "no-cors", // avoid CORS errors with Apps Script; response will be opaque
+        mode: "no-cors",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encodedBody,
       });
 
-      // With no-cors, we can't read res.ok. Assume success if no network error.
       setSubmissionStatus("success");
-      setSubmitMessage('Your application has been submitted successfully! We\'ll get back to you soon.');
-
-      // Reset form
+      setSubmitMessage('Your credentials have been transmitted successfully. Our department leads will evaluate alignment.');
       reset();
       setCurrentStep('personal');
     } catch (err) {
       console.error("Submit error:", err);
       setSubmissionStatus("error");
       const message = (err instanceof Error) ? err.message : String(err);
-      setSubmitMessage(`There was an error submitting your application: ${message}. Please check the console and try again.`);
+      setSubmitMessage(`TRANSMISSION_ERROR: ${message}. Re-attempt transmission.`);
     }
   };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 'personal':
-        // @ts-expect-error runtime-prop
-        return <PersonalInfoStep control={control} errors={errors.personalInfo} setValue={setValue} />;
+        return <PersonalInfoStep control={control as any} errors={errors.personalInfo} setValue={setValue} />;
       case 'experience':
-          // @ts-expect-error runtime-prop
-          return <ExperienceStep control={control} errors={errors.experience} />;
+        return <ExperienceStep control={control as any} errors={errors.experience} />;
       case 'motivation':
-          // @ts-expect-error runtime-prop
-          return <MotivationStep control={control} errors={errors.motivation} />;
+        return <MotivationStep control={control as any} errors={errors.motivation} />;
       default:
         return null;
     }
   };
 
-  // Check if applications are closed
-  if (!APPLICATION_CONFIG.APPLICATION_OPEN) {
+  // Render when applications are closed
+  if (!isAppOpen) {
     return (
-      <section id="apply" className="min-h-screen bg-gradient-to-br from-orange-900/20 via-gray-900 to-red-900/20 py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-orange-500/20">
-              <Clock className="w-16 h-16 text-orange-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">
-                {APPLICATION_CONFIG.CLOSED_MESSAGE.title}
-              </h2>
-              <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                {APPLICATION_CONFIG.CLOSED_MESSAGE.description}
-              </p>
-              <div className="bg-orange-900/20 border border-orange-500/20 rounded-lg p-4 mb-8">
-                <div className="flex items-center justify-center mb-2">
-                  <Bell className="w-5 h-5 text-orange-400 mr-2" />
-                  <span className="text-orange-400 font-medium">Stay Updated</span>
-                </div>
-                <p className="text-orange-300 text-sm">
-                  {APPLICATION_CONFIG.CLOSED_MESSAGE.reopenMessage}
-                </p>
-              </div>
-              <motion.a
-                href="#contact"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-block px-8 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
-              >
-                Contact Us for Updates
-              </motion.a>
+      <section id="apply" className="py-24 px-margin-mobile md:px-margin-desktop max-w-5xl mx-auto w-full">
+        <div className="forge-border bg-surface-container p-8 md:p-12 text-center relative overflow-hidden">
+          <div className="absolute top-2 right-2 flex gap-1">
+            <div className="rivet" />
+            <div className="rivet" />
+          </div>
+          <span className="material-symbols-outlined text-5xl text-secondary mb-6">lock_clock</span>
+          <h2 className="font-sans text-3xl font-bold text-on-surface uppercase mb-4 tracking-tight">
+            {APPLICATION_CONFIG.CLOSED_MESSAGE.title.toUpperCase()}
+          </h2>
+          <p className="font-mono text-xs md:text-sm text-on-surface-variant max-w-2xl mx-auto mb-8 leading-relaxed">
+            {APPLICATION_CONFIG.CLOSED_MESSAGE.description}
+          </p>
+          <div className="bg-secondary/5 border border-secondary/20 p-4 mb-8 max-w-md mx-auto">
+            <div className="font-mono text-xs font-bold text-secondary uppercase tracking-wider mb-1">
+              STATUS: AWAITING NEXT HEATING SPRINT
             </div>
-          </motion.div>
-        </div>
-      </section>
-    );
-  }
-
-  if (submissionStatus === 'success') {
-    return (
-      <section id="apply" className="min-h-screen bg-gradient-to-br from-green-900/20 via-gray-900 to-blue-900/20 py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-2xl mx-auto text-center"
+            <p className="font-mono text-[11px] text-on-surface-variant">
+              {APPLICATION_CONFIG.CLOSED_MESSAGE.reopenMessage}
+            </p>
+          </div>
+          <a
+            href="#contact"
+            className="inline-block px-8 py-3 bg-secondary text-white font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
           >
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-green-500/20">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold text-white mb-4">Application Submitted!</h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                {submitMessage}
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setSubmissionStatus('idle');
-                  setCurrentStep('personal');
-                  reset();
-                }}
-                className="mt-8 px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-              >
-                Submit Another Application
-              </motion.button>
-            </div>
-          </motion.div>
+            CONNECT_VIA_COMM_LINK
+          </a>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="apply" className="min-h-screen bg-gradient-to-br from-green-900/20 via-gray-900 to-blue-900/20 py-20">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto"
-        >
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              {APPLICATION_CONFIG.OPEN_MESSAGE.title}
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              {APPLICATION_CONFIG.OPEN_MESSAGE.description}
-            </p>
+    <section id="apply" className="py-24 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Left Column: Information / Casting steps */}
+        <div className="lg:col-span-5">
+          <div className="inline-block border border-tertiary text-tertiary font-mono text-[10px] font-bold px-3 py-1 mb-6 uppercase tracking-widest bg-tertiary/5">
+            FORGE_STATUS: FIRES_ACTIVE
           </div>
+          <h2 className="font-sans text-4xl md:text-5xl font-bold text-on-surface uppercase mb-6 tracking-tight">
+            COMMENCE FORGING
+          </h2>
+          <p className="font-mono text-xs md:text-sm text-on-surface-variant mb-12 leading-relaxed">
+            Submit your credentials for review. Our Forge Masters evaluate every potential Forge Member within 48 operational hours.
+          </p>
 
-          {/* Progress Indicator */}
-          <div className="mb-8 sm:mb-12">
-            {/* Mobile Progress Indicator */}
-            <div className="sm:hidden">
-              <div className="flex justify-center items-center mb-4">
-                <div className="flex space-x-2">
-                  {STEPS.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                        index <= currentStepIndex ? 'bg-green-600' : 'bg-gray-700'
-                      }`}
-                    />
-                  ))}
+          <div className="space-y-8 border-t border-outline-variant/30 pt-8">
+            {STEPS.map((step, idx) => {
+              const isActive = currentStep === step.key;
+              const isPast = currentStepIndex > idx;
+              return (
+                <div key={step.key} className="flex items-start gap-4 group">
+                  <div className={`w-10 h-10 border flex items-center justify-center font-mono text-xs font-bold transition-all duration-300 ${
+                    isActive 
+                      ? 'border-tertiary text-tertiary bg-tertiary/5 scale-105' 
+                      : isPast 
+                      ? 'border-outline text-outline bg-surface-container-low' 
+                      : 'border-outline-variant text-outline-variant'
+                  }`}>
+                    {String(idx + 1).padStart(2, '0')}
+                  </div>
+                  <div>
+                    <h4 className={`font-sans text-sm font-bold uppercase mb-1 transition-colors ${
+                      isActive ? 'text-on-surface' : 'text-on-surface-variant'
+                    }`}>
+                      {step.title}
+                    </h4>
+                    <p className="font-mono text-[11px] text-outline">
+                      {idx === 0 && 'Please provide your contact and academic details.'}
+                      {idx === 1 && 'Tell us about your programming and development skills.'}
+                      {idx === 2 && 'Share your goals and why you want to join.'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-white mb-1">
-                  {STEPS[currentStepIndex].title}
-                </div>
-                <div className="text-sm text-gray-400">
-                  Step {currentStepIndex + 1} of {STEPS.length}
-                </div>
-              </div>
-            </div>
+              );
+            })}
+          </div>
+        </div>
 
-            {/* Desktop Progress Indicator */}
-            <div className="hidden sm:flex justify-between items-center max-w-3xl mx-auto">
-              {STEPS.map((step, index) => (
-                <div key={step.key} className="flex items-center flex-1">
-                  <div className="flex items-center">
-                    <div className={`
-                      w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-sm lg:text-base font-bold transition-all duration-300
-                      ${index <= currentStepIndex 
-                        ? 'bg-green-600 text-white scale-110' 
-                        : 'bg-gray-700 text-gray-400'
-                      }
-                    `}>
-                      {index + 1}
-                    </div>
-                    <div className="ml-3 lg:ml-4">
-                      <div className={`text-sm lg:text-base font-medium transition-colors duration-300 ${
-                        index <= currentStepIndex ? 'text-white' : 'text-gray-400'
-                      }`}>
-                        {step.title}
-                      </div>
-                      <div className="text-xs lg:text-sm text-gray-500">
-                        {step.description}
-                      </div>
+        {/* Right Column: Multi-step Form Shell */}
+        <div className="lg:col-span-7">
+          <div className="forge-border bg-surface-container p-6 sm:p-8 lg:p-12 relative overflow-hidden shadow-2xl">
+            {/* Form decorative background pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 10% 10%, #ac012c 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            
+            {/* Segmented Phase Progress bar */}
+            <div className="flex gap-1.5 mb-8 border-b border-outline-variant/30 pb-4">
+              {STEPS.map((step, idx) => {
+                const isActive = currentStep === step.key;
+                const isCompleted = currentStepIndex >= idx;
+                return (
+                  <div key={step.key} className="flex-1">
+                    <div className={`h-1.5 transition-all duration-300 ${
+                      isActive 
+                        ? 'bg-tertiary' 
+                        : isCompleted 
+                        ? 'bg-primary' 
+                        : 'bg-outline-variant/30'
+                    }`} />
+                    <div className={`font-mono text-[9px] font-bold mt-1.5 uppercase tracking-wide hidden sm:block ${
+                      isActive ? 'text-on-surface' : 'text-outline-variant'
+                    }`}>
+                      {step.subtitle}
                     </div>
                   </div>
-                  {index < STEPS.length - 1 && (
-                    <div className={`
-                      flex-1 h-0.5 mx-4 lg:mx-6 transition-colors duration-300
-                      ${index < currentStepIndex ? 'bg-green-600' : 'bg-gray-700'}
-                    `} />
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </div>
 
-          {/* Form */}
-          <div className="space-y-6 sm:space-y-8">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-gray-700/50">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentStep}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {renderCurrentStep()}
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Error Message */}
-              {submissionStatus === 'error' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-4 bg-red-900/20 border border-red-500/20 rounded-lg flex items-center"
-                >
-                  <AlertCircle className="w-5 h-5 text-red-500 mr-3" />
-                  <p className="text-red-300">{submitMessage}</p>
-                </motion.div>
-              )}
-
-              {/* Navigation Buttons */}
-              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-0 mt-8 pt-6 border-t border-gray-700/50">
-                <motion.button
+            {/* Success screen */}
+            {submissionStatus === 'success' ? (
+              <div className="text-center py-10 relative z-10">
+                <span className="material-symbols-outlined text-5xl text-tertiary mb-4 animate-pulse">done_all</span>
+                <h3 className="font-sans text-2xl font-bold text-on-surface uppercase mb-3">
+                  TRANSMISSION_COMPLETE
+                </h3>
+                <p className="font-mono text-xs md:text-sm text-on-surface-variant max-w-md mx-auto mb-8 leading-relaxed">
+                  {submitMessage}
+                </p>
+                <button
                   type="button"
-                  onClick={handlePrevious}
-                  disabled={isFirstStep}
-                  whileHover={!isFirstStep ? { scale: 1.02 } : {}}
-                  whileTap={!isFirstStep ? { scale: 0.98 } : {}}
-                  className={`
-                    flex items-center justify-center px-6 py-3 sm:py-4 rounded-lg font-medium transition-all touch-manipulation min-h-[48px]
-                    ${isFirstStep 
-                      ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed order-2 sm:order-1' 
-                      : 'bg-gray-700 hover:bg-gray-600 text-white order-2 sm:order-1'
-                    }
-                  `}
+                  onClick={() => {
+                    setSubmissionStatus('idle');
+                    setCurrentStep('personal');
+                  }}
+                  className="px-6 py-3 bg-primary text-black font-mono text-xs font-bold uppercase active:scale-95 hover:bg-white transition-all"
                 >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous
-                </motion.button>
+                  TRANSMIT_NEW_CREDENTIALS
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={(e) => e.preventDefault()} className="space-y-6 relative z-10">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentStep}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {renderCurrentStep()}
+                  </motion.div>
+                </AnimatePresence>
 
-                {isLastStep ? (
-                  <motion.button
+                {/* Error Banner */}
+                {submissionStatus === 'error' && (
+                  <div className="p-4 bg-secondary/5 border border-secondary/20 font-mono text-xs text-secondary flex items-start gap-2">
+                    <span className="material-symbols-outlined text-sm mt-0.5">warning</span>
+                    <p>{submitMessage}</p>
+                  </div>
+                )}
+
+                {/* Navigation Controls */}
+                <div className="flex justify-between items-center pt-6 border-t border-outline-variant/30 mt-8">
+                  <button
                     type="button"
-                      // @ts-expect-error handleSubmit-callback
-                      onClick={handleSubmit(onSubmit)}
-                    disabled={submissionStatus === 'submitting'}
-                    whileHover={submissionStatus !== 'submitting' ? { scale: 1.02 } : {}}
-                    whileTap={submissionStatus !== 'submitting' ? { scale: 0.98 } : {}}
+                    onClick={handlePrevious}
+                    disabled={isFirstStep || submissionStatus === 'submitting'}
                     className={`
-                      flex items-center justify-center px-8 py-3 sm:py-4 rounded-lg font-medium transition-all touch-manipulation min-h-[48px] order-1 sm:order-2
-                      ${submissionStatus === 'submitting'
-                        ? 'bg-green-600/50 text-green-300 cursor-not-allowed'
-                        : 'bg-green-600 hover:bg-green-700 text-white'
+                      px-6 py-3 font-mono text-xs font-bold uppercase active:scale-95 transition-all border flex items-center gap-1.5
+                      ${isFirstStep || submissionStatus === 'submitting'
+                        ? 'border-outline-variant/40 text-outline-variant/40 cursor-not-allowed'
+                        : 'border-outline text-on-surface hover:bg-white/5'
                       }
                     `}
                   >
-                    {submissionStatus === 'submitting' ? (
-                      <>
-                        <div className="w-4 h-4 mr-2 border-2 border-green-300 border-t-transparent rounded-full animate-spin" />
-                        <span className="hidden sm:inline">Submitting...</span>
-                        <span className="sm:hidden">Submitting</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        <span className="hidden sm:inline">Submit Application</span>
-                        <span className="sm:hidden">Submit</span>
-                      </>
-                    )}
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    type="button"
-                    onClick={handleNext}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center px-6 py-3 sm:py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors touch-manipulation min-h-[48px] order-1 sm:order-2"
-                  >
-                    Next
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </motion.button>
-                )}
-              </div>
-            </div>
+                    <span className="material-symbols-outlined text-sm">arrow_left_alt</span>
+                    PREV
+                  </button>
+
+                  {isLastStep ? (
+                    <button
+                      type="button"
+                      onClick={handleSubmit(onSubmit as any)}
+                      disabled={submissionStatus === 'submitting'}
+                      className="px-8 py-3 bg-secondary text-white font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5"
+                    >
+                      {submissionStatus === 'submitting' ? (
+                        <>
+                          <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          TRANSMITTING...
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined text-sm">send</span>
+                          TRANSMIT
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="px-8 py-3 bg-primary text-black font-mono text-xs font-bold uppercase active:scale-95 hover:bg-white transition-all flex items-center gap-1.5"
+                    >
+                      NEXT
+                      <span className="material-symbols-outlined text-sm">arrow_right_alt</span>
+                    </button>
+                  )}
+                </div>
+              </form>
+            )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
-

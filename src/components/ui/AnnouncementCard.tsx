@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Calendar, Trophy, Users, Newspaper } from 'lucide-react';
 import { Announcement } from '@/types';
 
 interface AnnouncementCardProps {
@@ -9,125 +7,132 @@ interface AnnouncementCardProps {
   index: number;
 }
 
-const typeIcons = {
-  news: Newspaper,
-  event: Calendar,
-  achievement: Trophy,
-  recruitment: Users,
-};
-
-const typeColors = {
-  news: 'from-blue-500/20 to-blue-600/20 border-blue-500/30',
-  event: 'from-green-500/20 to-green-600/20 border-green-500/30',
-  achievement: 'from-yellow-500/20 to-yellow-600/20 border-yellow-500/30',
-  recruitment: 'from-purple-500/20 to-purple-600/20 border-purple-500/30',
-};
-
-const typeTextColors = {
-  news: 'text-blue-400',
-  event: 'text-green-400',
-  achievement: 'text-yellow-400',
-  recruitment: 'text-purple-400',
-};
-
-export default function AnnouncementCard({ announcement, index }: AnnouncementCardProps) {
-  const IconComponent = typeIcons[announcement.type];
+export default function AnnouncementCard({ announcement }: AnnouncementCardProps) {
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }).toUpperCase();
+    } catch {
+      return dateString.toUpperCase();
+    }
+  };
+
+  // Configuration mapping based on type
+  const getTypeConfig = (type: Announcement['type']) => {
+    switch (type) {
+      case 'news':
+        return {
+          label: 'LOG_NEWS',
+          icon: 'newspaper',
+          borderStyle: 'border-outline-variant hover:border-primary',
+          textStyle: 'text-primary',
+          badgeBg: 'bg-primary/10 text-primary border-primary/20'
+        };
+      case 'event':
+        return {
+          label: 'LOG_EVENTS',
+          icon: 'calendar_today',
+          borderStyle: 'border-outline-variant hover:border-tertiary',
+          textStyle: 'text-tertiary',
+          badgeBg: 'bg-tertiary/10 text-tertiary border-tertiary/20'
+        };
+      case 'achievement':
+        return {
+          label: 'LOG_ACHIEVEMENTS',
+          icon: 'workspace_premium',
+          borderStyle: 'border-outline-variant hover:border-primary',
+          textStyle: 'text-primary',
+          badgeBg: 'bg-primary/20 text-on-surface border-primary/30'
+        };
+      case 'recruitment':
+        return {
+          label: 'LOG_RECRUITMENT',
+          icon: 'engineering',
+          borderStyle: 'border-outline-variant hover:border-secondary',
+          textStyle: 'text-secondary',
+          badgeBg: 'bg-secondary/15 text-secondary border-secondary/30'
+        };
+    }
+  };
+
+  const config = getTypeConfig(announcement.type);
+
+  // Mouse follow glow effect handler
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Hover colors match type accents
+    let glowColor = 'rgba(196, 199, 203, 0.04)'; // primary
+    if (announcement.type === 'recruitment') glowColor = 'rgba(172, 1, 44, 0.04)';
+    else if (announcement.type === 'event') glowColor = 'rgba(145, 215, 138, 0.04)';
+
+    card.style.background = `radial-gradient(circle at ${x}px ${y}px, ${glowColor} 0%, transparent 70%), #1c1b1b`;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.background = '';
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      whileHover={{ 
-        scale: 1.02,
-        transition: { duration: 0.2 }
-      }}
-      className={`
-        relative p-6 rounded-xl border backdrop-blur-sm
-        bg-gradient-to-br ${typeColors[announcement.type]}
-        hover:shadow-lg hover:shadow-black/20
-        transition-all duration-300 group
-        ${announcement.isNew ? 'ring-2 ring-white/20' : ''}
-      `}
+    <div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative p-6 bg-surface-container-low border ${config.borderStyle} transition-all duration-300 group`}
     >
-      {/* New Badge */}
+      {/* Rivets in top right */}
+      <div className="absolute top-2 right-2 flex gap-1">
+        <div className="rivet" />
+        <div className="rivet" />
+      </div>
+
+      {/* New Notice Banner */}
       {announcement.isNew && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: index * 0.1 + 0.3, type: 'spring', stiffness: 200 }}
-          className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg"
-        >
-          <motion.div
-            animate={{ rotate: [0, -5, 5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          >
-            NEW
-          </motion.div>
-        </motion.div>
+        <div className="absolute -top-3 left-4 bg-secondary text-white font-mono text-[9px] font-bold px-2 py-0.5 border border-secondary/50 tracking-widest animate-pulse">
+          NEW_NOTICE
+        </div>
       )}
 
-      {/* Header */}
-      <div className="flex items-start gap-4 mb-4">
-        <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.5 }}
-          className={`p-3 rounded-lg bg-black/20 ${typeTextColors[announcement.type]}`}
-        >
-          <IconComponent size={24} />
-        </motion.div>
-        
-        <div className="flex-1">
-          <motion.h3 
-            className="text-xl font-bold text-white mb-2 group-hover:text-gray-100 transition-colors"
-            whileHover={{ x: 5 }}
-            transition={{ duration: 0.2 }}
-          >
-            {announcement.title}
-          </motion.h3>
-          
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <Calendar size={14} />
-            <span>{formatDate(announcement.date)}</span>
-            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
-            <span className={`capitalize font-medium ${typeTextColors[announcement.type]}`}>
-              {announcement.type}
-            </span>
+      {/* Header Layout */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between mb-4 border-b border-outline-variant/30 pb-4">
+        <div className="flex items-center gap-3">
+          {/* Symbol */}
+          <span className={`material-symbols-outlined text-2xl ${config.textStyle}`}>
+            {config.icon}
+          </span>
+          <div>
+            {/* Title */}
+            <h3 className="font-sans text-lg font-bold text-on-surface uppercase tracking-tight group-hover:text-white transition-colors">
+              {announcement.title}
+            </h3>
+            
+            {/* Meta row */}
+            <div className="flex items-center gap-2 font-mono text-[10px] text-outline-variant mt-0.5">
+              <span>{formatDate(announcement.date)}</span>
+              <span className="w-1 h-1 bg-outline-variant/50 rounded-full" />
+              <span className={`inline-flex items-center gap-1 font-bold ${config.textStyle}`}>
+                {config.label}
+              </span>
+            </div>
           </div>
+        </div>
+
+        {/* Small Tag */}
+        <div className={`self-start sm:self-center font-mono text-[9px] font-bold px-2.5 py-1 border uppercase tracking-wider ${config.badgeBg}`}>
+          {announcement.type}
         </div>
       </div>
 
-      {/* Content */}
-      <motion.p 
-        className="text-gray-300 leading-relaxed"
-        initial={{ opacity: 0.8 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
+      {/* Body content */}
+      <p className="font-mono text-xs md:text-sm text-on-surface-variant leading-relaxed">
         {announcement.content}
-      </motion.p>
-
-      {/* Hover Effect Overlay */}
-      <motion.div
-        className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        initial={false}
-        animate={{ x: '-100%' }}
-        whileHover={{ x: '100%' }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-      />
-    </motion.div>
+      </p>
+    </div>
   );
 }

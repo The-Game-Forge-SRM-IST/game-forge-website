@@ -11,57 +11,60 @@ export default function BackgroundMusic() {
     useEffect(() => {
         const audio = audioRef.current;
 
-        const startOnInteraction = async () => {
-            // "Autoplay" strategy:
-            // Browser policy prevents automatic audio without interaction.
-            // We listen for the FIRST user interaction anywhere to trigger the music.
-
-            if (audio && audio.paused) {
-                console.log('User interacted, attempting to start music...');
-                try {
-                    // Lazy load if needed
-                    if (!audio.src) {
-                        audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
-                        audio.load();
-                    }
-
-                    // Try to play
-                    await audio.play();
-                    setIsPlaying(true);
-                    console.log('🎵 Autoplay success after interaction');
-                } catch (error) {
-                    console.log("Autoplay prevented even after interaction (rare):", error);
+        const unmuteOnInteraction = () => {
+            if (audio) {
+                console.log('User interacted, unmuting audio...');
+                audio.muted = false;
+                // Double check it is playing
+                if (audio.paused) {
+                    audio.play()
+                        .then(() => {
+                            setIsPlaying(true);
+                            setIsMuted(false);
+                        })
+                        .catch(e => console.log(e));
+                } else {
+                    setIsMuted(false);
                 }
             }
-
-            // Remove the listener immediately to essentially "run once"
-            document.removeEventListener('click', startOnInteraction);
-            document.removeEventListener('touchstart', startOnInteraction);
-            document.removeEventListener('keydown', startOnInteraction);
+            cleanupInteractionListeners();
         };
 
-        // Add listeners for any interaction
-        document.addEventListener('click', startOnInteraction);
-        document.addEventListener('touchstart', startOnInteraction);
-        document.addEventListener('keydown', startOnInteraction);
+        const cleanupInteractionListeners = () => {
+            document.removeEventListener('click', unmuteOnInteraction);
+            document.removeEventListener('touchstart', unmuteOnInteraction);
+            document.removeEventListener('touchend', unmuteOnInteraction);
+            document.removeEventListener('keydown', unmuteOnInteraction);
+        };
 
-        // Attempt "true" autoplay just in case the browser allows it (e.g. user already interacted with domain previously)
-        const attemptInstantPlay = async () => {
+        // Add listeners for first interaction to unmute
+        document.addEventListener('click', unmuteOnInteraction);
+        document.addEventListener('touchstart', unmuteOnInteraction);
+        document.addEventListener('touchend', unmuteOnInteraction);
+        document.addEventListener('keydown', unmuteOnInteraction);
+
+        // Attempt muted autoplay immediately on load
+        const startMutedAutoplay = async () => {
             if (audio && audio.paused) {
                 try {
-                    if (!audio.src) audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
+                    audio.muted = true;
+                    audio.volume = 0.3;
                     await audio.play();
                     setIsPlaying(true);
+                    setIsMuted(true);
+                    console.log('🎵 Muted autoplay succeeded');
                 } catch (e) {
-                    // Expected failure, wait for interaction
+                    console.log('Muted autoplay blocked, waiting for interaction to start/unmute:', e);
                 }
             }
         };
-        attemptInstantPlay();
+        startMutedAutoplay();
 
         return () => {
-            document.removeEventListener('click', startOnInteraction);
-            document.removeEventListener('touchstart', startOnInteraction);
+            cleanupInteractionListeners();
+            if (audio) {
+                audio.pause();
+            }
         };
     }, []);
 
@@ -82,12 +85,6 @@ export default function BackgroundMusic() {
 
         try {
             // Mobile-optimized play sequence
-
-            // LAZY LOAD: Only set source when user clicks play
-            if (!audio.src) {
-                console.log('📥 Lazy loading audio...');
-                audio.src = "/C418  - Sweden - Minecraft Volume Alpha.mp3";
-            }
 
             audio.load(); // Force reload
 
@@ -126,11 +123,10 @@ export default function BackgroundMusic() {
             <div className="bg-black/80 backdrop-blur-sm rounded-lg p-2 md:p-3 flex items-center gap-1 md:gap-2 shadow-lg border border-white/10">
                 <audio
                     ref={audioRef}
-                    preload="none"
+                    src="/C418  - Sweden - Minecraft Volume Alpha.mp3"
+                    preload="auto"
                     loop
-                >
-                    {/* Source will be added dynamically when play is requested to prevent initial download */}
-                </audio>
+                />
 
                 {!isPlaying && (
                     <button

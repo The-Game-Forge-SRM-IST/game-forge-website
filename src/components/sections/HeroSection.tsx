@@ -1,223 +1,245 @@
 'use client';
 
+import { useRef, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
-import { Linkedin, Instagram, ExternalLink } from 'lucide-react';
-import { AnimatedButton } from '@/components/ui';
-import { useTheme } from '@/providers/ThemeProvider';
-
+import { Terminal, Hammer, ArrowLeft, ArrowRight } from 'lucide-react';
+import projectsData from '@/data/projects.json';
+import teamData from '@/data/team.json';
+import { Project, TeamMember } from '@/types';
 
 export default function HeroSection() {
-  const [displayText, setDisplayText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const { resolvedTheme } = useTheme();
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const texts = useMemo(() => [
-    'Where creativity meets code',
-    'Innovation shapes the future of gaming',
-    'Building tomorrow\'s games today',
-    'Crafting digital experiences'
-  ], []);
+  // Load projects from local data
+  const projects = projectsData as Project[];
+  const team = teamData as TeamMember[];
 
-  // Simple scroll detection - just fade the hero logo
-  useEffect(() => {
-    let ticking = false;
+  // Find the featured project (prefer "The Quota" brackeys entry)
+  const featuredProject = projects.find(p => p.id === 'the-quota') || projects.find(p => p.status === 'completed' && p.awards && p.awards.length > 0) || projects[0];
 
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          const newIsScrolled = scrollY > 100;
-          setIsScrolled(newIsScrolled);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+  // In-progress or planned projects for the WIP slider
+  const wipProjects = projects.filter(p => p.id !== featuredProject.id);
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+  const getTeamNames = (memberIds: string[]) => {
+    return memberIds
+      .map(id => team.find(t => t.id === id)?.name || id)
+      .join(', ');
+  };
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const currentText = texts[currentIndex];
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        if (displayText.length < currentText.length) {
-          setDisplayText(currentText.slice(0, displayText.length + 1));
-        } else {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        if (displayText.length > 0) {
-          setDisplayText(displayText.slice(0, -1));
-        } else {
-          setIsDeleting(false);
-          setCurrentIndex((prev) => (prev + 1) % texts.length);
-        }
-      }
-    }, isDeleting ? 50 : 100);
-
-    return () => clearTimeout(timeout);
-  }, [displayText, currentIndex, isDeleting, texts]);
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const scrollSlider = (direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollAmount = 350;
+      container.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
     }
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative safe-area-inset-top px-4 sm:px-6 lg:px-8">
-      {/* Theme-aware background overlay for text readability */}
-      <div className={`absolute inset-0 backdrop-blur-sm ${resolvedTheme === 'light'
-          ? 'bg-white/10'
-          : 'bg-black/20'
-        }`} />
+    <div className="relative w-full">
+      {/* 1. Hero Cover Section */}
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden border-b border-white/5">
+        <div className="absolute inset-0 z-0">
+          <img
+            alt="Forge Background"
+            className="w-full h-full object-cover opacity-25 select-none pointer-events-none"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjJ4hAOoh6OkNV8RV_rqpQC3ppVXoewoSH9yGVhT49ofYUCIkJWyBhqOmJw1omkiQNAy7yUOyjgRCQvUnKyPuBTDaDzGm0kQ8qEFyngiP6h9LAdfmvdiO8Y0MPf0CL8dmbTHXzdnkvrRw4-9lj5egWHWvQzY0meFXQa5p_jVMRJdjiOMuBYCHkWW1opT8UBgmH8fKVIJjLi-YgoIeh_XoX7NNJk3hZ2qevbz749t0Us4ZDP-gIJG2R_gy5vaEMJpxCRr8fzCLOZwY"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background"></div>
+        </div>
 
-      <div className="container-responsive text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-8"
-        >
-          {/* Club Logo */}
+        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center justify-center mt-12 md:mt-20">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
-              opacity: isScrolled ? 0.4 : 1,
-              scale: isScrolled ? 0.9 : 1,
-            }}
-            transition={{
-              duration: 0.4,
-              ease: "easeOut"
-            }}
-            className="mb-6 sm:mb-8 md:mb-10"
-          >
-            <div className="w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 mx-auto mb-4 sm:mb-6 relative">
-              {/* The Game Forge Club Logo */}
-              <Image
-                src="/images/ClubLogo.png"
-                alt="The Game Forge Club Logo"
-                fill
-                priority
-                className="object-contain rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300"
-              />
-              {/* Simple glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-blue-400/20 to-red-400/20 rounded-lg blur-xl opacity-60" />
-            </div>
-          </motion.div>
-
-
-
-          {/* Main Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-responsive-3xl font-bold mb-4 sm:mb-6 leading-tight text-center text-foreground"
+            transition={{ duration: 0.8 }}
           >
-            The Game <span className="text-green-400">Forge</span>
-          </motion.h1>
-
-          {/* Club Description */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0"
-          >
-            <p className={`text-responsive-xl max-w-4xl mx-auto leading-relaxed text-center ${resolvedTheme === 'light' ? 'text-text-secondary' : 'text-gray-300'
-              }`}>
-              A game development club at <span className="text-blue-400 font-semibold">SRM IST KTR</span>
+            <h1 className="font-sans text-[52px] md:text-[96px] mb-2 leading-none uppercase text-white tracking-tighter font-extrabold select-none">
+              THE GAME <br />
+              <span className="text-tertiary text-glow-green block mt-2">FORGE</span>
+            </h1>
+            <p className="font-mono text-xs md:text-sm text-on-surface-variant max-w-xl mx-auto mt-6 uppercase tracking-wider">
+              Iterative, high-precision game engineering and digital worldcrafting.
             </p>
+          </motion.div>
 
-            {/* Typewriter Animation */}
-            <div className="h-12 sm:h-14 md:h-16 lg:h-20 flex items-center justify-center">
-              <p className={`text-responsive-lg max-w-3xl mx-auto text-center leading-relaxed ${resolvedTheme === 'light' ? 'text-text-muted' : 'text-gray-400'
-                }`}>
-                {displayText}
-                <span className="animate-pulse text-green-400">|</span>
-              </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-16"
+          >
+            <Link
+              href="/recruitment"
+              className="w-full sm:w-auto text-center bg-secondary-container text-white font-mono text-xs font-bold px-10 py-4 uppercase border border-secondary-container hover:bg-secondary-container/80 transition-all shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] interactive block sm:inline-block"
+            >
+              JOIN THE FORGE
+            </Link>
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="flex items-center gap-3 font-mono text-xs font-bold text-on-surface hover:text-tertiary transition-colors group uppercase interactive"
+              href="#latest"
+            >
+              VIEW ARTIFACTS
+              <Hammer className="w-4 h-4 group-hover:translate-x-1 transition-transform text-tertiary" />
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-40 z-10 cursor-pointer"
+          onClick={() => document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          <span className="material-symbols-outlined text-white">south</span>
+        </div>
+      </section>
+
+      {/* 2. Featured Masterwork Project */}
+      {featuredProject && (
+        <section className="px-margin-mobile md:px-margin-desktop py-20" id="latest">
+          <div className="forge-border industrial-card p-0 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+              <div className="lg:col-span-8 relative min-h-[300px] md:min-h-[500px] bg-surface-container-lowest">
+                {featuredProject.images && featuredProject.images.length > 0 ? (
+                  <img
+                    alt={featuredProject.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-all duration-700 select-none pointer-events-none"
+                    src={featuredProject.images[0]}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-surface-container-low font-mono text-xs text-outline-variant">
+                    NO_VISUAL_RECORD
+                  </div>
+                )}
+                <div className="absolute top-6 left-6 flex gap-3">
+                  <span className="bg-tertiary text-on-tertiary px-3 py-1 font-mono text-[10px] uppercase font-bold tracking-widest">
+                    Masterwork
+                  </span>
+                </div>
+              </div>
+              <div className="lg:col-span-4 p-8 md:p-12 flex flex-col justify-center bg-surface-container-low border-l border-white/5">
+                <div className="font-mono text-tertiary text-[10px] mb-4 uppercase tracking-widest">
+                  CRAFT_ID: {featuredProject.id.toUpperCase()}
+                </div>
+                <h2 className="font-sans text-2xl md:text-3xl text-white mb-6 uppercase tracking-tight font-extrabold">
+                  {featuredProject.title}
+                </h2>
+                <p className="font-mono text-xs md:text-sm text-on-surface-variant mb-8 leading-relaxed">
+                  {featuredProject.description}
+                </p>
+                
+                {featuredProject.teamMembers && featuredProject.teamMembers.length > 0 && (
+                  <div className="mb-6 font-mono text-[10px] text-outline uppercase tracking-wider">
+                    SMITHED BY: {getTeamNames(featuredProject.teamMembers)}
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-2 mb-10">
+                  {featuredProject.technologies.slice(0, 3).map((tech, i) => (
+                    <span
+                      key={i}
+                      className="font-mono text-[9px] border border-outline-variant px-3 py-1 bg-surface-container-highest uppercase text-on-surface-variant"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {featuredProject.itchUrl || featuredProject.githubUrl ? (
+                  <a
+                    href={featuredProject.itchUrl || featuredProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-fit border border-primary text-primary hover:bg-primary hover:text-on-primary px-8 py-3 font-mono text-xs font-bold transition-all uppercase interactive"
+                  >
+                    ACQUIRE BUILD
+                  </a>
+                ) : (
+                  <button className="w-fit border border-outline-variant text-outline-variant px-8 py-3 font-mono text-xs font-bold uppercase cursor-not-allowed">
+                    BUILD TEMPERING
+                  </button>
+                )}
+              </div>
             </div>
-          </motion.div>
+          </div>
+        </section>
+      )}
 
-          {/* Call-to-Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-8 sm:mb-10 max-w-lg mx-auto"
+      {/* 3. Works in Progress Slider */}
+      {wipProjects.length > 0 && (
+        <section className="px-margin-mobile md:px-margin-desktop py-20 overflow-hidden bg-surface-container-lowest">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <div className="font-mono text-tertiary text-[10px] mb-2 uppercase tracking-widest">
+                On the Anvil
+              </div>
+              <h2 className="font-sans text-2xl md:text-3xl text-white uppercase font-extrabold tracking-tight">
+                CURRENT TEMPERING
+              </h2>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => scrollSlider('left')}
+                className="w-12 h-12 border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors interactive"
+                aria-label="Scroll left"
+              >
+                <ArrowLeft className="w-5 h-5 text-on-surface-variant" />
+              </button>
+              <button
+                onClick={() => scrollSlider('right')}
+                className="w-12 h-12 border border-tertiary flex items-center justify-center hover:bg-tertiary/10 transition-colors interactive"
+                aria-label="Scroll right"
+              >
+                <ArrowRight className="w-5 h-5 text-tertiary" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-6 overflow-x-auto pb-8 scrollbar-none snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <AnimatedButton
-              variant="primary"
-              size="lg"
-              glowEffect
-              particleEffect
-              onClick={() => scrollToSection('apply')}
-              className="flex-1 sm:flex-none"
-            >
-              Join Our Community
-            </AnimatedButton>
-            <AnimatedButton
-              variant="outline"
-              size="lg"
-              onClick={() => scrollToSection('projects')}
-              className="flex-1 sm:flex-none"
-            >
-              <span>View Projects</span>
-              <ExternalLink className="w-5 h-5" />
-            </AnimatedButton>
-          </motion.div>
-
-          {/* Social Media Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="flex justify-center space-x-6 sm:space-x-8"
-          >
-            <motion.a
-              href="https://www.linkedin.com/company/105910279/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2, y: -5 }}
-              whileTap={{ scale: 0.9 }}
-              className={`p-4 sm:p-5 backdrop-blur-sm rounded-full transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center ${resolvedTheme === 'light'
-                  ? 'bg-background-secondary/80 hover:bg-blue-600/10 border border-border-color/20'
-                  : 'bg-white/10 hover:bg-blue-600/20'
-                }`}
-              aria-label="Follow us on LinkedIn"
-            >
-              <Linkedin className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400 group-hover:text-blue-300" />
-            </motion.a>
-            <motion.a
-              href="https://www.instagram.com/the_game_forge/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2, y: -5 }}
-              whileTap={{ scale: 0.9 }}
-              className={`p-4 sm:p-5 backdrop-blur-sm rounded-full transition-all duration-300 group touch-manipulation min-h-[56px] min-w-[56px] flex items-center justify-center ${resolvedTheme === 'light'
-                  ? 'bg-background-secondary/80 hover:bg-pink-600/10 border border-border-color/20'
-                  : 'bg-white/10 hover:bg-pink-600/20'
-                }`}
-              aria-label="Follow us on Instagram"
-            >
-              <Instagram className="w-6 h-6 sm:w-7 sm:h-7 text-pink-400 group-hover:text-pink-300" />
-            </motion.a>
-          </motion.div>
-
-
-        </motion.div>
-      </div>
-    </section>
+            {wipProjects.map((project) => (
+              <div
+                key={project.id}
+                className="flex-shrink-0 w-[290px] sm:w-[360px] md:w-[420px] industrial-card relative overflow-hidden group snap-start"
+              >
+                <div className="relative h-[250px] overflow-hidden bg-surface-container-lowest">
+                  {project.images && project.images.length > 0 ? (
+                    <img
+                      alt={project.title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 select-none pointer-events-none"
+                      src={project.images[0]}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-surface-container-low font-mono text-xs text-outline-variant">
+                      NO_VISUAL_RECORD
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6 md:p-8">
+                    <div className="font-mono text-tertiary text-[9px] mb-2 uppercase tracking-widest">
+                      {project.status.toUpperCase()} / {project.technologies.slice(0, 1).join(', ').toUpperCase()}
+                    </div>
+                    <h4 className="font-sans text-xl text-white uppercase font-bold tracking-tight">
+                      {project.title}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
   );
 }

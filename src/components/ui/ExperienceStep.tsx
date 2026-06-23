@@ -1,8 +1,6 @@
 'use client';
 
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { motion } from 'framer-motion';
-import { Code, Gamepad2, FileText, ExternalLink, X } from 'lucide-react';
 import { ApplicationFormData, ExperienceFormData, PROGRAMMING_LANGUAGES, GAME_ENGINES } from '@/lib/validations/application';
 import { useState } from 'react';
 
@@ -17,19 +15,18 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-white mb-2">Technical Experience</h3>
-        <p className="text-gray-400">Tell us about your programming skills and project experience</p>
+      <div className="text-center mb-8 border-b border-outline-variant/30 pb-4">
+        <h3 className="font-sans text-xl font-bold text-on-surface uppercase tracking-tight">
+          Step 2: Technical Experience
+        </h3>
+        <p className="font-mono text-xs text-on-surface-variant mt-1">
+          Tell us about your programming and development skills.
+        </p>
       </div>
 
       {/* Programming Languages */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          <Code className="w-4 h-4 inline mr-2" />
+      <div className="space-y-3">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
           Programming Languages * (Select all that apply)
         </label>
         <Controller
@@ -37,36 +34,40 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
           control={control}
           render={({ field }) => (
             <div className="space-y-3">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {PROGRAMMING_LANGUAGES.map((language) => (
-                  <motion.label
-                    key={language}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`
-                      flex items-center p-3 rounded-lg border cursor-pointer transition-all
-                      ${field.value?.includes(language)
-                        ? 'bg-green-600/20 border-green-500 text-green-300'
-                        : 'bg-gray-700/30 border-gray-600 text-gray-300 hover:border-gray-500'
-                      }
-                    `}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={field.value?.includes(language) || false}
-                      onChange={(e) => {
-                        const currentValue = field.value || [];
-                        if (e.target.checked) {
-                          field.onChange([...currentValue, language]);
-                        } else {
-                          field.onChange(currentValue.filter(lang => lang !== language));
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                {PROGRAMMING_LANGUAGES.map((language) => {
+                  const isChecked = field.value?.includes(language) || false;
+                  return (
+                    <label
+                      key={language}
+                      className={`
+                        font-mono text-xs p-3 border cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-between
+                        ${isChecked
+                          ? 'bg-tertiary/10 border-tertiary text-tertiary font-bold'
+                          : 'bg-surface-container-low border-outline-variant text-on-surface-variant hover:border-primary hover:text-white'
                         }
-                      }}
-                      className="sr-only"
-                    />
-                    <span className="text-sm font-medium">{language}</span>
-                  </motion.label>
-                ))}
+                      `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => {
+                          const currentValue = field.value || [];
+                          if (e.target.checked) {
+                            field.onChange([...currentValue, language]);
+                          } else {
+                            field.onChange(currentValue.filter(lang => lang !== language));
+                          }
+                        }}
+                        className="sr-only"
+                      />
+                      <span>{language.toUpperCase()}</span>
+                      {isChecked && (
+                        <span className="material-symbols-outlined text-sm font-bold animate-pulse">check</span>
+                      )}
+                    </label>
+                  );
+                })}
               </div>
               
               {/* Custom Language Input */}
@@ -75,46 +76,42 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
                   type="text"
                   value={customLanguage}
                   onChange={(e) => setCustomLanguage(e.target.value)}
-                  placeholder="Add custom language..."
-                  className="flex-1 px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="e.g. Go, Rust"
+                  className="flex-1 bg-surface-container-low border border-outline-variant p-2 text-on-surface font-mono text-xs focus:outline-none focus:border-tertiary"
                 />
-                <motion.button
+                <button
                   type="button"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     if (customLanguage.trim() && !field.value?.includes(customLanguage.trim())) {
                       field.onChange([...(field.value || []), customLanguage.trim()]);
                       setCustomLanguage('');
                     }
                   }}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-primary text-black font-mono text-xs font-bold uppercase hover:bg-white active:scale-95 transition-all"
                 >
-                  Add
-                </motion.button>
+                  ADD
+                </button>
               </div>
 
-              {/* Selected Languages Display */}
+              {/* Selected Languages Display (redundancy/clean check) */}
               {field.value && field.value.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {field.value.map((language) => (
-                    <motion.span
+                    <span
                       key={language}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="inline-flex items-center px-3 py-1 bg-green-600/20 text-green-300 rounded-full text-sm"
+                      className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-tertiary/15 border border-tertiary/30 text-tertiary font-mono text-[10px] font-bold"
                     >
-                      {language}
+                      {language.toUpperCase()}
                       <button
                         type="button"
                         onClick={() => {
                           field.onChange(field.value?.filter(lang => lang !== language));
                         }}
-                        className="ml-2 hover:text-green-100"
+                        className="hover:text-white font-bold"
                       >
-                        <X className="w-3 h-3" />
+                        [X]
                       </button>
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
               )}
@@ -122,61 +119,57 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
           )}
         />
         {errors?.programmingLanguages && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.programmingLanguages.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
       {/* Game Engines */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-3">
-          <Gamepad2 className="w-4 h-4 inline mr-2" />
-          Game Engines & Frameworks (Optional)
+      <div className="space-y-3">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+          Game Engines (Optional)
         </label>
         <Controller
           name="experience.gameEngines"
           control={control}
           render={({ field }) => (
             <div className="space-y-3">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {GAME_ENGINES.map((engine) => (
-                  <motion.label
-                    key={engine}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`
-                      flex items-center p-3 rounded-lg border cursor-pointer transition-all
-                      ${field.value?.includes(engine)
-                        ? 'bg-blue-600/20 border-blue-500 text-blue-300'
-                        : 'bg-gray-700/30 border-gray-600 text-gray-300 hover:border-gray-500'
-                      }
-                    `}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={field.value?.includes(engine) || false}
-                      onChange={(e) => {
-                        const currentValue = field.value || [];
-                        if (e.target.checked) {
-                          field.onChange([...currentValue, engine]);
-                        } else {
-                          field.onChange(currentValue.filter(eng => eng !== engine));
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                {GAME_ENGINES.map((engine) => {
+                  const isChecked = field.value?.includes(engine) || false;
+                  return (
+                    <label
+                      key={engine}
+                      className={`
+                        font-mono text-xs p-3 border cursor-pointer transition-all duration-150 active:scale-95 flex items-center justify-between
+                        ${isChecked
+                          ? 'bg-secondary-container/10 border-secondary-container text-on-secondary-container font-bold'
+                          : 'bg-surface-container-low border-outline-variant text-on-surface-variant hover:border-primary hover:text-white'
                         }
-                      }}
-                      className="sr-only"
-                    />
-                    <span className="text-sm font-medium">{engine}</span>
-                  </motion.label>
-                ))}
+                      `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => {
+                          const currentValue = field.value || [];
+                          if (e.target.checked) {
+                            field.onChange([...currentValue, engine]);
+                          } else {
+                            field.onChange(currentValue.filter(eng => eng !== engine));
+                          }
+                        }}
+                        className="sr-only"
+                      />
+                      <span>{engine.toUpperCase()}</span>
+                      {isChecked && (
+                        <span className="material-symbols-outlined text-sm font-bold text-secondary">check</span>
+                      )}
+                    </label>
+                  );
+                })}
               </div>
               
               {/* Custom Engine Input */}
@@ -185,63 +178,54 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
                   type="text"
                   value={customEngine}
                   onChange={(e) => setCustomEngine(e.target.value)}
-                  placeholder="Add custom engine/framework..."
-                  className="flex-1 px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. Godot, Unreal"
+                  className="flex-1 bg-surface-container-low border border-outline-variant p-2 text-on-surface font-mono text-xs focus:outline-none focus:border-tertiary"
                 />
-                <motion.button
+                <button
                   type="button"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     if (customEngine.trim() && !field.value?.includes(customEngine.trim())) {
                       field.onChange([...(field.value || []), customEngine.trim()]);
                       setCustomEngine('');
                     }
                   }}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-primary text-black font-mono text-xs font-bold uppercase hover:bg-white active:scale-95 transition-all"
                 >
-                  Add
-                </motion.button>
+                  ADD
+                </button>
               </div>
 
               {/* Selected Engines Display */}
               {field.value && field.value.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {field.value.map((engine) => (
-                    <motion.span
+                    <span
                       key={engine}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="inline-flex items-center px-3 py-1 bg-blue-600/20 text-blue-300 rounded-full text-sm"
+                      className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-secondary-container/10 border border-secondary-container/30 text-on-secondary-container font-mono text-[10px] font-bold"
                     >
-                      {engine}
+                      {engine.toUpperCase()}
                       <button
                         type="button"
                         onClick={() => {
                           field.onChange(field.value?.filter(eng => eng !== engine));
                         }}
-                        className="ml-2 hover:text-blue-100"
+                        className="hover:text-white font-bold"
                       >
-                        <X className="w-3 h-3" />
+                        [X]
                       </button>
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
               )}
             </div>
           )}
         />
-      </motion.div>
+      </div>
 
       {/* Previous Projects */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          <FileText className="w-4 h-4 inline mr-2" />
-          Previous Projects & Experience *
+      <div className="space-y-2">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+          Previous Projects *
         </label>
         <Controller
           name="experience.previousProjects"
@@ -249,37 +233,28 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
           render={({ field }) => (
             <textarea
               {...field}
-              rows={6}
-              placeholder="Describe your previous programming projects, game development experience, or any relevant work. Include technologies used, challenges faced, and what you learned..."
+              rows={4}
+              placeholder="Describe your previous programming projects, game development experience, or relevant coursework. Include technologies, architecture, and what challenges you resolved..."
               className={`
-                w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 resize-none
-                focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                transition-all duration-200
-                ${errors?.previousProjects ? 'border-red-500' : 'border-gray-600'}
+                w-full bg-surface-container-low border p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant resize-none
+                focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all
+                ${errors?.previousProjects ? 'border-secondary' : 'border-outline-variant'}
               `}
             />
           )}
         />
         {errors?.previousProjects && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-1 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.previousProjects.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
       {/* Portfolio URL */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          <ExternalLink className="w-4 h-4 inline mr-2" />
-          Portfolio/GitHub URL (Optional)
+      <div className="space-y-2">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+          Portfolio / GitHub URL (Optional)
         </label>
         <Controller
           name="experience.portfolioUrl"
@@ -288,38 +263,22 @@ export function ExperienceStep({ control, errors }: ExperienceStepProps) {
             <input
               {...field}
               type="url"
-              placeholder="https://github.com/yourusername or https://yourportfolio.com"
+              placeholder="https://github.com/..."
               className={`
-                w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                transition-all duration-200
-                ${errors?.portfolioUrl ? 'border-red-500' : 'border-gray-600'}
+                w-full bg-surface-container-low border p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant
+                focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all
+                ${errors?.portfolioUrl ? 'border-secondary' : 'border-outline-variant'}
               `}
             />
           )}
         />
         {errors?.portfolioUrl && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-1 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.portfolioUrl.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="bg-green-900/20 border border-green-500/20 rounded-lg p-4 mt-6"
-      >
-        <p className="text-green-300 text-sm">
-          <strong>Tip:</strong> Don&apos;t worry if you&apos;re a beginner! We welcome members at all skill levels. 
-          Focus on your enthusiasm to learn and any relevant experience, even if it&apos;s from coursework or personal projects.
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 }

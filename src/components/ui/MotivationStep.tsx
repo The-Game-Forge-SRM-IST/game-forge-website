@@ -1,8 +1,6 @@
 'use client';
 
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { motion } from 'framer-motion';
-import { Heart, Target, Clock } from 'lucide-react';
 import { ApplicationFormData, MotivationFormData } from '@/lib/validations/application';
 
 interface MotivationStepProps {
@@ -13,19 +11,18 @@ interface MotivationStepProps {
 export function MotivationStep({ control, errors }: MotivationStepProps) {
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-white mb-2">Motivation & Goals</h3>
-        <p className="text-gray-400">Help us understand your passion and commitment to game development</p>
+      <div className="text-center mb-8 border-b border-outline-variant/30 pb-4">
+        <h3 className="font-sans text-xl font-bold text-on-surface uppercase tracking-tight">
+          Step 3: Motivation & Goals
+        </h3>
+        <p className="font-mono text-xs text-on-surface-variant mt-1">
+          Share your goals and why you want to join.
+        </p>
       </div>
 
       {/* Why Join */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          <Heart className="w-4 h-4 inline mr-2" />
+      <div className="space-y-2">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
           Why do you want to join The Game Forge? *
         </label>
         <Controller
@@ -35,40 +32,31 @@ export function MotivationStep({ control, errors }: MotivationStepProps) {
             <div className="relative">
               <textarea
                 {...field}
-                rows={5}
+                rows={4}
                 placeholder="Share what draws you to game development and why you want to be part of our community. What excites you about creating games? What do you hope to contribute to the club?"
                 className={`
-                  w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 resize-none
-                  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                  transition-all duration-200
-                  ${errors?.whyJoin ? 'border-red-500' : 'border-gray-600'}
+                  w-full bg-surface-container-low border p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant resize-none pr-16
+                  focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all
+                  ${errors?.whyJoin ? 'border-secondary' : 'border-outline-variant'}
                 `}
               />
-              <div className="absolute bottom-3 right-3 text-xs text-gray-500">
+              <div className="absolute bottom-3 right-3 font-mono text-[10px] text-outline-variant">
                 {field.value?.length || 0}/500
               </div>
             </div>
           )}
         />
         {errors?.whyJoin && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-1 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.whyJoin.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
       {/* Goals */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          <Target className="w-4 h-4 inline mr-2" />
+      <div className="space-y-2">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
           What are your goals in game development? *
         </label>
         <Controller
@@ -78,40 +66,31 @@ export function MotivationStep({ control, errors }: MotivationStepProps) {
             <div className="relative">
               <textarea
                 {...field}
-                rows={5}
+                rows={4}
                 placeholder="Describe your short-term and long-term goals in game development. What skills do you want to develop? What type of games do you want to create? How do you see yourself growing in this field?"
                 className={`
-                  w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 resize-none
-                  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                  transition-all duration-200
-                  ${errors?.goals ? 'border-red-500' : 'border-gray-600'}
+                  w-full bg-surface-container-low border p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant resize-none pr-16
+                  focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all
+                  ${errors?.goals ? 'border-secondary' : 'border-outline-variant'}
                 `}
               />
-              <div className="absolute bottom-3 right-3 text-xs text-gray-500">
+              <div className="absolute bottom-3 right-3 font-mono text-[10px] text-outline-variant">
                 {field.value?.length || 0}/500
               </div>
             </div>
           )}
         />
         {errors?.goals && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-1 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.goals.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
       {/* Availability */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          <Clock className="w-4 h-4 inline mr-2" />
+      <div className="space-y-2">
+        <label className="block font-mono text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
           Time Commitment & Availability *
         </label>
         <Controller
@@ -121,44 +100,41 @@ export function MotivationStep({ control, errors }: MotivationStepProps) {
             <div className="relative">
               <textarea
                 {...field}
-                rows={4}
+                rows={3}
                 placeholder="How much time can you dedicate to club activities per week? Are there specific days/times that work best for you? Any scheduling constraints we should know about?"
                 className={`
-                  w-full px-4 py-3 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 resize-none
-                  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
-                  transition-all duration-200
-                  ${errors?.availability ? 'border-red-500' : 'border-gray-600'}
+                  w-full bg-surface-container-low border p-3 text-on-surface font-mono text-xs placeholder:text-outline-variant resize-none pr-16
+                  focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all
+                  ${errors?.availability ? 'border-secondary' : 'border-outline-variant'}
                 `}
               />
-              <div className="absolute bottom-3 right-3 text-xs text-gray-500">
+              <div className="absolute bottom-3 right-3 font-mono text-[10px] text-outline-variant">
                 {field.value?.length || 0}/200
               </div>
             </div>
           )}
         />
         {errors?.availability && (
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-1 text-sm text-red-400"
-          >
+          <p role="alert" className="mt-1 font-mono text-[11px] text-secondary flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">warning</span>
             {errors.availability.message}
-          </motion.p>
+          </p>
         )}
-      </motion.div>
+      </div>
 
-      {/* Expectations Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 border border-purple-500/20 rounded-lg p-6"
-      >
-        <h4 className="text-lg font-semibold text-white mb-4">What to Expect</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+      {/* Expectations Workbench Card */}
+      <div className="forge-border bg-surface-container-low p-6 relative overflow-hidden">
+        <div className="absolute top-2 right-2 flex gap-1">
+          <div className="rivet" />
+          <div className="rivet" />
+        </div>
+        <h4 className="font-sans text-sm font-bold text-on-surface mb-4 uppercase tracking-wider border-b border-outline-variant/30 pb-2">
+          What to Expect
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs text-on-surface-variant">
           <div>
-            <h5 className="font-medium text-green-400 mb-2">Club Activities</h5>
-            <ul className="space-y-1 text-gray-400">
+            <h5 className="font-bold text-tertiary mb-2 uppercase tracking-wide">Club Activities</h5>
+            <ul className="space-y-1">
               <li>• Weekly workshops and tutorials</li>
               <li>• Collaborative game projects</li>
               <li>• Game jams and competitions</li>
@@ -166,8 +142,8 @@ export function MotivationStep({ control, errors }: MotivationStepProps) {
             </ul>
           </div>
           <div>
-            <h5 className="font-medium text-blue-400 mb-2">Time Commitment</h5>
-            <ul className="space-y-1 text-gray-400">
+            <h5 className="font-bold text-primary mb-2 uppercase tracking-wide">Time Commitment</h5>
+            <ul className="space-y-1">
               <li>• 4-6 hours per week minimum</li>
               <li>• Regular meeting attendance</li>
               <li>• Project deadlines</li>
@@ -175,20 +151,7 @@ export function MotivationStep({ control, errors }: MotivationStepProps) {
             </ul>
           </div>
         </div>
-      </motion.div>
-
-      {/* Final Note */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="bg-green-900/20 border border-green-500/20 rounded-lg p-4"
-      >
-        <p className="text-green-300 text-sm">
-          <strong>Almost there!</strong> Your responses help us understand how to best support your game development journey. 
-          We&apos;re excited to potentially welcome you to The Game Forge family!
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 }

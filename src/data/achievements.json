@@ -28,5 +28,15 @@
     "placement": "1st Place",
     "competition": "IEEE Paper Presentation at Samgatha Vashisht 2025, IIITDM Kancheepuram",
     "image": "/images/achievements/iiitdm.jpeg"
+  },
+  {
+    "id": "jabali-cricket-game-jam",
+    "title": "First Place - Jabali Cricket Game Jam",
+    "description": "Secured 1st place in the Jabali Cricket Game Jam. 🎉",
+    "date": "2026-05-15",
+    "type": "competition",
+    "placement": "1st Place",
+    "competition": "Jabali Cricket Game Jam",
+    "image": "/images/achievements/jabali-cricket-win.jpeg"
   }
 ]
