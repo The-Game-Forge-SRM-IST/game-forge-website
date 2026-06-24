@@ -48,12 +48,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide default cursor on desktop */
+/* Hide default cursor on desktop only when custom cursor JS is active */
 @media (pointer: fine) {
-  body, a, button, input, select, textarea, [role="button"], .interactive {
-    cursor: none !important;
-  }
-  input[type="text"], input[type="email"], input[type="url"], input[type="tel"], textarea {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
     cursor: none !important;
   }
 }
@@ -67,6 +65,12 @@ body {
 /* Sharp elements (Industrial Brutalism) */
 *, *::before, *::after {
   border-radius: 0px !important;
+}
+
+/* Exception: loading spinners and circular elements need to stay round */
+.animate-spin,
+.rounded-full-override {
+  border-radius: 9999px !important;
 }
 
 /* Custom Scrollbar */

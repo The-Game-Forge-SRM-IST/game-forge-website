@@ -2,7 +2,7 @@
   {
     "id": "impossible-pacman",
     "title": "Impossible Pacman",
-    "description": "Made for the retro revive game jam condcuted by IITK.",
+    "description": "Made for the retro revive game jam conducted by IITP.",
     "longDescription": "Dive into a fresh and unpredictable Pacman experience with Impossible Pacman! This isn't your classic arcade game. We've taken the familiar ghost-dodging, pellet-munching gameplay and added a twist: each level is generated uniquely every time you play. Using a random walk algorithm, the maze layout is different in every game, ensuring endless replayability and challenging you to adapt to new environments. But that's not all! Do you feel like setting your challenge? Impossible Pacman allows you to define the win score before you start a level. Whether you prefer a quick dash for a low score or a marathon session aiming for a high one, the choice is yours. Get ready for an 'impossible' level of Pacman fun where no two games are the same!",
     "images": [
       "/images/projects/retro-revive-1.png",
@@ -90,8 +90,7 @@
     ],
     "teamMembers": [
       "harsh-soni",
-      "vidyut-arun",
-      ""
+      "vidyut-arun"
     ],
     "status": "completed",
     "githubUrl": "https://github.com/hs5385/EndlessRunner-GameForge",

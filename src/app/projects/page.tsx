@@ -5,6 +5,11 @@ import { Project, TeamMember } from '@/types';
 import projectsData from '@/data/projects.json';
 import teamData from '@/data/team.json';
 
+export const metadata = {
+  title: 'Projects | THE GAME FORGE',
+  description: 'Explore games and projects built by The Game Forge club members at SRM IST KTR.',
+};
+
 export default function ProjectsPage() {
   return (
     <main id="main-content" tabIndex={-1}>

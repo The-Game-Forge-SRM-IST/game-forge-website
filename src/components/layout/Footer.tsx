@@ -14,7 +14,7 @@ export default function Footer() {
             <img
               alt="Logo"
               className="w-10 h-10 pixelated"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxZVETh4X_svRmDPTcf37f6591KVsra3YltQfjDIZnk6WwJN5OBr5S4psWyUOTZOFomUQzUQP6YlPaTlgA9t5DFSelaS_WZpN7OvrdNzc_HQKvhkFPXT9a6vKa8mJWezThEyq-9C4GFYddiiGXOXmuIUNZ85JvW_To-XdebYjdI5raZQm7SkN3Lbf0SGahVLV9el8ILOVSEm0676lNvJHhtR-bF4OS8HLzOCOoxP_EFH6sjOnlcyeX4dZnFYkJnJf4FXx4DYHs70Q"
+              src="/images/ClubLogo.png"
               style={{ imageRendering: 'pixelated' }}
             />
             <div className="font-sans text-lg font-bold text-white uppercase tracking-tight">THE GAME FORGE</div>

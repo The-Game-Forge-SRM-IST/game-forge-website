@@ -14,7 +14,7 @@ import { ExperienceStep } from '@/components/ui/ExperienceStep';
 import { MotivationStep } from '@/components/ui/MotivationStep';
 
 // === Configure Apps Script endpoint ===
-const ENDPOINT =
+const ENDPOINT = process.env.NEXT_PUBLIC_GOOGLE_SCRIPTS_URL ||
   "https://script.google.com/macros/s/AKfycbxO9ZF19tr8TfxJy9CXkYM28cGc4uP9ZkQX16Pjk_CAmKKeEVDq1_N7HT9F4R2FLlpt/exec";
 
 type FormStep = 'personal' | 'experience' | 'motivation';
@@ -209,7 +209,7 @@ export default function ApplicationSection({ isOpen = false }: { isOpen?: boolea
             </p>
           </div>
           <a
-            href="#contact"
+            href="/contact"
             className="inline-block px-8 py-3 bg-secondary text-white font-mono text-xs font-bold uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
           >
             CONNECT_VIA_COMM_LINK

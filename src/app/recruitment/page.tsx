@@ -6,16 +6,19 @@ import { SectionTransition } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Join The Forge | THE GAME FORGE',
+  description: 'Apply to join The Game Forge — a game development club at SRM IST KTR. Submit your credentials and start your game dev journey.',
+};
+
 function getApplicationStatus(): boolean {
   try {
-    const configPath = path.join(process.cwd(), 'src/config/application.ts');
+    const configPath = path.join(process.cwd(), 'src/config/application.json');
     const fileContent = fs.readFileSync(configPath, 'utf8');
-    const match = fileContent.match(/APPLICATION_OPEN\s*:\s*(true|false)/);
-    if (match) {
-      return match[1] === 'true';
-    }
+    const config = JSON.parse(fileContent);
+    return config.APPLICATION_OPEN === true;
   } catch (e) {
-    console.error('Failed to read dynamic application config on recruitment page:', e);
+    console.error('Failed to read application config on recruitment page:', e);
   }
   return false;
 }

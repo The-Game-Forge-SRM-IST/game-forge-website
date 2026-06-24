@@ -18,6 +18,14 @@ export default function EventsSection() {
     setEvents(eventsData as Event[]);
     setNow(new Date());
 
+    // Only tick if there are upcoming events
+    const hasUpcoming = (eventsData as Event[]).some(e => {
+      const eventTime = e.time || '00:00';
+      return new Date(`${e.date}T${eventTime}:00`).getTime() > Date.now();
+    });
+
+    if (!hasUpcoming) return;
+
     const interval = setInterval(() => {
       setNow(new Date());
     }, 1000);

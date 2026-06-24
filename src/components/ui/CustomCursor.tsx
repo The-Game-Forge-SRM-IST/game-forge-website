@@ -24,6 +24,9 @@ export default function CustomCursor() {
       };
     }
 
+    // Signal CSS that custom cursor JS is active
+    document.body.classList.add('custom-cursor-active');
+
     const cursor = cursorRef.current;
 
     const createEmber = (x: number, y: number) => {
@@ -97,6 +100,7 @@ export default function CustomCursor() {
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      document.body.classList.remove('custom-cursor-active');
       window.removeEventListener('resize', checkMobile);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);

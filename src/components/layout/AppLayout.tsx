@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import CustomCursor from '../ui/CustomCursor';
-import { useTheme } from '@/providers/ThemeProvider';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -13,7 +12,6 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
-  const { resolvedTheme } = useTheme();
 
   // Determine active section based on the Next.js current pathname
   const activeSection = useMemo(() => {
@@ -27,7 +25,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   }, [pathname]);
 
   return (
-    <div className={`min-h-screen text-foreground relative ${resolvedTheme}`}>
+    <div className="min-h-screen text-foreground relative dark">
       {/* Custom Gaming Cursor */}
       <CustomCursor />
       
@@ -53,9 +51,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Navigation activeSection={activeSection} />
 
       {/* Main Content */}
-      <main className="pt-20 relative z-10 safe-area-inset-bottom">
+      <div className="pt-20 relative z-10 safe-area-inset-bottom">
         {children}
-      </main>
+      </div>
 
       {/* Footer */}
       <Footer />

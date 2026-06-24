@@ -128,7 +128,7 @@
   {
     "id": "rishav-raj",
     "name": "Rishav Raj",
-    "role": "Creatives Memeber",
+    "role": "Creatives Member",
     "department": "Management",
     "image": "/images/team/rishav.webp",
     "bio": "Coordinating ideas from concept to design.",
@@ -145,7 +145,7 @@
   {
     "id": "dineshwar-nagubothu",
     "name": "Dineshwar Nagubothu",
-    "role": "Corporate for Sponsers",
+    "role": "Corporate for Sponsors",
     "department": "Management",
     "image": "/images/team/dinesh.webp",
     "bio": "wannabe a android dev , B.Tech student SRMIST don't hesitate to dm lets connect through telegram @dinonomous",
@@ -247,10 +247,10 @@
   {
     "id": "anshu-aman",
     "name": "Anshu Aman",
-    "role": "Creatives Memeber",
+    "role": "Creatives Member",
     "department": "Management",
     "image": "/images/team/anshu.webp",
-    "bio": "I'm Surya Game forge club member",
+    "bio": "Creative team member at The Game Forge, contributing to visual content and club initiatives.",
     "skills": [
       "C",
       "C++",
@@ -357,7 +357,7 @@
     "role": "Game Design",
     "department": "Design",
     "image": "/images/team/udayan.webp",
-    "bio": "I'm Udayan Game forge club member",
+    "bio": "Game Forge club member contributing to game development projects and community events at SRMIST.",
     "skills": [
       "C",
       "C++",
@@ -414,7 +414,7 @@
     "role": "Game Development",
     "department": "Development",
     "image": "/images/team/harsh-soni.webp",
-    "bio": "I'm Sanjithkumar Sukumar, a passionate Computer Science student at SRMIST with strong interests in Python development, UI/UX design, and content creation.",
+    "bio": "Game developer at The Game Forge, building interactive experiences with various game engines and programming languages.",
     "skills": [
       "C",
       "C#",
@@ -469,7 +469,7 @@
     "role": "Game Design",
     "department": "Design",
     "image": "/images/team/reddy-manoj-kumar.webp",
-    "bio": "I am a third-year undergraduate student at SRM Institute of Science and Technology (SRMIST), pursuing a degree in Computer Science and Engineering with specialization Artificial intelligence and machine learning. My academic journey focuses on building strong programming skills like c, c++, java",
+    "bio": "Game designer at The Game Forge, focused on creating engaging gameplay experiences. Pursuing Computer Science and Engineering with specialization in AI and ML at SRMIST.",
     "skills": [
       "C",
       "C++",

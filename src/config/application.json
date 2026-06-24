@@ -1,0 +1,12 @@
+{
+  "APPLICATION_OPEN": false,
+  "CLOSED_MESSAGE": {
+    "title": "Applications Currently Closed",
+    "description": "Thank you for your interest in joining The Game Forge! Applications are currently closed, but we'll be opening them again soon. Follow our social media or check back later for updates.",
+    "reopenMessage": "Applications will reopen soon. Stay tuned!"
+  },
+  "OPEN_MESSAGE": {
+    "title": "Join The Game Forge",
+    "description": "Ready to level up your game development skills? Apply to become part of our creative community."
+  }
+}

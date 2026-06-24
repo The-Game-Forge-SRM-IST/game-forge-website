@@ -27,9 +27,11 @@ export default function Home() {
         </SectionTransition>
       </Suspense>
       
-      <NoSSR>
-        <AccessibilityTester />
-      </NoSSR>
+      {process.env.NODE_ENV === 'development' && (
+        <NoSSR>
+          <AccessibilityTester />
+        </NoSSR>
+      )}
     </main>
   );
 }
